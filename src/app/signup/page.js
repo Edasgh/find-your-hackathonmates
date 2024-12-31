@@ -103,11 +103,10 @@ export default function Signup() {
               autoClose: 2000,
               closeButton: true,
             });
+            router.push("/login");
             setTimeout(() => {
-              router.push("/login");
-
               window.location.reload();
-            }, 1000);
+            }, 80);
           } else {
             throw new Error("Something went wrong!");
           }

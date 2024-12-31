@@ -22,9 +22,9 @@ export default function Login() {
   useLayoutEffect(() => {
     if (!isLoading && user) {
       router.push("/teams");
-      setTimeout(()=>{
-      window.location.reload();
-      },80)
+      setTimeout(() => {
+        window.location.reload();
+      }, 80);
     }
   }, [isLoading, user, router]);
 
@@ -76,11 +76,8 @@ export default function Login() {
           autoClose: 2000,
           closeButton: true,
         });
-        setTimeout(() => {
-          router.push(`/profile`);
-
-          window.location.reload();
-        }, 800);
+        router.push(`/teams`);
+        window.location.reload();
       } else {
         throw new Error("Wrong email or password!");
       }
