@@ -1,0 +1,240 @@
+@import url("./fonts.css");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-primary: #1b1b1d;
+  --bg-secondary: #242526;
+  --text-primary: #e3e3e3;
+  --text-secondary: #b98efd;
+  --text-bg-primary: #444950;
+  --text-bg-primary-hover: #ba8fff;
+}
+
+body {
+  background-color: var(--bg-primary);
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+body,
+* {
+  font-family: "Poppins", serif;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  text-decoration: inherit;
+  color: inherit;
+}
+
+/* navigation bar */
+.navbar {
+  background-color: var(--bg-secondary);
+  padding: 1.4rem 1.12rem;
+}
+
+.main-div {
+  background-color: var(--bg-secondary);
+}
+
+.login-signup-form {
+  position: relative;
+
+  height: 80%;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+
+  margin-bottom: 0.2rem;
+}
+/* floating label */
+
+.input-div {
+  margin-bottom: 0.8rem;
+  position: relative;
+}
+
+.labelLine {
+  position: absolute;
+  left: 7.4px;
+  top: 6px;
+  font-size: 0.9rem;
+  background-color: var(--bg-secondary);
+  color: grey;
+  padding: 0.2rem 0.5rem;
+  transition: 0.2s ease;
+  z-index: 4;
+}
+
+.login-signup-form input,
+.login-signup-form select,
+.login-signup-form textarea {
+  max-width: 13rem;
+  position: relative;
+  background: var(--bg-secondary);
+  font-size: 1.1rem;
+  padding: 0.35rem 0.95rem;
+  transition: 0.2s ease;
+  border: 1.5px solid var(--text-secondary);
+  outline: none;
+  border-radius: 3px;
+  z-index: 2;
+}
+.login-signup-form select {
+  cursor: pointer;
+  font-size: .99rem;
+}
+
+.input-div textarea {
+  resize: none;
+  height: 5rem;
+}
+
+.fa-eye,
+.fa-eye-slash,
+.fa-eye::after,
+.fa-eye-slash::after,
+.fa-eye::before,
+.fa-eye-slash::before {
+  color: grey;
+}
+
+/* The flip card container - set the width and height to whatever you want. We have added the border property to demonstrate that the flip itself goes out of the box on hover (remove perspective if you don't want the 3D effect */
+.team-card {
+  position: relative;
+  background-color: transparent;
+
+  perspective: 1000px; /* Remove this if you don't want the 3D effect */
+}
+
+/* This container is needed to position the front and back side */
+.team-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+}
+
+/* Do an horizontal flip when you move the mouse over the flip box container */
+.team-card:hover .team-card-inner {
+  transform: rotateY(180deg);
+}
+
+/* Position the front and back side */
+.team-card-front, .team-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  padding: inherit;
+  -webkit-backface-visibility: hidden; /* Safari */
+  backface-visibility: hidden;
+}
+
+/* Style the back side */
+.team-card-back {
+  background-color: transparent;
+  color:var(--text-bg-primary);
+  transform: rotateY(180deg);
+}
+
+
+.dashing{
+  box-shadow: 0 0 3px var(--text-secondary);
+}
+.dashing:hover {
+   box-shadow: 0 0 24px var(--text-secondary);
+}
+
+.dashing-muted{
+  box-shadow: 0 0 3px var(--text-secondary);
+}
+.dashing-muted:hover {
+   box-shadow: 0 0 18px var(--text-secondary);
+}
+
+@media screen and (max-width: 500px) {
+  .login-signup-form {
+    gap: 0rem;
+    margin-bottom: 0.2rem;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .login-signup-form {
+    height: 100%;
+  }
+}
+
+/* For the loader or the spinning loader */
+
+.loader {
+  color: #ba8fff;
+  font-size: 10px;
+  width: 1em;
+  height: 1em;
+  border-radius: 50%;
+  position: relative;
+  text-indent: -9999em;
+  animation: mulShdSpin 1.3s infinite linear;
+  transform: translateZ(0);
+}
+
+@keyframes mulShdSpin {
+  0%,
+  100% {
+    box-shadow: 0 -3em 0 0.2em, 
+    2em -2em 0 0em, 3em 0 0 -1em, 
+    2em 2em 0 -1em, 0 3em 0 -1em, 
+    -2em 2em 0 -1em, -3em 0 0 -1em, 
+    -2em -2em 0 0;
+  }
+  12.5% {
+    box-shadow: 0 -3em 0 0, 2em -2em 0 0.2em, 
+    3em 0 0 0, 2em 2em 0 -1em, 0 3em 0 -1em, 
+    -2em 2em 0 -1em, -3em 0 0 -1em, 
+    -2em -2em 0 -1em;
+  }
+  25% {
+    box-shadow: 0 -3em 0 -0.5em, 
+    2em -2em 0 0, 3em 0 0 0.2em, 
+    2em 2em 0 0, 0 3em 0 -1em, 
+    -2em 2em 0 -1em, -3em 0 0 -1em, 
+    -2em -2em 0 -1em;
+  }
+  37.5% {
+    box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em,
+     3em 0em 0 0, 2em 2em 0 0.2em, 0 3em 0 0em, 
+     -2em 2em 0 -1em, -3em 0em 0 -1em, -2em -2em 0 -1em;
+  }
+  50% {
+    box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em,
+     3em 0 0 -1em, 2em 2em 0 0em, 0 3em 0 0.2em, 
+     -2em 2em 0 0, -3em 0em 0 -1em, -2em -2em 0 -1em;
+  }
+  62.5% {
+    box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em,
+     3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 0, 
+     -2em 2em 0 0.2em, -3em 0 0 0, -2em -2em 0 -1em;
+  }
+  75% {
+    box-shadow: 0em -3em 0 -1em, 2em -2em 0 -1em, 
+    3em 0em 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em, 
+    -2em 2em 0 0, -3em 0em 0 0.2em, -2em -2em 0 0;
+  }
+  87.5% {
+    box-shadow: 0em -3em 0 0, 2em -2em 0 -1em, 
+    3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em, 
+    -2em 2em 0 0, -3em 0em 0 0, -2em -2em 0 0.2em;
+  }
+}
+  
