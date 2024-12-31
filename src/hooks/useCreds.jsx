@@ -10,7 +10,7 @@ export const CredsProvider = ({ children, initialUser }) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!initialUser) {
+    if (initialUser === null) {
       // Fetch only if user is not preloaded
       const fetchUser = async () => {
         try {
@@ -42,11 +42,8 @@ export const CredsProvider = ({ children, initialUser }) => {
     }
   }, [initialUser]);
 
-
   return (
-    <CredsContext.Provider
-      value={{ user, isLoading, error }}
-    >
+    <CredsContext.Provider value={{ user, isLoading, error }}>
       {children}
     </CredsContext.Provider>
   );
