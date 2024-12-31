@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import useChat from "@/hooks/useChat";
 import ChatLoader from "../components/ChatLoader";
 import CustomAvatar from "@/components/CustomAvatar";
@@ -22,10 +22,11 @@ const TeamChat = () => {
   const [messages, setMessages] = useState([]);
   const [newLinks, setNewLinks] = useState([]);
   const [newMembers, setNewMembers] = useState([]);
- 
+
   const [msg, setMsg] = useState("");
 
- 
+  const msgEndRef = useRef(null);
+
   // Fetch team messages and data
   const fetchTeamData = async () => {
     setLoading(true);
@@ -85,7 +86,10 @@ const TeamChat = () => {
     socket.emit("join-room", teamId);
 
     socket.on("message", ({ message, senderId, senderName, sentOn }) => {
-      setMessages((prev) => [...prev, {message,sender:{name:senderName,id:senderId},sentOn}]);
+      setMessages((prev) => [
+        ...prev,
+        { message, sender: { name: senderName, id: senderId }, sentOn },
+      ]);
     });
 
     socket.on("set_link", ({ linkName, link }) => {
@@ -122,6 +126,13 @@ const TeamChat = () => {
   const handleRemoveMember = (member) => {
     socket.emit("set_member", { teamId, ...member });
   };
+
+  // Scroll to the bottom whenever the messages change
+  useEffect(() => {
+    if (msgEndRef.current) {
+      msgEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
 
   return (
     <>
@@ -190,6 +201,8 @@ const TeamChat = () => {
                   </div>
                 </div>
               ))}
+              {/* Scroll to the bottom */}
+              <div ref={msgEndRef} />
             </div>
 
             {/* Message Input */}
