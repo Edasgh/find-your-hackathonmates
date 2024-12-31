@@ -46,7 +46,9 @@ export const POST = async (request) => {
     let members = findTeam.members;
     if(members.some(m=>m.id===recieverId))
     {
-        throw new Error("Team mate already exists in team!");
+         return new NextResponse("Team mate already exists in team!", {
+           status: 403,
+         });
     }
     const sendInvite = await Request.create(invitationData);
     if (!sendInvite) {

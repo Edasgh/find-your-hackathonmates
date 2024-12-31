@@ -18,7 +18,6 @@ app.prepare().then(() => {
 
   io.on("connection", (socket) => {
     console.log(`New connection ${socket.id}`);
-    
     socket.on("join-room", async (roomId) => {
       try {
         socket.join(roomId);
@@ -64,47 +63,46 @@ app.prepare().then(() => {
       }
     );
     // get join requests in real time
-  socket.on("get_alerts", async ({ userId }) => {
-    try {
-      const requests = await Request.find({
-        "reciever.id": { $eq: userId },
-      });
-      if (!requests) {
-        throw new Error("Requests not found!");
+    socket.on("get_alerts", async ({ userId }) => {
+      try {
+        const requests = await Request.find({
+          "reciever.id": { $eq: userId },
+        });
+        if (!requests) {
+          throw new Error("Requests not found!");
+        }
+
+        socket.emit("get_alerts", { data: requests });
+      } catch (error) {
+        console.log(error.message);
       }
+    });
 
-      socket.emit("get_alerts", {data:requests});
-    } catch (error) {
-      console.log(error.message);
-    }
-  });
+    // socket.on(
+    //   "invite",
+    //   async ({
+    //     senderName,
+    //     senderId,
+    //     teamName,
+    //     teamId,
+    //     recieverName,
+    //     recieverId,
+    //     email,
+    //   }) => {
+    //     try {
+    //       const requests = await Request.find({
+    //         "reciever.id": { $eq: userId },
+    //       });
+    //       if (!requests) {
+    //         throw new Error("Requests not found!");
+    //       }
 
-  // socket.on(
-  //   "invite",
-  //   async ({
-  //     senderName,
-  //     senderId,
-  //     teamName,
-  //     teamId,
-  //     recieverName,
-  //     recieverId,
-  //     email,
-  //   }) => {
-  //     try {
-  //       const requests = await Request.find({
-  //         "reciever.id": { $eq: userId },
-  //       });
-  //       if (!requests) {
-  //         throw new Error("Requests not found!");
-  //       }
-
-  //       socket.emit("invite", { data: requests });
-  //     } catch (error) {
-  //       console.log(error.message);
-  //     }
-  //   }
-  // );
-  
+    //       socket.emit("invite", { data: requests });
+    //     } catch (error) {
+    //       console.log(error.message);
+    //     }
+    //   }
+    // );
 
     socket.on("set_link", async ({ teamId, linkName, link }) => {
       try {

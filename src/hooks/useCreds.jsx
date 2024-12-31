@@ -4,13 +4,13 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 // Create a context for user credentials
 const CredsContext = createContext();
 
-export const CredsProvider = ({ children, initialUser }) => {
-  const [user, setUser] = useState(initialUser || null);
-  const [isLoading, setIsLoading] = useState(!initialUser);
+export const CredsProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (initialUser === null) {
+    if (user===null) {
       // Fetch only if user is not preloaded
       const fetchUser = async () => {
         try {
@@ -40,10 +40,13 @@ export const CredsProvider = ({ children, initialUser }) => {
 
       fetchUser();
     }
-  }, [initialUser]);
+  }, [user]);
+
 
   return (
-    <CredsContext.Provider value={{ user, isLoading, error }}>
+    <CredsContext.Provider
+      value={{ user, isLoading, error }}
+    >
       {children}
     </CredsContext.Provider>
   );

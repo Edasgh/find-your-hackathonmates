@@ -68,6 +68,8 @@ const InviteToTeamModal = ({ open, setOpen, userId, userName, email }) => {
           isLoading: false,
           autoClose: 1500,
         });
+      } else if (sendInvite.status === 403) {
+        throw new Error("Already member in the team!");
       } else {
         throw new Error("Something went wrong!");
       }
