@@ -35,12 +35,6 @@ export const POST = async (request) => {
       id: recieverId,
     },
   };
-
-  const userObj = {
-    name : recieverName,
-    id : recieverId
-  }
-
   try {
     const findTeam = await Team.findById(teamId);
     let members = findTeam.members;

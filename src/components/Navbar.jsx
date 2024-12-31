@@ -56,9 +56,9 @@ export default function Navbar() {
     const response = await fetch("/api/logout");
     if (response.status === 200) {
       router.push("/");
-       setTimeout(() => {
-         window.location.reload();
-       }, 500);
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
     }
   };
 
