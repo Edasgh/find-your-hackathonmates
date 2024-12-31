@@ -3,6 +3,7 @@ import { Server } from "socket.io";
 import next from "next";
 import Team from "./src/model/team-model.js";
 import User from "./src/model/user-model.js";
+import Request from "./src/model/request-model.js";
 
 const dev = process.env.NODE_ENV !== "production";
 const hostname = process.env.HOSTNAME || "localhost";
@@ -17,6 +18,7 @@ app.prepare().then(() => {
 
   io.on("connection", (socket) => {
     console.log(`New connection ${socket.id}`);
+    
     socket.on("join-room", async (roomId) => {
       try {
         socket.join(roomId);
@@ -61,10 +63,48 @@ app.prepare().then(() => {
         }
       }
     );
-    
-    //get teams
-    //get all messages of a team
     // get join requests in real time
+  socket.on("get_alerts", async ({ userId }) => {
+    try {
+      const requests = await Request.find({
+        "reciever.id": { $eq: userId },
+      });
+      if (!requests) {
+        throw new Error("Requests not found!");
+      }
+
+      socket.emit("get_alerts", {data:requests});
+    } catch (error) {
+      console.log(error.message);
+    }
+  });
+
+  // socket.on(
+  //   "invite",
+  //   async ({
+  //     senderName,
+  //     senderId,
+  //     teamName,
+  //     teamId,
+  //     recieverName,
+  //     recieverId,
+  //     email,
+  //   }) => {
+  //     try {
+  //       const requests = await Request.find({
+  //         "reciever.id": { $eq: userId },
+  //       });
+  //       if (!requests) {
+  //         throw new Error("Requests not found!");
+  //       }
+
+  //       socket.emit("invite", { data: requests });
+  //     } catch (error) {
+  //       console.log(error.message);
+  //     }
+  //   }
+  // );
+  
 
     socket.on("set_link", async ({ teamId, linkName, link }) => {
       try {

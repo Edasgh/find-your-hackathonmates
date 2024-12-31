@@ -11,33 +11,21 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import LoadingComponent from "../loading";
 import Footer from "@/components/Footer";
+import { useCreds } from "@/hooks/useCreds";
 
 export default function Signup() {
+  const { user, isLoading, error } = useCreds();
   //router
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
 
   useLayoutEffect(() => {
-    const res = async () => {
-      try {
-        const resp = await fetch("/api/profile");
-        const data = await resp.json();
-
-        if (resp.status === 200) {
-          router.push("/teams");
-          setInterval(() => {
-            window.location.reload();
-          }, 100);
-        } else {
-          throw new Error("Something went wrong!");
-        }
-      } catch (err) {
-        console.log(err);
-        setLoading(false);
-      }
-    };
-    res();
-  }, []);
+    if (!isLoading && user) {
+      router.push("/teams");
+      setTimeout(() => {
+        window.location.reload();
+      }, 80);
+    }
+  }, [isLoading, user, router]);
 
   // access password & confirm password value
   const [password, setPassword] = useState("");
@@ -115,12 +103,11 @@ export default function Signup() {
               autoClose: 2000,
               closeButton: true,
             });
-            setInterval(() => {
+            setTimeout(() => {
               router.push("/login");
-              setInterval(() => {
-                window.location.reload();
-              }, 1000);
-            }, 3000);
+
+              window.location.reload();
+            }, 1000);
           } else {
             throw new Error("Something went wrong!");
           }
@@ -166,7 +153,7 @@ export default function Signup() {
 
   return (
     <>
-      {loading ? (
+      {isLoading ? (
         <>
           <LoadingComponent />
         </>

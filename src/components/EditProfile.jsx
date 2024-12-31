@@ -63,7 +63,7 @@ export default function EditProfile({
             autoClose: 2000,
             closeButton: true,
           });
-           setInterval(() => {
+           setTimeout(() => {
              window.location.reload();
            }, 300);
         } else {

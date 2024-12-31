@@ -1,62 +1,43 @@
 "use client";
 
+import { useCreds } from "@/hooks/useCreds";
+import { socket } from "@/lib/socket";
 import { faBell, faMessage, faUser } from "@fortawesome/free-regular-svg-icons";
 import {
   faMessage as msg,
   faUser as userIcon,
   faBell as bellIcon,
   faBars,
- 
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const ProfileNav = () => {
-  const [loading, setLoading] = useState(true);
-  const [userDetails, setUserDetails] = useState(null);
-  const [opened, setOpened] = useState(true);
- const [reqs, setReqs] = useState([]);
-   const getJoinRequests = async () => {
-     try {
-       const resp = await fetch("/api/joinRequests");
-       const data = await resp.json();
-       console.log(data);
-       setReqs(data);
-       setInterval(() => {
-         setLoading(false);
-       }, 900);
-     } catch (error) {
-       setReqs([]);
-       setInterval(() => {
-         setLoading(false);
-       }, 900);
-     }
-   };
-  const res = async () => {
-    try {
-      const resp = await fetch("/api/profile");
-      const data = await resp.json();
+  const { user, isLoading, error } = useCreds();
 
-      setUserDetails(data);
-      setLoading(false);
-    } catch (err) {
-      setUserDetails(null);
-      setLoading(false);
-    }
-  };
-  useLayoutEffect(() => {
-    res();
-    getJoinRequests();
-  }, []);
+  const [opened, setOpened] = useState(true);
+  const [reqs, setReqs] = useState([]);
 
   const [over1, setOver1] = useState(false);
   const [over2, setOver2] = useState(false);
   const [over3, setOver3] = useState(false);
 
+  useEffect(() => {
+    if (!isLoading && user) {
+      socket.emit("get_alerts", { userId: user._id });
+      socket.on("get_alerts", ({ data }) => {
+        setReqs([...data]);
+      });
+      return () => {
+        socket.off("get_alerts");
+      };
+    }
+  }, [isLoading, user]);
+
   return (
     <>
-      {!loading && userDetails !== null && (
+      {!isLoading && user !== null && (
         <>
           <div
             className={`absolute left-0 bg-gray-800 text-white w-52 min-h-screen overflow-y-auto transition-transform transform ${
@@ -65,10 +46,7 @@ const ProfileNav = () => {
             id="sidebar"
           >
             <div className="p-4">
-              <h1 className="text-2xl mt-8 font-semibold">
-                {" "}
-                {userDetails.name}
-              </h1>
+              <h1 className="text-2xl mt-8 font-semibold"> {user.name}</h1>
               <ul className="mt-4">
                 <li
                   className="mb-3"
@@ -110,7 +88,10 @@ const ProfileNav = () => {
                     setOver3(false);
                   }}
                 >
-                  <Link href="/profile/joinRequests" className="block hover:text-indigo-400">
+                  <Link
+                    href="/profile/joinRequests"
+                    className="block hover:text-indigo-400"
+                  >
                     <FontAwesomeIcon icon={over3 ? bellIcon : faBell} />
                     &nbsp;&nbsp; Notifications
                     <span className="mx-2 bg-blue-100 text-blue-800 text-xs font-medium me-2 px-1.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">

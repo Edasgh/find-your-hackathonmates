@@ -1,39 +1,31 @@
 "use client";
 import LoadingComponent from "@/app/loading";
 
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AlertEl from "./components/AlertEl";
+import { useCreds } from "@/hooks/useCreds";
+import { socket } from "@/lib/socket";
 
 const JoinRequests = () => {
-  const [loading, setLoading] = useState(true);
+  const { user, isLoading, error } = useCreds();
+  const [loading, setLoading] = useState(isLoading);
   const [reqs, setReqs] = useState([]);
-  const getJoinRequests = async () => {
-    try {
-      const resp = await fetch("/api/joinRequests");
-      const data = await resp.json();
-      if (resp.status === 200) {
-        setReqs(data);
-        setInterval(() => {
-          setLoading(false);
-        }, 900);
-      } else {
-        throw new Error("Something went wrong!");
-      }
-    } catch (error) {
-      setReqs([]);
-      setInterval(() => {
+
+  useEffect(() => {
+    if (user) {
+      socket.emit("get_alerts", { userId: user._id });
+      socket.on("get_alerts", ({ data }) => {
+        setReqs([...data]);
         setLoading(false);
-      }, 900);
+      });
+      return () => {
+        socket.off("get_alerts");
+      };
     }
-  };
-
-  useLayoutEffect(() => {
-    getJoinRequests();
-  }, []);
-
+  }, [user]);
 
   const handleAccept = async (
     message,
@@ -67,9 +59,9 @@ const JoinRequests = () => {
           isLoading: false,
           autoClose: 1500,
         });
-        setInterval(() => {
+        setTimeout(() => {
           window.location.reload();
-        }, 500);
+        }, 400);
       } else {
         throw new Error("Something went wrong!");
       }
@@ -100,9 +92,9 @@ const JoinRequests = () => {
           isLoading: false,
           autoClose: 1500,
         });
-        setInterval(() => {
+        setTimeout(() => {
           window.location.reload();
-        }, 800);
+        }, 400);
       } else {
         throw new Error("Something went wrong!");
       }

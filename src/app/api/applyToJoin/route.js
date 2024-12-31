@@ -8,7 +8,7 @@ import { getLoggedInUser } from "@/queries/users";
 import User from "@/model/user-model";
 
 export const POST = async (request) => {
-  const { teamName, teamId, recieverId, teamEmail } = await request.json();
+  const { teamName, teamId, recieverId, teamEmail} = await request.json();
   await dbConn();
 
   try {
@@ -25,7 +25,7 @@ export const POST = async (request) => {
     const recieverName = getReciever.name;
 
     const requestData = {
-      message: `Hi ${recieverName}, I would like to join your team ${teamName}`,
+      message: `Hi ${recieverName}, ${user.name} would like to join your team ${teamName}`,
       team: {
         name: teamName,
         id: teamId,

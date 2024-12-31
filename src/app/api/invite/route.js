@@ -3,6 +3,7 @@ import { dbConn } from "@/lib/mongo";
 import { createTransport } from "nodemailer";
 
 import Request from "@/model/request-model";
+import Team from "@/model/team-model";
 
 export const POST = async (request) => {
   const {
@@ -35,10 +36,21 @@ export const POST = async (request) => {
     },
   };
 
+  const userObj = {
+    name : recieverName,
+    id : recieverId
+  }
+
   try {
+    const findTeam = await Team.findById(teamId);
+    let members = findTeam.members;
+    if(members.some(m=>m.id===recieverId))
+    {
+        throw new Error("Team mate already exists in team!");
+    }
     const sendInvite = await Request.create(invitationData);
     if (!sendInvite) {
-      throw new Error("Member not removed");
+      throw new Error("Invitation not sent!");
     } else {
       //send an email to the user with notification link
       const html = `

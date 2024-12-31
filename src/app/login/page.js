@@ -12,35 +12,21 @@ import "react-toastify/dist/ReactToastify.css";
 
 import LoadingComponent from "../loading";
 import Footer from "@/components/Footer";
+import { useCreds } from "@/hooks/useCreds";
 
 export default function Login() {
+  const { user, isLoading, error } = useCreds();
   //router
   const router = useRouter();
 
-  const [loading, setLoading] = useState(true);
-
   useLayoutEffect(() => {
-    const res = async () => {
-      try {
-        const resp = await fetch("/api/profile");
-        const data = await resp.json();
-
-        if (resp.status === 200) {
-          router.push(`/teams`);
-           setInterval(() => {
-             window.location.reload();
-           }, 500);
-        } else {
-          throw new Error("Something went wrong!");
-        }
-      } catch (err) {
-        console.log(err);
-
-        setLoading(false);
-      }
-    };
-    res();
-  }, []);
+    if (!isLoading && user) {
+      router.push("/teams");
+      setTimeout(()=>{
+      window.location.reload();
+      },80)
+    }
+  }, [isLoading, user, router]);
 
   //to show floating labels if focused on input fields
   const [isPasswordFocus, setIsPasswordFocus] = useState(false);
@@ -90,12 +76,11 @@ export default function Login() {
           autoClose: 2000,
           closeButton: true,
         });
-        setInterval(() => {
+        setTimeout(() => {
           router.push(`/profile`);
-          setInterval(() => {
-            window.location.reload();
-          }, 500);
-        }, 3000);
+
+          window.location.reload();
+        }, 800);
       } else {
         throw new Error("Wrong email or password!");
       }
@@ -112,7 +97,7 @@ export default function Login() {
 
   return (
     <>
-      {loading ? (
+      {isLoading ? (
         <>
           <LoadingComponent />
         </>
@@ -222,7 +207,7 @@ export default function Login() {
               </button>
             </form>
           </div>
-          <Footer/>
+          <Footer />
         </>
       )}
     </>

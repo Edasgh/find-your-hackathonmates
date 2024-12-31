@@ -1,4 +1,5 @@
 "use client";
+import { useCreds } from "@/hooks/useCreds";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
@@ -7,37 +8,32 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const InviteToTeamModal = ({ open, setOpen, userId, userName, email }) => {
-  const [loading, setLoading] = useState(true);
+  const { user, isLoading, error } = useCreds();
+  const [loading, setLoading] = useState(isLoading);
   const [myTeams, setMyTeams] = useState([]);
-  const [myDetails, setMyDetails] = useState(null);
 
   const getMyTeams = async () => {
+    setLoading(true);
     try {
-      const getUser = await fetch("/api/profile");
-      const jsonData = await getUser.json();
-      if (getUser.status === 200) {
-        setMyDetails(jsonData);
-        const resp = await fetch(`/api/profile/myTeams?id=${jsonData._id}`);
-        const data = await resp.json();
-        if (resp.status === 200) {
-          setMyTeams([...data]);
-          setLoading(false);
-        } else {
-          throw new Error("No teams found!");
-        }
+      const resp = await fetch(`/api/profile/myTeams?id=${user._id}`);
+      const data = await resp.json();
+      if (resp.status === 200) {
+        setMyTeams([...data]);
+        setLoading(false);
       } else {
-        throw new Error("No Data found!");
+        throw new Error("No teams found!");
       }
     } catch (error) {
       console.log(error);
       setMyTeams([]);
-      setMyDetails(null);
       setLoading(false);
     }
   };
 
   useLayoutEffect(() => {
-    getMyTeams();
+    if (!isLoading && user) {
+      getMyTeams();
+    }
   }, []);
 
   const handleClose = () => {
@@ -46,12 +42,13 @@ const InviteToTeamModal = ({ open, setOpen, userId, userName, email }) => {
 
   const handleInvite = async (e) => {
     e.preventDefault();
-     handleClose();
+    handleClose();
+    let tId = toast.loading("Sending Invitation...");
     const data = new FormData(e.target);
     const team = JSON.parse(data.get("team"));
     const invitationData = {
-      senderName: myDetails.name,
-      senderId: myDetails._id,
+      senderName: user.name,
+      senderId: user._id,
       teamName: team.name,
       teamId: team.id,
       recieverName: userName,
@@ -65,14 +62,24 @@ const InviteToTeamModal = ({ open, setOpen, userId, userName, email }) => {
       });
 
       if (sendInvite.status === 200) {
-        toast.success("Invite Sent!");
+        toast.update(tId, {
+          render: "Invite Sent!",
+          type: "success",
+          isLoading: false,
+          autoClose: 1500,
+        });
       } else {
-        throw new Error("Invite not sent!");
+        throw new Error("Something went wrong!");
       }
     } catch (error) {
       console.log(error);
       console.log(error.message);
-      toast.error(error.message);
+      toast.update(tId, {
+        render: error.message,
+        type: "error",
+        isLoading: false,
+        autoClose: 1500,
+      });
     }
   };
 

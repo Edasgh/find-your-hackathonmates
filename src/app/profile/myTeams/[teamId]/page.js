@@ -17,7 +17,7 @@ const TeamChat = () => {
   const userDetails = user;
 
   const currentTimeStamp = getDate();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(isLoading);
   const [teamData, setTeamData] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newLinks, setNewLinks] = useState([]);
@@ -28,6 +28,7 @@ const TeamChat = () => {
  
   // Fetch team messages and data
   const fetchTeamData = async () => {
+    setLoading(true);
     try {
       const res = await fetch(`/api/profile/myTeams`, {
         method: "POST",

@@ -10,6 +10,8 @@ import SkillsCloud from "./SkillsCloud";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useState } from "react";
+import { useCreds } from "@/hooks/useCreds";
 
 export default function Team({
   id,
@@ -22,6 +24,7 @@ export default function Team({
   email,
   index,
 }) {
+  const {user, isLoading,error} = useCreds();
   const handleApply = async () => {
     let tId = toast.loading("Sending Application...");
     const data = {
@@ -29,6 +32,7 @@ export default function Team({
       teamName: name,
       teamId: id,
       teamEmail: email,
+      senderName : user.name,
     };
     try {
       const resp = await fetch("/api/applyToJoin", {

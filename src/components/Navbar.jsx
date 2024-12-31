@@ -1,200 +1,181 @@
 "use client";
 
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-
+import { faBell, faCircleUser } from "@fortawesome/free-regular-svg-icons";
 import {
   faBars,
-  faCircleUser,
+  faCircleUser as hoverUser,
   faPlus,
   faPeopleGroup,
   faUserPlus,
   faXmark,
+  faBell as bellIcon,
+  faRightFromBracket,
 } from "@fortawesome/free-solid-svg-icons";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/navigation";
+import { useCreds } from "@/hooks/useCreds";
+import { socket } from "@/lib/socket";
+
+const UserNav = ({ menuItems, opened }) => {
+  return (
+    <ul
+      className={`navbar-ul z-50 ${
+        !opened ? "max-[1023.9px]:hidden" : "visible"
+      } `}
+    >
+      {menuItems.map((item, index) => (
+        <Link
+          key={index}
+          href={item.href}
+          className="text-textPrimary text-[1rem] hover:text-indigo-400 flex gap-4 items-center px-1 py-2"
+        >
+          <FontAwesomeIcon
+            icon={item.icon}
+            className={`text-xl hover:text-indigo-400 max-[1023.9px]:visible min-[1024px]:hidden`}
+          />
+          {item.label}
+        </Link>
+      ))}
+    </ul>
+  );
+};
 
 export default function Navbar() {
+  const { user, isLoading, error } = useCreds();
   const router = useRouter();
-  const [token, setToken] = useState(null);
-  const res = async () => {
-    try {
-      const resp = await fetch("/api/profile");
-      const data = await resp.json();
 
-      setToken(true);
-    } catch (error) {
-      console.log(error);
-      setToken(null);
-    }
-  };
-  useLayoutEffect(() => {
-    res();
-  }, []);
+  const [opened, setOpened] = useState(false);
+  const [hoverIndex, setHoverIndex] = useState(null);
+  const [over, setOver] = useState(false);
+  const [alerts, setAlerts] = useState([]);
 
   const handleLogOut = async () => {
     const response = await fetch("/api/logout");
-    setToken(null);
     if (response.status === 200) {
       router.push("/");
-      setInterval(() => {
-        window.location.reload();
-      }, 100);
+       setTimeout(() => {
+         window.location.reload();
+       }, 500);
     }
   };
 
-  const [opened, setOpened] = useState(false);
-  const [colB1, setColB1] = useState(false);
-  const [colB2, setColB2] = useState(false);
-  const [colB3, setColB3] = useState(false);
-  const [colB4, setColB4] = useState(false);
+  useEffect(() => {
+    if (user) {
+      socket.emit("get_alerts", { userId: user._id });
+      socket.on("get_alerts", ({ data }) => {
+        setAlerts([...data]);
+      });
+      return () => {
+        socket.off("get_alerts");
+      };
+    }
+  }, [user]);
 
-  const menuTransition = {
-    transition: "all 0.2s ease-in-out",
-  };
+  // console.log(alerts);
+
+  const menuItems = [
+    { href: "/createTeam", icon: faPlus, label: "Create your Team" },
+    { href: "/teamMates", icon: faUserPlus, label: "Find Teammates" },
+    { href: "/teams", icon: faPeopleGroup, label: "Join a Team" },
+  ];
+
+  const userMenuItems = [
+    {
+      href: "/profile",
+      icon: faCircleUser,
+      hoverIcon: hoverUser,
+      name: "Profile",
+    },
+    {
+      href: "/profile/joinRequests",
+      icon: faBell,
+      hoverIcon: bellIcon,
+      name: "Notifications",
+    },
+  ];
+
   return (
     <>
-      <nav className="navbar w-screen flex gap-2 flex-wrap justify-between">
+      <nav className="navbar w-screen flex gap-2 flex-wrap justify-between items-center">
         <Link href="/">
           <p className="text-textPrimary font-semibold text-3xl flex flex-wrap gap-1 items-end cursor-pointer">
-            <span className="text-lg font-extralight"> find your</span>
+            <span className="text-lg font-extralight"> find</span>
+            <span className="text-lg font-extralight">your</span>
             <span className="text-textSecondary">&nbsp;HackathonMates</span>
           </p>
         </Link>
 
-        {token === null || !token ? (
-          <>
-            <Link
-              href="/login"
-              className="w-fit border-[1px] border-textBgPrimaryHv hover:bg-textBgPrimaryHv text-textPrimary hover:text-black  px-8 py-3 rounded-md cursor-pointer"
-              suppressHydrationWarning
-            >
-              Login
-            </Link>
-          </>
+        {!user ? (
+          <Link
+            href="/login"
+            className="w-fit border-[1px] border-textBgPrimaryHv hover:bg-textBgPrimaryHv text-textPrimary hover:text-black px-8 py-3 rounded-md cursor-pointer"
+          >
+            Login
+          </Link>
         ) : (
-          <span className="flex flex-row items-center gap-4">
+          <div className="flex items-center gap-4">
+            <UserNav menuItems={menuItems} opened={opened} />
             <button
               onClick={handleLogOut}
-              className="w-fit border-[1px] text-textPrimary border-textBgPrimaryHv hover:bg-textBgPrimaryHv hover:text-black  px-8 py-3 rounded-md"
+              className="w-fit text-textPrimary hover:text-indigo-400 relative"
+              onMouseOver={() => {
+                setOver(true);
+              }}
+              onMouseOut={() => {
+                setOver(false);
+              }}
             >
-              Logout
+              <FontAwesomeIcon icon={faRightFromBracket} className="text-2xl" />
+              <span
+                className={`bg-slate-600 text-textPrimary px-2 py-1 text-sm rounded-md absolute bottom-[1.75rem] left-[-.9rem] ${
+                  over ? "visible" : "hidden"
+                }`}
+              >
+                LogOut
+              </span>
             </button>
-            {opened ? (
-              <p className="relative">
+            {userMenuItems.map((m, i) => (
+              <Link
+                key={i}
+                href={m.href}
+                className={`relative text-textPrimary flex gap-4 items-center px-1 py-2 ${
+                  m.name === "Notifications" && "w-16"
+                }`}
+                onMouseOver={() => setHoverIndex(i)}
+                onMouseOut={() => setHoverIndex(null)}
+              >
                 <FontAwesomeIcon
-                  icon={faXmark}
-                  className="text-textPrimary text-2xl border border-textPrimary p-1 rounded-md cursor-pointer"
-                  onClick={() => {
-                    setOpened(!opened);
-                  }}
+                  icon={hoverIndex === i ? m.hoverIcon : m.icon}
+                  className={`text-[1.75rem] ${
+                    hoverIndex === i ? "text-indigo-400" : "text-textPrimary"
+                  }`}
                 />
+                {m.name === "Notifications" && (
+                  <span className="absolute -top-1 right-3 bg-blue-100 text-blue-800 text-xs font-medium me-2 px-1.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
+                    {alerts.length}
+                  </span>
+                )}
                 <span
-                  className={`bg-textSecondary text-textPrimary px-2 py-1 text-xs rounded-md absolute -top-1 left-0 ${"flex"} `}
-                ></span>
-              </p>
-            ) : (
-              <p className="relative">
-                <FontAwesomeIcon
-                  icon={faBars}
-                  className="text-textPrimary text-2xl border border-textPrimary p-1 rounded-md cursor-pointer"
-                  onClick={() => {
-                    setOpened(!opened);
-                  }}
-                />
-                <span
-                  className={`bg-textSecondary text-textPrimary px-2 py-1 text-xs rounded-md absolute -top-1 left-0 ${"flex"} `}
-                ></span>
-              </p>
-            )}
-          </span>
+                  className={`bg-slate-600 text-textPrimary px-2 py-1 text-sm rounded-md absolute bottom-[2.2rem] ${
+                    m.name === "Notifications" ? "-left-11" : "-left-3"
+                  } ${hoverIndex === i ? "visible" : "hidden"}`}
+                >
+                  {m.name}
+                </span>
+              </Link>
+            ))}
+
+            <FontAwesomeIcon
+              icon={opened ? faXmark : faBars}
+              className="text-textPrimary text-2xl border border-textPrimary p-1 rounded-md cursor-pointer max-[1023.9px]:visible min-[1024px]:hidden"
+              onClick={() => setOpened(!opened)}
+            />
+          </div>
         )}
       </nav>
-      {opened === true && (
-        <ul
-          type="none"
-          style={{ boxShadow: ".5px .5px 1px black,-.5px -.5px 6px black" }}
-          className="absolute w-64 min-[320px]:top-44 min-[446px]:top-32 min-[615px]:top-24 max-[614px]:left-[1rem] min-[615px]:right-8 px-7 py-8 bg-bgSecondary flex flex-col gap-3 justify-end rounded-lg z-[9999999999]"
-        >
-          <Link
-            className="text-textPrimary hover:bg-textBgPrimaryHv hover:text-black hover:text-center flex gap-4 items-center px-1 py-2"
-            href="/profile"
-            style={menuTransition}
-            onMouseOver={() => {
-              setColB1(true);
-            }}
-            onMouseOut={() => {
-              setColB1(false);
-            }}
-          >
-            <FontAwesomeIcon
-              icon={faCircleUser}
-              className={
-                colB1 ? "text-2xl text-black" : "text-textPrimary text-2xl"
-              }
-            />
-            Profile
-          </Link>
-          <Link
-            className="text-textPrimary hover:bg-textBgPrimaryHv hover:text-black hover:text-center flex gap-4 items-center px-1 py-2"
-            href="/createTeam"
-            style={menuTransition}
-            onMouseOver={() => {
-              setColB2(true);
-            }}
-            onMouseOut={() => {
-              setColB2(false);
-            }}
-          >
-            <FontAwesomeIcon
-              icon={faPlus}
-              className={
-                colB2 ? "text-2xl text-black" : "text-textPrimary text-2xl"
-              }
-            />
-            Create your Team
-            
-          </Link>
-          <Link
-            className="text-textPrimary hover:bg-textBgPrimaryHv hover:text-black hover:text-center flex gap-4 items-center px-1 py-2"
-            href="/teamMates"
-            style={menuTransition}
-            onMouseOver={() => {
-              setColB3(true);
-            }}
-            onMouseOut={() => {
-              setColB3(false);
-            }}
-          >
-            <FontAwesomeIcon
-              icon={faUserPlus}
-              className={
-                colB3 ? "text-2xl text-black" : "text-textPrimary text-2xl"
-              }
-            />
-            Find Teammates
-          </Link>
-          <Link
-            className="text-textPrimary hover:bg-textBgPrimaryHv hover:text-black hover:text-center flex gap-4 items-center px-1 py-2"
-            href="/teams"
-            style={menuTransition}
-            onMouseOver={() => {
-              setColB4(true);
-            }}
-            onMouseOut={() => {
-              setColB4(false);
-            }}
-          >
-            <FontAwesomeIcon
-              icon={faPeopleGroup}
-              className={
-                colB4 ? "text-2xl text-black" : "text-textPrimary text-2xl"
-              }
-            />
-            Join a Team
-          </Link>
-        </ul>
-      )}
     </>
   );
 }

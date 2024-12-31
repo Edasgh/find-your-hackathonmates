@@ -11,30 +11,16 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import LoadingComponent from "../loading";
 import Footer from "@/components/Footer";
+import { useCreds } from "@/hooks/useCreds";
 
 export default function ResetPassword({ searchParams }) {
+  const {user, isLoading,error} = useCreds();
   const router = useRouter();
   const { id } = use(searchParams);
 
- const [loading, setLoading] = useState(true);
- const [userDetails, setUserDetails] = useState(null);
- const res = async () => {
-   try {
-     const resp = await fetch("/api/profile");
-     const data = await resp.json();
-
-     setUserDetails(data);
-     setLoading(false);
-   } catch (err) {
-     setUserDetails(null);
-     setLoading(false);
-   }
- };
- useLayoutEffect(() => {
-   res();
- }, []);
+ const [loading, setLoading] = useState(isLoading);
+ const [userDetails, setUserDetails] = useState(user!==null?user:null);
  
-
   // access password & confirm password value
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -104,12 +90,18 @@ export default function ResetPassword({ searchParams }) {
             closeButton: true,
           });
           if (userDetails !== null) {
-            setInterval(() => {
+            setTimeout(() => {
               router.push("/profile");
+              setTimeout(()=>{
+                window.location.reload();
+              },500)
             }, 3000);
           } else {
-            setInterval(() => {
+            setTimeout(() => {
               router.push("/login");
+               setTimeout(() => {
+                 window.location.reload();
+               }, 500);
             }, 3000);
           }
         }

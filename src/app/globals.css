@@ -90,7 +90,7 @@ a {
 }
 .login-signup-form select {
   cursor: pointer;
-  font-size: .99rem;
+  font-size: 0.99rem;
 }
 
 .input-div textarea {
@@ -131,7 +131,8 @@ a {
 }
 
 /* Position the front and back side */
-.team-card-front, .team-card-back {
+.team-card-front,
+.team-card-back {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -143,23 +144,22 @@ a {
 /* Style the back side */
 .team-card-back {
   background-color: transparent;
-  color:var(--text-bg-primary);
+  color: var(--text-bg-primary);
   transform: rotateY(180deg);
 }
 
-
-.dashing{
+.dashing {
   box-shadow: 0 0 3px var(--text-secondary);
 }
 .dashing:hover {
-   box-shadow: 0 0 24px var(--text-secondary);
+  box-shadow: 0 0 24px var(--text-secondary);
 }
 
-.dashing-muted{
+.dashing-muted {
   box-shadow: 0 0 3px var(--text-secondary);
 }
 .dashing-muted:hover {
-   box-shadow: 0 0 18px var(--text-secondary);
+  box-shadow: 0 0 18px var(--text-secondary);
 }
 
 @media screen and (max-width: 500px) {
@@ -172,6 +172,49 @@ a {
 @media screen and (max-width: 800px) {
   .login-signup-form {
     height: 100%;
+  }
+}
+
+.navbar-ul {
+  display: flex;
+  gap: 2px;
+  flex-wrap: wrap;
+}
+@media screen and (min-width: 320px) {
+  .navbar-ul {
+    background-color: var(--bg-secondary);
+    position: absolute;
+    right: 1rem;
+    top: 10rem;
+    width: 15rem;
+    padding: 1.75rem 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0.5px 0.5px 1px black, -0.5px -0.5px 6px black;
+  }
+}
+
+@media screen and (min-width: 425px) {
+  .navbar-ul {
+    top: 8rem;
+  }
+}
+
+@media screen and (min-width: 559px) {
+  .navbar-ul {
+    top: 6rem;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .navbar-ul {
+    position: relative;
+    top: auto;
+    right: auto;
+    width: fit-content;
+    padding: 0;
+    background-color: transparent;
+    box-shadow: none;
+    gap: 6px;
   }
 }
 
@@ -192,49 +235,35 @@ a {
 @keyframes mulShdSpin {
   0%,
   100% {
-    box-shadow: 0 -3em 0 0.2em, 
-    2em -2em 0 0em, 3em 0 0 -1em, 
-    2em 2em 0 -1em, 0 3em 0 -1em, 
-    -2em 2em 0 -1em, -3em 0 0 -1em, 
-    -2em -2em 0 0;
+    box-shadow: 0 -3em 0 0.2em, 2em -2em 0 0em, 3em 0 0 -1em, 2em 2em 0 -1em,
+      0 3em 0 -1em, -2em 2em 0 -1em, -3em 0 0 -1em, -2em -2em 0 0;
   }
   12.5% {
-    box-shadow: 0 -3em 0 0, 2em -2em 0 0.2em, 
-    3em 0 0 0, 2em 2em 0 -1em, 0 3em 0 -1em, 
-    -2em 2em 0 -1em, -3em 0 0 -1em, 
-    -2em -2em 0 -1em;
+    box-shadow: 0 -3em 0 0, 2em -2em 0 0.2em, 3em 0 0 0, 2em 2em 0 -1em,
+      0 3em 0 -1em, -2em 2em 0 -1em, -3em 0 0 -1em, -2em -2em 0 -1em;
   }
   25% {
-    box-shadow: 0 -3em 0 -0.5em, 
-    2em -2em 0 0, 3em 0 0 0.2em, 
-    2em 2em 0 0, 0 3em 0 -1em, 
-    -2em 2em 0 -1em, -3em 0 0 -1em, 
-    -2em -2em 0 -1em;
+    box-shadow: 0 -3em 0 -0.5em, 2em -2em 0 0, 3em 0 0 0.2em, 2em 2em 0 0,
+      0 3em 0 -1em, -2em 2em 0 -1em, -3em 0 0 -1em, -2em -2em 0 -1em;
   }
   37.5% {
-    box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em,
-     3em 0em 0 0, 2em 2em 0 0.2em, 0 3em 0 0em, 
-     -2em 2em 0 -1em, -3em 0em 0 -1em, -2em -2em 0 -1em;
+    box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0em 0 0, 2em 2em 0 0.2em,
+      0 3em 0 0em, -2em 2em 0 -1em, -3em 0em 0 -1em, -2em -2em 0 -1em;
   }
   50% {
-    box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em,
-     3em 0 0 -1em, 2em 2em 0 0em, 0 3em 0 0.2em, 
-     -2em 2em 0 0, -3em 0em 0 -1em, -2em -2em 0 -1em;
+    box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 0em,
+      0 3em 0 0.2em, -2em 2em 0 0, -3em 0em 0 -1em, -2em -2em 0 -1em;
   }
   62.5% {
-    box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em,
-     3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 0, 
-     -2em 2em 0 0.2em, -3em 0 0 0, -2em -2em 0 -1em;
+    box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 -1em,
+      0 3em 0 0, -2em 2em 0 0.2em, -3em 0 0 0, -2em -2em 0 -1em;
   }
   75% {
-    box-shadow: 0em -3em 0 -1em, 2em -2em 0 -1em, 
-    3em 0em 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em, 
-    -2em 2em 0 0, -3em 0em 0 0.2em, -2em -2em 0 0;
+    box-shadow: 0em -3em 0 -1em, 2em -2em 0 -1em, 3em 0em 0 -1em, 2em 2em 0 -1em,
+      0 3em 0 -1em, -2em 2em 0 0, -3em 0em 0 0.2em, -2em -2em 0 0;
   }
   87.5% {
-    box-shadow: 0em -3em 0 0, 2em -2em 0 -1em, 
-    3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em, 
-    -2em 2em 0 0, -3em 0em 0 0, -2em -2em 0 0.2em;
+    box-shadow: 0em -3em 0 0, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 -1em,
+      0 3em 0 -1em, -2em 2em 0 0, -3em 0em 0 0, -2em -2em 0 0.2em;
   }
 }
-  

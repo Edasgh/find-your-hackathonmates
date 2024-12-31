@@ -10,12 +10,14 @@ export const metadata = {
 };
 
 async function getUser() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/profile`, {
-    cache: "no-store", // Disable caching for fresh data
-    credentials: "include",
-  });
-  if (res.status!==200) return null;
-  return res.json();
+ try {
+   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/profile`,{cache:"no-store"});
+   if (res.status !== 200) throw new Error("Something went wrong!");
+   return res.json();
+ } catch (error) {
+   console.log(error);
+   return null;
+ }
 }
 
 
@@ -23,8 +25,10 @@ const Layout = async({children}) => {
   const user = await getUser();
   return (
     <>
-      <Navbar />
-      <CredsProvider initialUser={user}>{children}</CredsProvider>
+      <CredsProvider initialUser={user}>
+        <Navbar/>
+        {children}
+      </CredsProvider>
     </>
   );
 };

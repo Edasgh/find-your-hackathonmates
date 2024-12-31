@@ -31,7 +31,7 @@ export default function Profile() {
 
     if (response.status === 200) {
       router.push("/");
-      setInterval(() => {
+      setTimeout(() => {
         window.location.reload();
       }, 500);
     }

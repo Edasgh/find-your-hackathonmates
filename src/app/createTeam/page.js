@@ -73,7 +73,7 @@ export default function createTeam() {
               autoClose: 1000,
               closeButton: true,
             });
-            setInterval(() => {
+            setTimeout(() => {
               window.location.reload();
             }, 500);
           } else {

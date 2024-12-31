@@ -3,17 +3,13 @@ import { dbConn } from "@/lib/mongo";
 
 import Request from "@/model/request-model";
 
-import { getLoggedInUser } from "@/queries/users";
 
-export const GET = async (request) => {
+export const POST = async (request) => {
+  const {userId} = await request.json();
   await dbConn();
 
   try {
-    const user = await getLoggedInUser();
-    if (!user) {
-      throw new Error("User not found!");
-    }
-    const requests = await Request.find({ "reciever.id": { $eq: user._id } });
+    const requests = await Request.find({ "reciever.id": { $eq: userId } });
     if (!requests) {
       throw new Error("Requests not found!");
     }

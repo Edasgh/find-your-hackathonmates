@@ -25,7 +25,7 @@ export const CredsProvider = ({ children, initialUser }) => {
             _id: userData._id,
             name: userData.name,
             email: userData.email,
-            bio:userData.bio,
+            bio: userData.bio,
             githubID: userData.githubID,
             country: userData.country,
             skills: [...userData.skills],
@@ -42,8 +42,11 @@ export const CredsProvider = ({ children, initialUser }) => {
     }
   }, [initialUser]);
 
+
   return (
-    <CredsContext.Provider value={{ user, isLoading, error }}>
+    <CredsContext.Provider
+      value={{ user, isLoading, error }}
+    >
       {children}
     </CredsContext.Provider>
   );
@@ -57,38 +60,3 @@ export const useCreds = () => {
   }
   return context;
 };
-
-/*
-export const CredsProvider = ({ children, initialUser }) => {
-  const [user, setUser] = useState(initialUser || null);
-  const [isLoading, setIsLoading] = useState(!initialUser);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    if (!initialUser) {
-      // Fetch only if user is not preloaded
-      const fetchUser = async () => {
-        try {
-          const response = await fetch("/api/profile");
-          if (!response.ok) throw new Error("Failed to fetch user");
-          const userData = await response.json();
-          setUser(userData);
-        } catch (err) {
-          setError(err.message);
-        } finally {
-          setIsLoading(false);
-        }
-      };
-
-      fetchUser();
-    }
-  }, [initialUser]);
-
-  return (
-    <CredsContext.Provider value={{ user, isLoading, error }}>
-      {children}
-    </CredsContext.Provider>
-  );
-};
-
-*/
