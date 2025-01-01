@@ -44,7 +44,7 @@ const InviteToTeamModal = ({ open, setOpen, userId, userName, email }) => {
   const handleInvite = async (e) => {
     e.preventDefault();
     handleClose();
-    let tId = toast.loading("Sending Invitation...");
+    let tId = toast.loading("Sending Invitation...",{containerId:"A"});
     const data = new FormData(e.target);
     const team = JSON.parse(data.get("team"));
     const invitationData = {
@@ -65,6 +65,7 @@ const InviteToTeamModal = ({ open, setOpen, userId, userName, email }) => {
             type: "success",
             isLoading: false,
             autoClose: 1500,
+            containerId:"A"
           });
         } else if (res.status === 403) {
           toast.update(tId, {
@@ -72,6 +73,7 @@ const InviteToTeamModal = ({ open, setOpen, userId, userName, email }) => {
             type: "error",
             isLoading: false,
             autoClose: 1500,
+            containerId:"A"
           });
           
         } else {
@@ -80,6 +82,7 @@ const InviteToTeamModal = ({ open, setOpen, userId, userName, email }) => {
             type: "error",
             isLoading: false,
             autoClose: 1500,
+            containerId:"A"
           });
         }
       });
@@ -91,7 +94,7 @@ const InviteToTeamModal = ({ open, setOpen, userId, userName, email }) => {
 
   return (
     <>
-      <ToastContainer position="top-center" theme="dark" />
+      <ToastContainer position="top-center" theme="dark" containerId={"A"} />
       {!loading && myTeams.length !== 0 ? (
         <>
           <div

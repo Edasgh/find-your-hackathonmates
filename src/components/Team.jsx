@@ -4,15 +4,18 @@ import Link from "next/link";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
-import { faEnvelope, faPeopleGroup } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCircleCheck,
+  faCircleNotch,
+  faEnvelope,
+  faPeopleGroup,
+} from "@fortawesome/free-solid-svg-icons";
 import CustomAvatar from "./CustomAvatar";
 import SkillsCloud from "./SkillsCloud";
 
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-
 import { useCreds } from "@/hooks/useCreds";
 import { socket } from "@/lib/socket";
+import { useState } from "react";
 
 export default function Team({
   id,
@@ -25,9 +28,12 @@ export default function Team({
   email,
   index,
 }) {
+  const [loading, setLoading] = useState(false);
+  const [applySuccess, setApplySuccess] = useState(false);
   const { user, isLoading, error } = useCreds();
   const handleApply = async () => {
-    let tId = toast.loading("Sending Application...");
+    setLoading(true);
+
     const data = {
       teamName: name,
       teamId: id,
@@ -43,19 +49,10 @@ export default function Team({
       socket.emit("apply-to-join", data);
       socket.on("apply-to-join", (resp) => {
         if (resp.status === 200) {
-          toast.update(tId, {
-            render: "Applied Successfully!!",
-            type: "success",
-            isLoading: false,
-            autoClose: 1500,
-          });
+          setLoading(false);
+          setApplySuccess(true);
         } else {
-          toast.update(tId, {
-            render: "Failed to Apply",
-            type: "error",
-            isLoading: false,
-            autoClose: 1500,
-          });
+          setLoading(false);
         }
       });
     } catch (error) {
@@ -66,7 +63,6 @@ export default function Team({
 
   return (
     <>
-      <ToastContainer position="top-center" theme="dark" />
       <div
         key={index}
         className="team-card max-[800px]:h-[26rem] min-[800.1px]:h-[28rem] w-[19rem] backdrop-blur-md m-auto"
@@ -102,8 +98,36 @@ export default function Team({
                 title="Request to Join"
                 className="flex gap-2 justify-center items-center px-1 py-2 w-[10rem] rounded-md dashing"
               >
-                <FontAwesomeIcon className="text-2xl" icon={faEnvelope} />
-                &nbsp;&nbsp; Apply
+                {loading ? (
+                  <>
+                    <FontAwesomeIcon
+                      className="text-2xl poopins-light"
+                      icon={faCircleNotch}
+                      spin
+                    />
+                    &nbsp;&nbsp; Applying..
+                  </>
+                ) : (
+                  <>
+                    {applySuccess ? (
+                      <>
+                        <FontAwesomeIcon
+                          icon={faCircleCheck}
+                          className="text-2xl"
+                        />
+                        &nbsp;&nbsp; Applied
+                      </>
+                    ) : (
+                      <>
+                        <FontAwesomeIcon
+                          className="text-2xl"
+                          icon={faEnvelope}
+                        />
+                        &nbsp;&nbsp; Apply
+                      </>
+                    )}
+                  </>
+                )}
               </button>
             </div>
           </div>

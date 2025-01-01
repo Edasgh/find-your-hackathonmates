@@ -70,6 +70,38 @@ app.prepare().then(() => {
         }
       }
     );
+
+    socket.on(
+      "remove-msg",
+      async ({ roomId, message, senderId, senderName, sentOn }) => {
+        try {
+          const delMsg = await Team.findByIdAndUpdate(
+            roomId,
+            {
+              $pull: {
+                messages: {
+                  message: message,
+                  sentOn: sentOn,
+                  sender: {
+                    name: senderName,
+                    id: senderId,
+                  },
+                },
+              },
+            },
+            { new: true }
+          );
+          if (!delMsg) {
+            throw new Error("Message not deleted!");
+          }
+
+          io.to(roomId).emit("remove-msg", { data: delMsg.messages });
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    );
+
     // get join requests in real time
     socket.on("get_alerts", async ({ userId }) => {
       try {

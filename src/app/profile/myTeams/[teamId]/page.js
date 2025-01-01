@@ -4,7 +4,11 @@ import useChat from "@/hooks/useChat";
 import ChatLoader from "../components/ChatLoader";
 import CustomAvatar from "@/components/CustomAvatar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowLeft,
+  faPaperPlane,
+  faTrashCan,
+} from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 import ChatNavigation from "../components/ChatNavigation";
 import { socket } from "@/lib/socket";
@@ -82,6 +86,16 @@ const TeamChat = () => {
     setMsg("");
   };
 
+  const handleDelMsg = ({ msg, sentOn, senderId, senderName }) => {
+    socket.emit("remove-msg", {
+      roomId: teamId,
+      message: msg,
+      senderId,
+      senderName,
+      sentOn,
+    });
+  };
+
   useEffect(() => {
     socket.emit("join-room", teamId);
 
@@ -90,6 +104,10 @@ const TeamChat = () => {
         ...prev,
         { message, sender: { name: senderName, id: senderId }, sentOn },
       ]);
+    });
+
+    socket.on("remove-msg", ({ data }) => {
+      setMessages([...data]);
     });
 
     socket.on("set_link", ({ linkName, link }) => {
@@ -103,6 +121,7 @@ const TeamChat = () => {
     return () => {
       socket.off("join-room");
       socket.off("message");
+      socket.off("remove-msg");
       socket.off("set_link");
       socket.off("set_member");
     };
@@ -193,7 +212,27 @@ const TeamChat = () => {
                         : "bg-textBgPrimary text-textPrimary"
                     }`}
                   >
-                    <h2 className="text-sm font-semibold">{m.sender.name}</h2>
+                    <div className="flex justify-between items-center">
+                      <h2 className="text-sm font-semibold">{m.sender.name}</h2>
+                      {m.sender.id === userDetails._id && (
+                        <button
+                          onClick={() => {
+                            handleDelMsg({
+                              msg: m.message,
+                              teamId: teamId,
+                              sentOn: m.sentOn,
+                              senderId: m.sender.id,
+                              senderName: m.sender.name,
+                            });
+                          }}
+                        >
+                          <FontAwesomeIcon
+                            icon={faTrashCan}
+                            className="text-white"
+                          />
+                        </button>
+                      )}
+                    </div>
                     <p className="font-light">{m.message}</p>
                     <span className="text-[.6rem] text-blue-100 mt-1 block">
                       {m.sentOn}
