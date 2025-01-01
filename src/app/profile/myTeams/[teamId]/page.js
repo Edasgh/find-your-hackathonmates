@@ -28,6 +28,7 @@ const TeamChat = () => {
   const [newMembers, setNewMembers] = useState([]);
 
   const [msg, setMsg] = useState("");
+  const [over,setOver] = useState(false);
 
   const msgEndRef = useRef(null);
 
@@ -212,10 +213,19 @@ const TeamChat = () => {
                         : "bg-textBgPrimary text-textPrimary"
                     }`}
                   >
-                    <div className="flex justify-between items-center">
+                    <div className="flex justify-between items-center relative">
                       <h2 className="text-sm font-semibold">{m.sender.name}</h2>
+                      <span
+                        className={`bg-slate-600 text-textPrimary px-2 py-1 text-xs rounded-md absolute top-[-1.5rem] right-[-.9rem] ${
+                          over===idx ? "visible" : "hidden"
+                        }`}
+                      >
+                        Delete
+                      </span>
                       {m.sender.id === userDetails._id && (
                         <button
+                          onMouseOver={()=>{setOver(idx)}}
+                          onMouseOut={()=>{setOver(false)}}
                           onClick={() => {
                             handleDelMsg({
                               msg: m.message,
