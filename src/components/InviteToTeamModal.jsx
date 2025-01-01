@@ -1,5 +1,6 @@
 "use client";
 import { useCreds } from "@/hooks/useCreds";
+import { socket } from "@/lib/socket";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
@@ -56,32 +57,35 @@ const InviteToTeamModal = ({ open, setOpen, userId, userName, email }) => {
       email: email,
     };
     try {
-      const sendInvite = await fetch("/api/invite", {
-        method: "POST",
-        body: JSON.stringify(invitationData),
+      socket.emit("invite",invitationData);
+      socket.on("invite", (res) => {
+        if (res.status === 200) {
+          toast.update(tId, {
+            render: "Invite Sent!",
+            type: "success",
+            isLoading: false,
+            autoClose: 1500,
+          });
+        } else if (res.status === 403) {
+          toast.update(tId, {
+            render: "Already a member of the team!",
+            type: "error",
+            isLoading: false,
+            autoClose: 1500,
+          });
+          
+        } else {
+          toast.update(tId, {
+            render: "Something went wrong!",
+            type: "error",
+            isLoading: false,
+            autoClose: 1500,
+          });
+        }
       });
-
-      if (sendInvite.status === 200) {
-        toast.update(tId, {
-          render: "Invite Sent!",
-          type: "success",
-          isLoading: false,
-          autoClose: 1500,
-        });
-      } else if (sendInvite.status === 403) {
-        throw new Error("Already a member of the team!");
-      } else {
-        throw new Error("Something went wrong!");
-      }
     } catch (error) {
       console.log(error);
-      console.log(error.message);
-      toast.update(tId, {
-        render: error.message,
-        type: "error",
-        isLoading: false,
-        autoClose: 1500,
-      });
+      
     }
   };
 

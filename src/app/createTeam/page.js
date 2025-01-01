@@ -8,8 +8,10 @@ import LoadingComponent from "@/app/loading";
 import Footer from "@/components/Footer";
 import NotFoundUser from "@/components/not-found-user";
 import { useCreds } from "@/hooks/useCreds";
+import { useRouter } from "next/navigation";
 
 export default function createTeam() {
+  const router = useRouter();
   const { user, isLoading, error } = useCreds();
   const [loading, setLoading] = useState(isLoading);
   const userDetails = user;
@@ -73,9 +75,10 @@ export default function createTeam() {
               autoClose: 1000,
               closeButton: true,
             });
+            router.push("/profile/myTeams");
             setTimeout(() => {
               window.location.reload();
-            }, 500);
+            }, 300);
           } else {
             throw new Error("Something went wrong!");
           }

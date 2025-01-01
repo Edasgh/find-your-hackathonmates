@@ -1,4 +1,5 @@
 "use client";
+import { socket } from "@/lib/socket";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 // Create a context for user credentials
@@ -39,6 +40,9 @@ export const CredsProvider = ({ children }) => {
       };
 
       fetchUser();
+    }else
+    {
+      socket.emit("visit",user._id);
     }
   }, [user]);
 

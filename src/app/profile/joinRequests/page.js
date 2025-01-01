@@ -27,7 +27,7 @@ const JoinRequests = () => {
     }
   }, [user]);
 
-  const handleAccept = async (
+  const handleAccept = (
     message,
     senderName,
     senderId,
@@ -38,20 +38,18 @@ const JoinRequests = () => {
   ) => {
     let tId = toast.loading("Please wait...");
 
-    try {
-      const data = {
-        message,
-        senderName,
-        senderId,
-        teamId,
-        recieverName,
-        recieverId,
-        reqId,
-      };
-      const resp = await fetch("/api/invitationAccept", {
-        method: "POST",
-        body: JSON.stringify(data),
-      });
+    const data = {
+      message,
+      senderName,
+      senderId,
+      teamId,
+      recieverName,
+      recieverId,
+      reqId,
+    };
+
+    socket.emit("accept-alert", { ...data });
+    socket.on("accept-alert", (resp) => {
       if (resp.status === 200) {
         toast.update(tId, {
           render: "Accepted!",
@@ -59,32 +57,23 @@ const JoinRequests = () => {
           isLoading: false,
           autoClose: 1500,
         });
-        setTimeout(() => {
-          window.location.reload();
-        }, 400);
       } else {
-        throw new Error("Something went wrong!");
+        toast.update(tId, {
+          render: resp.message,
+          type: "error",
+          isLoading: false,
+          autoClose: 1500,
+        });
       }
-    } catch (error) {
-      console.log(error);
-      console.log(error.message);
-      toast.update(tId, {
-        render: error.message,
-        type: "error",
-        isLoading: false,
-        autoClose: 1500,
-      });
-    }
+    });
   };
 
-  const handleReject = async (reqId) => {
-    const data = { reqId };
+  const handleReject = (reqId) => {
+    const data = { reqId, myId: user._id };
     let tId = toast.loading("Please wait...");
-    try {
-      const resp = await fetch("/api/invitationReject", {
-        method: "POST",
-        body: JSON.stringify(data),
-      });
+
+    socket.emit("reject-alert", { ...data });
+    socket.on("reject-alert", (resp) => {
       if (resp.status === 200) {
         toast.update(tId, {
           render: "Rejected!",
@@ -92,22 +81,15 @@ const JoinRequests = () => {
           isLoading: false,
           autoClose: 1500,
         });
-        setTimeout(() => {
-          window.location.reload();
-        }, 400);
       } else {
-        throw new Error("Something went wrong!");
+        toast.update(tId, {
+          render: "Something went wrong!",
+          type: "error",
+          isLoading: false,
+          autoClose: 1500,
+        });
       }
-    } catch (error) {
-      console.log(error);
-      console.log(error.message);
-      toast.update(tId, {
-        render: error.message,
-        type: "error",
-        isLoading: false,
-        autoClose: 1500,
-      });
-    }
+    });
   };
 
   return (

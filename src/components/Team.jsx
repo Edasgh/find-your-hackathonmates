@@ -10,8 +10,9 @@ import SkillsCloud from "./SkillsCloud";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useState } from "react";
+
 import { useCreds } from "@/hooks/useCreds";
+import { socket } from "@/lib/socket";
 
 export default function Team({
   id,
@@ -24,43 +25,42 @@ export default function Team({
   email,
   index,
 }) {
-  const {user, isLoading,error} = useCreds();
+  const { user, isLoading, error } = useCreds();
   const handleApply = async () => {
     let tId = toast.loading("Sending Application...");
     const data = {
-      recieverId: admin,
       teamName: name,
       teamId: id,
+      recieverId: admin,
       teamEmail: email,
-      senderName : user.name,
+      myId: user._id,
+      myName: user.name,
     };
+    /*
+    teamName, teamId, recieverId, teamEmail, myId, myName
+    */
     try {
-      const resp = await fetch("/api/applyToJoin", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
+      socket.emit("apply-to-join", data);
+      socket.on("apply-to-join", (resp) => {
+        if (resp.status === 200) {
+          toast.update(tId, {
+            render: "Applied Successfully!!",
+            type: "success",
+            isLoading: false,
+            autoClose: 1500,
+          });
+        } else {
+          toast.update(tId, {
+            render: "Failed to Apply",
+            type: "error",
+            isLoading: false,
+            autoClose: 1500,
+          });
+        }
       });
-      if (resp.status === 200) {
-        toast.update(tId, {
-          render: "Applied Successfully!!",
-          type: "success",
-          isLoading: false,
-          autoClose: 1500,
-        });
-      } else {
-        throw new Error("Failed to Apply");
-      }
     } catch (error) {
       console.log(error);
       console.log(error.message);
-      toast.update(tId, {
-        render: "Failed to Apply",
-        type: "error",
-        isLoading: false,
-        autoClose: 1500,
-      });
     }
   };
 
