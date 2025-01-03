@@ -4,13 +4,16 @@ import React, { useLayoutEffect, useState } from "react";
 import TeamsLoader from "./TeamsLoader";
 import useChat from "@/hooks/useChat";
 import ChatTile from "./ChatTile";
+import { useCreds } from "@/hooks/useCreds";
 
 const Sidebar = () => {
+  const {user,isLoading,error} = useCreds();
   const { isActive } = useChat();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(isLoading);
   const [myTeams, setMyTeams] = useState([]);
 
   const getMyTeams = async () => {
+    setLoading(true);
     try {
       const getUser = await fetch("/api/profile");
       const jsonData = await getUser.json();
@@ -70,7 +73,7 @@ const Sidebar = () => {
                 </h1>
                 <div className="overflow-y-auto h-[calc(100vh-5rem)]">
                   {myTeams.map((team, index) => (
-                    <ChatTile key={index} team={team} />
+                    <ChatTile key={index} team={team} myId={user._id} />
                   ))}
                 </div>
               </div>

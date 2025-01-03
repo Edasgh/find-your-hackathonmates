@@ -166,7 +166,7 @@ const TeamChat = () => {
         teamData &&
         userDetails && (
           <>
-            <div className="p-4 bg-bgPrimary border-b-[.1px] border-bgSecondary flex gap-2 items-center">
+            <div className="p-3 bg-bgPrimary border-b-[.1px] border-bgSecondary flex gap-2 items-center">
               <Link
                 className="text-lg mr-2 max-[750px]:flex min-[750.1px]:hidden text-textPrimary"
                 href="/profile/myTeams"
@@ -217,7 +217,7 @@ const TeamChat = () => {
                         : "bg-textBgPrimary text-textPrimary"
                     }`}
                   >
-                    <div className="flex justify-between items-center relative">
+                    <div className="flex gap-5 justify-between items-center relative">
                       <h2 className="text-sm font-semibold">{m.sender.name}</h2>
                       <span
                         className={`bg-slate-600 text-textPrimary px-2 py-1 text-xs rounded-md absolute top-[-1.5rem] right-[-.9rem] ${
@@ -247,7 +247,7 @@ const TeamChat = () => {
                         >
                           <FontAwesomeIcon
                             icon={faTrashCan}
-                            className="text-white"
+                            className="text-white text-sm"
                           />
                         </button>
                       )}
