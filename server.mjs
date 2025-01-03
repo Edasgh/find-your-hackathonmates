@@ -519,6 +519,10 @@ app.prepare().then(() => {
   });
 
   server.listen(port, () => {
-    console.log(`Server running on http://${hostname}:${port}`);
+    if (dev) {
+      console.log(`Server running on http://${hostname}:${port}`);
+    } else {
+      console.log("find your HackathonMates server is running!");
+    }
   });
 });

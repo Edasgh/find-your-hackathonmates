@@ -1,8 +1,8 @@
 export const fakeTeams = [
   {
     name: "Space Invaders",
-    admins: ["Eshita Das", "Sammridhhi Patil"],
-    members: ["Shreya Roy", "Riya Das", "Eshita Das", "Sammridhhi Patil"],
+    admin: "Eshita Das",
+    members: ["Shreya Roy", "Riya Das", "Eshita Das", "Tanaya Ghosh"],
     skills: [
       "React.js",
       "Next.js",
@@ -17,13 +17,13 @@ export const fakeTeams = [
     ],
     desc: "lorem ipsum dolor sit. temae ameka dolor dolor lorem ipsum dolor sit.",
     githubLink: "https://github.com/Edasgh",
-    email: "edas25564@gmail.com",
+    email: "testemail1@mail.com",
   },
 
   {
     name: "Nervewreckers",
-    admins: ["Eshita Das", "Sammridhhi Patil"],
-    members: ["Shreya Roy", "Riya Das", "Eshita Das", "Sammridhhi Patil"],
+    admin: "Eshita Das",
+    members: ["Shreya Roy", "Riya Das", "Eshita Das", "Tanaya Ghosh"],
     skills: [
       "React.js",
       "Next.js",
@@ -38,23 +38,30 @@ export const fakeTeams = [
     ],
     desc: "lorem ipsum dolor sit. temae ameka dolor dolor lorem ipsum dolor sit.lorem ipsum dolor sit. temae a",
     githubLink: "https://github.com/Edasgh",
-    email: "yteshita2023@gmail.com",
+    email: "testemail2@mail.com",
   },
   {
     name: "Test Team",
-    admins: ["Eshita Das", "Sammridhhi Patil"],
-    members: ["Shreya Roy", "Riya Das", "Eshita Das", "Sammridhhi Patil","Sagnika Goswami","Tanaya Ghosh"],
+    admin: "Shreya Roy",
+    members: [
+      "Shreya Roy",
+      "Riya Das",
+      "Eshita Das",
+      "Priya Roy",
+      "Sagnika Goswami",
+      "Tanaya Ghosh",
+    ],
     skills: ["React.js", "Next.js", "C", "php", "mySql", "AWS", "Figma"],
     desc: "lorem ipsum dolor sit. temae ameka dolor dolor lorem ipsum dolor sit.",
     githubLink: "https://github.com/Edasgh",
-    email: "eshitadas704@gmail.com",
+    email: "testemail3@mail.com",
   },
 ];
 
 export const fakeTeamMates = [
   {
     name: "Eshita Das",
-    email: "edas25564@gmail.com",
+    email: "testemail1@mail.com",
     country: "IN",
     githubID: "Edasgh",
     bio: "lorem ipsum dolor sit. temae ameka dolor dolor lorem ipsum dolor sit.lorem ipsum dolor sit. temae a",
@@ -73,32 +80,18 @@ export const fakeTeamMates = [
   },
   {
     name: "Ritu Das",
-    email: "ritudass1234@gmail.com",
+    email: "testemail5@mail.com",
     country: "IN",
-    githubID: "Rdsgh",
+    githubID: "testUser",
     bio: "lorem ipsum dolor sit. temae ameka dolor dolor lorem ipsum dolor sit.",
-    skills: [
-      "React.js",
-      "Next.js",
-      "C",
-      "php",
-      "mySql",
-      "AWS",
-    ],
+    skills: ["React.js", "Next.js", "C", "php", "mySql", "AWS"],
   },
   {
     name: "Priyanka Khan",
-    email: "khanpriyanka2023@gmail.com",
+    email: "testemail7@mail.com",
     country: "US",
-    githubID: "Uttalgeria",
+    githubID: "testUser",
     bio: "lorem ipsum dolor sit. temae ameka dolor dolor lorem ipsum dolor sit.",
-    skills: [
-      "React.js",
-      "Next.js",
-      "C",
-      "php",
-      "mySql",
-      "AWS",
-    ],
+    skills: ["React.js", "Next.js", "C", "php", "mySql", "AWS"],
   },
 ];
