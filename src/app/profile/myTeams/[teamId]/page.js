@@ -15,6 +15,8 @@ import { socket } from "@/lib/socket";
 import { getDate } from "@/lib/getDate";
 import { useCreds } from "@/hooks/useCreds";
 
+const urlRegex = /^(https?:\/\/[^\s< >\{\}\[\]]+)$/;
+
 const TeamChat = () => {
   const { teamId } = useChat();
   const { user, isLoading, error } = useCreds();
@@ -28,7 +30,7 @@ const TeamChat = () => {
   const [newMembers, setNewMembers] = useState([]);
 
   const [msg, setMsg] = useState("");
-  const [over,setOver] = useState(false);
+  const [over, setOver] = useState(false);
 
   const msgEndRef = useRef(null);
 
@@ -139,7 +141,9 @@ const TeamChat = () => {
       linkName,
       link,
     };
-    socket.emit("set_link", linkData);
+    if (linkName.includes("https://") || !urlRegex.test(link)) {
+      console.log("error");
+    } else socket.emit("set_link", linkData);
   };
 
   // Remove a member
@@ -217,15 +221,19 @@ const TeamChat = () => {
                       <h2 className="text-sm font-semibold">{m.sender.name}</h2>
                       <span
                         className={`bg-slate-600 text-textPrimary px-2 py-1 text-xs rounded-md absolute top-[-1.5rem] right-[-.9rem] ${
-                          over===idx ? "visible" : "hidden"
+                          over === idx ? "visible" : "hidden"
                         }`}
                       >
                         Delete
                       </span>
                       {m.sender.id === userDetails._id && (
                         <button
-                          onMouseOver={()=>{setOver(idx)}}
-                          onMouseOut={()=>{setOver(false)}}
+                          onMouseOver={() => {
+                            setOver(idx);
+                          }}
+                          onMouseOut={() => {
+                            setOver(false);
+                          }}
                           onClick={() => {
                             handleDelMsg({
                               msg: m.message,
@@ -234,6 +242,7 @@ const TeamChat = () => {
                               senderId: m.sender.id,
                               senderName: m.sender.name,
                             });
+                            setOver(false);
                           }}
                         >
                           <FontAwesomeIcon

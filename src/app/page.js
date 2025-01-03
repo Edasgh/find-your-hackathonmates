@@ -17,7 +17,7 @@ export default function Home() {
           </p>
           <Link
             href="/teams"
-            className="w-fit border-[1px]  border-textBgPrimaryHv bg-textBgPrimaryHv text-black  px-8 py-3 rounded-md"
+            className="w-fit border-[1px]  border-textBgPrimaryHv hover:bg-textBgPrimaryHv text-textSecondary hover:text-black  px-8 py-3 rounded-md"
           >
             Get Started
           </Link>

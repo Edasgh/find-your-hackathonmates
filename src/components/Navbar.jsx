@@ -2,10 +2,15 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { faBell, faCircleUser } from "@fortawesome/free-regular-svg-icons";
+import {
+  faBell,
+  faMessage,
+  faCircleUser,
+} from "@fortawesome/free-regular-svg-icons";
 import {
   faBars,
   faCircleUser as hoverUser,
+  faMessage as msgIcon,
   faPlus,
   faPeopleGroup,
   faUserPlus,
@@ -68,9 +73,6 @@ export default function Navbar() {
       socket.on("get_alerts", ({ data }) => {
         setAlerts([...data]);
       });
-      return () => {
-        socket.off("get_alerts");
-      };
     }
   }, [user]);
 
@@ -88,6 +90,12 @@ export default function Navbar() {
       icon: faCircleUser,
       hoverIcon: hoverUser,
       name: "Profile",
+    },
+    {
+      href: "/profile/myTeams",
+      icon: faMessage,
+      hoverIcon: msgIcon,
+      name: "Teams",
     },
     {
       href: "/profile/joinRequests",

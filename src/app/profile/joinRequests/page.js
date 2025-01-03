@@ -21,9 +21,6 @@ const JoinRequests = () => {
         setReqs([...data]);
         setLoading(false);
       });
-      return () => {
-        socket.off("get_alerts");
-      };
     }
   }, [user]);
 

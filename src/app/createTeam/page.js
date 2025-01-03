@@ -10,6 +10,8 @@ import NotFoundUser from "@/components/not-found-user";
 import { useCreds } from "@/hooks/useCreds";
 import { useRouter } from "next/navigation";
 
+const urlRegex = /^(https?:\/\/[^\s< >\{\}\[\]]+)$/;
+
 export default function createTeam() {
   const router = useRouter();
   const { user, isLoading, error } = useCreds();
@@ -50,6 +52,19 @@ export default function createTeam() {
     try {
       let members = [{ name: userDetails.name, id: userDetails._id }];
       try {
+        if (!urlRegex.test(github)) {
+          throw new Error("Invalid github link");
+        }
+
+        if (
+          !github.includes("github.com") ||
+          !github.includes("github.io")
+        ) {
+          throw new Error("Not a GitHub link.");
+          
+        }
+
+
         if (skills.includes(",") && skillsArr.length >= 5) {
           const response = await fetch("/api/createTeam", {
             method: "POST",
@@ -94,7 +109,7 @@ export default function createTeam() {
         }
       } catch (error) {
         toast.update(tId, {
-          render: "Something went wrong!",
+          render: error.message,
           type: "error",
           isLoading: false,
           autoClose: 2000,

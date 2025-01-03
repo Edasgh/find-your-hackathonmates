@@ -13,6 +13,8 @@ import LoadingComponent from "../loading";
 import Footer from "@/components/Footer";
 import { useCreds } from "@/hooks/useCreds";
 
+const urlRegex = /^(https?:\/\/[^\s< >\{\}\[\]]+)$/;
+
 export default function Signup() {
   const { user, isLoading, error } = useCreds();
   //router
@@ -77,6 +79,11 @@ export default function Signup() {
         const password = data.get("password");
 
         const skillsArr = [...skills.split(",")];
+
+        if(urlRegex.test(githubID))
+        {
+          throw new Error("Not a valid github ID");
+        }
 
         if (skills.includes(",") && skillsArr.length >= 5) {
           const response = await fetch("/api/signup", {

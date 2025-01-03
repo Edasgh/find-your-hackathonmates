@@ -154,7 +154,6 @@ app.prepare().then(() => {
             return socket.emit("invite", {
               status: 403,
               message: "Team mate already exists in team!",
-              data: null,
             });
           }
           const sendInvite = await Request.create(invitationData);

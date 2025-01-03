@@ -54,7 +54,7 @@ const ChatNavigation = ({
       />
       <LinksModal links={links} open={openLinks} setOpen={setOpenLinks} />
       <div
-        className={`absolute top-0 -right-[15rem] bg-gray-800 text-white w-[14rem] h-fit overflow-y-auto transition-transform transform ${
+        className={`absolute z-50 top-0 -right-[15rem] bg-gray-800 text-white w-[14rem] h-fit overflow-y-auto transition-transform transform ${
           opened && "-translate-x-[15rem]"
         }  ease-in-out duration-200 `}
         id="sidebar"
@@ -72,7 +72,7 @@ const ChatNavigation = ({
             </Link>
           </p>
           <ul className="mt-4">
-            <li className="mb-3">
+            <li className="mb-3" style={{width:"12rem"}}>
               <p className="text-sm text-textPrimary">{description}</p>
             </li>
             <li className="mb-3">
@@ -170,7 +170,7 @@ const ChatNavigation = ({
           <div className="container mx-auto">
             <div className="flex gap-2 py-1 px-2">
               <button
-                className="text-gray-500 hover:text-gray-600 p-1 px-2"
+                className="text-gray-500 relative z-50 hover:text-gray-600 p-1 px-2"
                 id="open-sidebar"
                 onClick={() => {
                   setOpened(!opened);

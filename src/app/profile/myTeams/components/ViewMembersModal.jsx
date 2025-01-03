@@ -79,10 +79,13 @@ const ViewMembersModal = ({
                             }}
                             icon={faCircleMinus}
                             onClick={() =>
+                            {
                               handleRemoveMember({
                                 memberName: m.name,
                                 memberId: m.id,
-                              })
+                              });
+                              setOver1(false);
+                            }
                             }
                           />
                           <span
