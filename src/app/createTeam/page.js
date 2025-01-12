@@ -18,22 +18,15 @@ export default function createTeam() {
   const [loading, setLoading] = useState(isLoading);
   const userDetails = user;
 
-  if (error || user === null) {
-    return (
-      <>
-        <div className="w-screen h-screen">
-          <NotFoundUser />
-        </div>
-      </>
-    );
-  }
-
   // to show floating labels if focused on input fields
-  const [isNameFocus, setIsNameFocus] = useState(false);
-  const [isEmailFocus, setIsEmailFocus] = useState(false);
-  const [isghFocus, setIsghFocus] = useState(false);
-  const [isDescFocus, setIsDescFocus] = useState(false);
-  const [isSkillsFocus, setIsSkillsFocus] = useState(false);
+  const [focusObj, setFocusObj] = useState({
+    nameFocus: false,
+    hkNmFocus: false,
+    emailFocus: false,
+    ghFocus: false,
+    descFocus: false,
+    skillsFocus: false,
+  });
 
   const onFocusStyle = {
     padding: "0 0.5rem",
@@ -50,6 +43,7 @@ export default function createTeam() {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
     const name = data.get("TeamName");
+    const hkNm = data.get("hkNm");
     const desc = data.get("desc");
     const github = data.get("github");
     const skills = data.get("TeamSkills");
@@ -66,7 +60,7 @@ export default function createTeam() {
           throw new Error("Invalid github link");
         }
 
-        if (!github.includes("github.com") || !github.includes("github.io")) {
+        if (!github.includes("github.com")) {
           throw new Error("Not a GitHub link.");
         }
 
@@ -78,6 +72,7 @@ export default function createTeam() {
             },
             body: JSON.stringify({
               name: name,
+              hackathonName: hkNm,
               email: email,
               members: members,
               admin: userDetails._id,
@@ -132,6 +127,16 @@ export default function createTeam() {
     }
   };
 
+  if (error || user === null) {
+    return (
+      <>
+        <div className="w-screen h-screen">
+          <NotFoundUser />
+        </div>
+      </>
+    );
+  }
+
   return (
     <>
       {loading ? (
@@ -155,13 +160,22 @@ export default function createTeam() {
                       <input
                         type="text"
                         onFocus={() => {
-                          setIsNameFocus(true);
+                          setFocusObj((prev) => ({
+                            ...prev,
+                            nameFocus: true,
+                          }));
                         }}
                         onBlur={(e) => {
                           if (e.target.value === "") {
-                            setIsNameFocus(false);
+                            setFocusObj((prev) => ({
+                              ...prev,
+                              nameFocus: false,
+                            }));
                           } else {
-                            setIsNameFocus(true);
+                            setFocusObj((prev) => ({
+                              ...prev,
+                              nameFocus: true,
+                            }));
                           }
                         }}
                         id="TeamName"
@@ -174,7 +188,7 @@ export default function createTeam() {
                       <label
                         htmlFor="TeamName"
                         className="labelLine"
-                        style={getStyle(isNameFocus)}
+                        style={getStyle(focusObj.nameFocus)}
                       >
                         Name
                       </label>
@@ -183,15 +197,63 @@ export default function createTeam() {
                   <div className="flex flex-wrap gap-2">
                     <div className="input-div">
                       <input
-                        type="email"
+                        type="text"
                         onFocus={() => {
-                          setIsEmailFocus(true);
+                          setFocusObj((prev) => ({
+                            ...prev,
+                            hkNmFocus: true,
+                          }));
                         }}
                         onBlur={(e) => {
                           if (e.target.value === "") {
-                            setIsEmailFocus(false);
+                            setFocusObj((prev) => ({
+                              ...prev,
+                              hkNmFocus: false,
+                            }));
                           } else {
-                            setIsEmailFocus(true);
+                            setFocusObj((prev) => ({
+                              ...prev,
+                              hkNmFocus: true,
+                            }));
+                          }
+                        }}
+                        id="hkNm"
+                        name="hkNm"
+                        aria-describedby="hkNm"
+                        className="text-textPrimary"
+                        suppressHydrationWarning
+                        required
+                      />
+                      <label
+                        htmlFor="hkNm"
+                        className="labelLine"
+                        style={getStyle(focusObj.hkNmFocus)}
+                      >
+                        Hackathon Name
+                      </label>
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <div className="input-div">
+                      <input
+                        type="email"
+                        onFocus={() => {
+                          setFocusObj((prev) => ({
+                            ...prev,
+                            emailFocus: true,
+                          }));
+                        }}
+                        onBlur={(e) => {
+                          if (e.target.value === "") {
+                            setFocusObj((prev) => ({
+                              ...prev,
+                              emailFocus: false,
+                            }));
+                          } else {
+                            setFocusObj((prev) => ({
+                              ...prev,
+                              emailFocus: true,
+                            }));
                           }
                         }}
                         id="TeamEmail"
@@ -205,7 +267,7 @@ export default function createTeam() {
                       <label
                         htmlFor="TeamEmail"
                         className="labelLine"
-                        style={getStyle(isEmailFocus)}
+                        style={getStyle(focusObj.emailFocus)}
                       >
                         Contact Email
                       </label>
@@ -214,13 +276,22 @@ export default function createTeam() {
                       <input
                         type="text"
                         onFocus={() => {
-                          setIsghFocus(true);
+                          setFocusObj((prev) => ({
+                            ...prev,
+                            ghFocus: true,
+                          }));
                         }}
                         onBlur={(e) => {
                           if (e.target.value === "") {
-                            setIsghFocus(false);
+                            setFocusObj((prev) => ({
+                              ...prev,
+                              ghFocus: false,
+                            }));
                           } else {
-                            setIsghFocus(true);
+                            setFocusObj((prev) => ({
+                              ...prev,
+                              ghFocus: true,
+                            }));
                           }
                         }}
                         id="github"
@@ -234,7 +305,7 @@ export default function createTeam() {
                       <label
                         htmlFor="github"
                         className="labelLine"
-                        style={getStyle(isghFocus)}
+                        style={getStyle(focusObj.ghFocus)}
                       >
                         Github Link
                       </label>
@@ -251,13 +322,22 @@ export default function createTeam() {
                     <div className="input-div">
                       <textarea
                         onFocus={() => {
-                          setIsDescFocus(true);
+                          setFocusObj((prev) => ({
+                            ...prev,
+                            descFocus: true,
+                          }));
                         }}
                         onBlur={(e) => {
                           if (e.target.value === "") {
-                            setIsDescFocus(false);
+                            setFocusObj((prev) => ({
+                              ...prev,
+                              descFocus: false,
+                            }));
                           } else {
-                            setIsDescFocus(true);
+                            setFocusObj((prev) => ({
+                              ...prev,
+                              descFocus: true,
+                            }));
                           }
                         }}
                         id="desc"
@@ -273,7 +353,7 @@ export default function createTeam() {
                         htmlFor="desc"
                         className="labelLine"
                         style={
-                          isDescFocus
+                          focusObj.descFocus
                             ? { ...onFocusStyle }
                             : { display: "inherit" }
                         }
@@ -291,13 +371,22 @@ export default function createTeam() {
                     <div className="input-div">
                       <textarea
                         onFocus={() => {
-                          setIsSkillsFocus(true);
+                          setFocusObj((prev) => ({
+                            ...prev,
+                            skillsFocus: true,
+                          }));
                         }}
                         onBlur={(e) => {
                           if (e.target.value === "") {
-                            setIsSkillsFocus(false);
+                            setFocusObj((prev) => ({
+                              ...prev,
+                              skillsFocus: false,
+                            }));
                           } else {
-                            setIsSkillsFocus(true);
+                            setFocusObj((prev) => ({
+                              ...prev,
+                              skillsFocus: true,
+                            }));
                           }
                         }}
                         id="TeamSkills"
@@ -312,7 +401,7 @@ export default function createTeam() {
                       <label
                         htmlFor="TeamSkills"
                         className="labelLine"
-                        style={getStyle(isSkillsFocus)}
+                        style={getStyle(focusObj.skillsFocus)}
                       >
                         Skills
                       </label>

@@ -188,6 +188,7 @@ const TeamChat = () => {
                 <ChatNavigation
                   email={teamData.email}
                   userId={userDetails._id}
+                  hkNm={teamData.hackathonName}
                   adminId={teamData.admin}
                   name={teamData.name}
                   description={teamData.description}

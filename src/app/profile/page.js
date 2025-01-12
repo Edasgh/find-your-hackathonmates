@@ -21,7 +21,6 @@ import { useCreds } from "@/hooks/useCreds";
 
 export default function Profile() {
   const {user,isLoading,error} = useCreds();
-  console.log(user);
   const router = useRouter();
  
  

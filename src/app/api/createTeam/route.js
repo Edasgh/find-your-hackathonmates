@@ -5,8 +5,16 @@ import Team from "@/model/team-model";
 import User from "@/model/user-model";
 
 export const POST = async (request) => {
-  const { name, email, description, members, admin, skills, links } =
-    await request.json();
+  const {
+    name,
+    email,
+    description,
+    members,
+    hackathonName,
+    admin,
+    skills,
+    links,
+  } = await request.json();
 
   //db connection
   await dbConn();
@@ -15,6 +23,7 @@ export const POST = async (request) => {
   const tm = {
     name,
     email,
+    hackathonName,
     description,
     members,
     admin,

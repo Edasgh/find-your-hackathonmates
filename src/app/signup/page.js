@@ -36,14 +36,15 @@ export default function Signup() {
   const [isSame, setIsSame] = useState(true);
 
   // to show floating labels if focused on input fields
-  const [isNameFocus, setIsNameFocus] = useState(false);
-  const [isPasswordFocus, setIsPasswordFocus] = useState(false);
-  const [isCPasswordFocus, setIsCPasswordFocus] = useState(false);
-  const [isEmailFocus, setIsEmailFocus] = useState(false);
-
-  const [isghFocus, setIsghFocus] = useState(false);
-  const [isDescFocus, setIsDescFocus] = useState(false);
-  const [isSkillsFocus, setIsSkillsFocus] = useState(false);
+  const [focusObj, setFocusObj] = useState({
+    nameFocus: false,
+    passWFocus: false,
+    CpassWFocus: false,
+    emailFocus: false,
+    ghFocus: false,
+    descFocus: false,
+    skillsFocus: false,
+  });
   // to show / hide the password
   const [isShown, setIsShown] = useState(false);
   const [isCPShown, setIsCPShown] = useState(false);
@@ -80,8 +81,7 @@ export default function Signup() {
 
         const skillsArr = [...skills.split(",")];
 
-        if(urlRegex.test(githubID))
-        {
+        if (urlRegex.test(githubID)) {
           throw new Error("Not a valid github ID");
         }
 
@@ -111,9 +111,6 @@ export default function Signup() {
               closeButton: true,
             });
             router.push("/login");
-            setTimeout(() => {
-              window.location.reload();
-            }, 80);
           } else {
             throw new Error("Something went wrong!");
           }
@@ -180,13 +177,13 @@ export default function Signup() {
                   <input
                     type="text"
                     onFocus={() => {
-                      setIsNameFocus(true);
+                      setFocusObj((prev) => ({ ...prev, nameFocus: true }));
                     }}
                     onBlur={(e) => {
                       if (e.target.value === "") {
-                        setIsNameFocus(false);
+                        setFocusObj((prev) => ({ ...prev, nameFocus: false }));
                       } else {
-                        setIsNameFocus(true);
+                        setFocusObj((prev) => ({ ...prev, nameFocus: true }));
                       }
                     }}
                     id="name"
@@ -199,7 +196,7 @@ export default function Signup() {
                   <label
                     htmlFor="name"
                     className="labelLine"
-                    style={getStyle(isNameFocus)}
+                    style={getStyle(focusObj.nameFocus)}
                   >
                     Name
                   </label>
@@ -527,13 +524,19 @@ export default function Signup() {
                   <input
                     type="email"
                     onFocus={() => {
-                      setIsEmailFocus(true);
+                      setFocusObj((prev) => ({ ...prev, emailFocus: true }));
                     }}
                     onBlur={(e) => {
                       if (e.target.value === "") {
-                        setIsEmailFocus(false);
+                        setFocusObj((prev) => ({
+                          ...prev,
+                          emailFocus: false,
+                        }));
                       } else {
-                        setIsEmailFocus(true);
+                        setFocusObj((prev) => ({
+                          ...prev,
+                          emailFocus: true,
+                        }));
                       }
                     }}
                     id="email"
@@ -546,7 +549,7 @@ export default function Signup() {
                   <label
                     htmlFor="email"
                     className="labelLine"
-                    style={getStyle(isEmailFocus)}
+                    style={getStyle(focusObj.emailFocus)}
                   >
                     Email
                   </label>
@@ -555,13 +558,19 @@ export default function Signup() {
                   <input
                     type="text"
                     onFocus={() => {
-                      setIsghFocus(true);
+                      setFocusObj((prev) => ({ ...prev, ghFocus: true }));
                     }}
                     onBlur={(e) => {
                       if (e.target.value === "") {
-                        setIsghFocus(false);
+                        setFocusObj((prev) => ({
+                          ...prev,
+                          ghFocus: false,
+                        }));
                       } else {
-                        setIsghFocus(true);
+                        setFocusObj((prev) => ({
+                          ...prev,
+                          ghFocus: true,
+                        }));
                       }
                     }}
                     id="githubID"
@@ -574,7 +583,7 @@ export default function Signup() {
                   <label
                     htmlFor="githubID"
                     className="labelLine"
-                    style={getStyle(isghFocus)}
+                    style={getStyle(focusObj.ghFocus)}
                   >
                     Github ID
                   </label>
@@ -591,13 +600,17 @@ export default function Signup() {
                 <div className="input-div">
                   <textarea
                     onFocus={() => {
-                      setIsDescFocus(true);
+                      setFocusObj((prev) => ({ ...prev, descFocus: true }));
                     }}
                     onBlur={(e) => {
                       if (e.target.value === "") {
-                        setIsDescFocus(false);
+                                              setFocusObj((prev) => ({
+                                                ...prev,
+                                                descFocus: false,
+                                              }));
+
                       } else {
-                        setIsDescFocus(true);
+                        setFocusObj((prev) => ({ ...prev, descFocus: true }));
                       }
                     }}
                     id="bio"
@@ -612,7 +625,7 @@ export default function Signup() {
                     htmlFor="bio"
                     className="labelLine"
                     style={
-                      isDescFocus ? { ...onFocusStyle } : { display: "inherit" }
+                      focusObj.descFocus ? { ...onFocusStyle } : { display: "inherit" }
                     }
                   >
                     Bio
@@ -628,13 +641,22 @@ export default function Signup() {
                 <div className="input-div">
                   <textarea
                     onFocus={() => {
-                      setIsSkillsFocus(true);
+                      setFocusObj((prev) => ({ ...prev, skillsFocus: true }));
+
                     }}
                     onBlur={(e) => {
                       if (e.target.value === "") {
-                        setIsSkillsFocus(false);
+                                              setFocusObj((prev) => ({
+                                                ...prev,
+                                                skillsFocus: false,
+                                              }));
+
                       } else {
-                        setIsSkillsFocus(true);
+                                              setFocusObj((prev) => ({
+                                                ...prev,
+                                                skillsFocus: true,
+                                              }));
+
                       }
                     }}
                     id="skills"
@@ -648,7 +670,7 @@ export default function Signup() {
                   <label
                     htmlFor="skills"
                     className="labelLine"
-                    style={getStyle(isSkillsFocus)}
+                    style={getStyle(focusObj.skillsFocus)}
                   >
                     Skills
                   </label>
@@ -674,14 +696,17 @@ export default function Signup() {
                       matchWCPassword(e);
                     }}
                     onFocus={(e) => {
-                      setIsPasswordFocus(true);
+                      setFocusObj((prev) => ({ ...prev, passWFocus: true }));
                       matchWCPassword(e);
                     }}
                     onBlur={(e) => {
                       if (e.target.value === "") {
-                        setIsPasswordFocus(false);
+                          setFocusObj((prev) => ({
+                            ...prev,
+                            passWFocus: false,
+                          }));
                       } else {
-                        setIsPasswordFocus(true);
+                         setFocusObj((prev) => ({ ...prev, passWFocus: true }));
                       }
 
                       matchWCPassword(e);
@@ -709,7 +734,7 @@ export default function Signup() {
                   <label
                     htmlFor="password"
                     className="labelLine"
-                    style={getStyle(isPasswordFocus)}
+                    style={getStyle(focusObj.passWFocus)}
                   >
                     Password
                   </label>
@@ -725,14 +750,14 @@ export default function Signup() {
                       matchWPassword(e);
                     }}
                     onFocus={(e) => {
-                      setIsCPasswordFocus(true);
+                        setFocusObj((prev) => ({ ...prev, CpassWFocus: true }));
                       matchWPassword(e);
                     }}
                     onBlur={(e) => {
                       if (e.target.value === "") {
-                        setIsCPasswordFocus(false);
+                        setFocusObj((prev) => ({ ...prev, CpassWFocus: false }));
                       } else {
-                        setIsCPasswordFocus(true);
+                          setFocusObj((prev) => ({ ...prev, CpassWFocus: true }));
                       }
 
                       matchWPassword(e);
@@ -760,7 +785,7 @@ export default function Signup() {
                   <label
                     htmlFor="confirmPassword"
                     className="labelLine"
-                    style={getStyle(isCPasswordFocus)}
+                    style={getStyle(focusObj.CpassWFocus)}
                   >
                     Confirm Password
                   </label>

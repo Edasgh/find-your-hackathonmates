@@ -65,6 +65,7 @@ export default function Teams() {
             <Team
               key={index}
               id={t._id}
+              hkNm = {t.hackathonName}
               index={index}
               desc={t.description}
               email={t.email}

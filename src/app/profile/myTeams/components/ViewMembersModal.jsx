@@ -3,6 +3,7 @@
 import { faCircleMinus, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
+import { ProfileEl } from "../../joinRequests/components/ProfileEl";
 
 const ViewMembersModal = ({
   members,
@@ -10,13 +11,14 @@ const ViewMembersModal = ({
   isAdmin,
   open,
   setOpen,
-  handleRemoveMember
+  handleRemoveMember,
 }) => {
   const handleClose = () => {
-    setOpen(false);
+    setOpen(null);
   };
 
   const [over1, setOver1] = useState(false);
+  const [openProfile, setOpenProfile] = useState(false);
   return (
     <div
       style={{
@@ -28,8 +30,8 @@ const ViewMembersModal = ({
         background: " #0a0b0cba",
         display: "grid",
         placeItems: "center",
-        visibility: open ? "visible" : "hidden",
-        zIndex: open ? "100" : "-1",
+        visibility: open === "members" ? "visible" : "hidden",
+        zIndex: open === "members" ? "100" : "-1",
       }}
     >
       <div
@@ -56,7 +58,7 @@ const ViewMembersModal = ({
             onClick={handleClose}
           />
         </div>
-        {open == true && (
+        {open === "members" && (
           <>
             {members.length !== 0 &&
               members.map((m, i) => (
@@ -64,7 +66,15 @@ const ViewMembersModal = ({
                   key={i}
                   className="flex relative w-full gap-2 justify-between cursor-pointer p-2 items-center hover:bg-textBgPrimary text-textPrimary"
                 >
-                  <p className="text-lg">{m.name}</p>
+                  <div
+                    className="text-lg hover:underline"
+                    onClick={() => {
+                      setOpenProfile(!openProfile);
+                    }}
+                  >
+                    <p>{m.name}</p>
+                    <ProfileEl open={openProfile} userId={m.id} />
+                  </div>
                   {isAdmin && (
                     <>
                       {userId !== m.id && (
@@ -78,15 +88,13 @@ const ViewMembersModal = ({
                               setOver1(false);
                             }}
                             icon={faCircleMinus}
-                            onClick={() =>
-                            {
+                            onClick={() => {
                               handleRemoveMember({
                                 memberName: m.name,
                                 memberId: m.id,
                               });
                               setOver1(false);
-                            }
-                            }
+                            }}
                           />
                           <span
                             className={`bg-slate-500 text-textPrimary px-2 py-1 text-sm rounded-md absolute bottom-10 right-0 ${

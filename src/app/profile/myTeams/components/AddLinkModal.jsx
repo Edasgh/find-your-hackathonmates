@@ -7,7 +7,7 @@ const AddLinkModal = ({ open, setOpen, handleAddLink }) => {
   const [name, setName] = useState("");
   const [link, setLink] = useState("");
   const handleClose = () => {
-    setOpen(false);
+    setOpen(null);
   };
   return (
     <div
@@ -20,8 +20,8 @@ const AddLinkModal = ({ open, setOpen, handleAddLink }) => {
         background: " #0a0b0cba",
         display: "grid",
         placeItems: "center",
-        visibility: open ? "visible" : "hidden",
-        zIndex: open ? "100" : "-1",
+        visibility: open==="addLinks" ? "visible" : "hidden",
+        zIndex: open==="addLinks" ? "100" : "-1",
       }}
     >
       <div

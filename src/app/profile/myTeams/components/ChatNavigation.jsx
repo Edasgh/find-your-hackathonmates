@@ -6,6 +6,8 @@ import {
   faPlus,
   faUser,
   faEye,
+  faRightFromBracket,
+  faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
@@ -13,12 +15,15 @@ import React, { useEffect, useState } from "react";
 import LinksModal from "./LinksModal";
 import AddLinkModal from "./AddLinkModal";
 import ViewMembersModal from "./ViewMembersModal";
-
+import DelAlert from "./delAlert";
+import useChat from "@/hooks/useChat";
+import LeaveAlert from "./leaveAlert";
 
 const ChatNavigation = ({
   name,
   description,
   links,
+  hkNm,
   email,
   members,
   userId,
@@ -26,16 +31,19 @@ const ChatNavigation = ({
   handleAddLink,
   handleRemoveMember,
 }) => {
+  const { teamId } = useChat();
+  const [openIdx, setOpenIdx] = useState(null);
   const [opened, setOpened] = useState(false);
-  const [openLinks, setOpenLinks] = useState(false);
-  const [openAddLinks, setOpenAddLinks] = useState(false);
-  const [openMembersModal, setOpenMembersModal] = useState(false);
 
   const isAdmin = userId === adminId;
 
-  const [over2, setOver2] = useState(false);
-  const [over3, setOver3] = useState(false);
-  const [over4, setOver4] = useState(false);
+  const [over, setOver] = useState({
+    over1: false,
+    over2: false,
+    over3: false,
+    over4: false,
+    over5: false,
+  });
 
   return (
     <div className="relative">
@@ -43,16 +51,29 @@ const ChatNavigation = ({
         members={members}
         userId={userId}
         isAdmin={isAdmin}
-        open={openMembersModal}
-        setOpen={setOpenMembersModal}
+        open={openIdx}
+        setOpen={setOpenIdx}
         handleRemoveMember={handleRemoveMember}
       />
       <AddLinkModal
-        open={openAddLinks}
-        setOpen={setOpenAddLinks}
+        open={openIdx}
+        setOpen={setOpenIdx}
         handleAddLink={handleAddLink}
       />
-      <LinksModal links={links} open={openLinks} setOpen={setOpenLinks} />
+      <LinksModal links={links} open={openIdx} setOpen={setOpenIdx} />
+      <DelAlert
+        open={openIdx}
+        setOpen={setOpenIdx}
+        teamId={teamId}
+        teamName={name}
+      />
+      <DelAlert
+        open={openIdx}
+        setOpen={setOpenIdx}
+        teamId={teamId}
+        teamName={name}
+      />
+      <LeaveAlert open={openIdx} setOpen={setOpenIdx} teamId={teamId} teamName={name} userId={userId} />
       <div
         className={`absolute z-50 top-0 -right-[15rem] bg-gray-800 text-white w-[14rem] h-fit overflow-y-auto transition-transform transform ${
           opened && "-translate-x-[15rem]"
@@ -60,9 +81,16 @@ const ChatNavigation = ({
         id="sidebar"
       >
         <div className="p-4">
-          <p className="text-2xl flex flex-col gap-2 mt-8 font-semibold">
+          <div
+            className="text-2xl flex flex-col gap-2 mt-8 font-semibold"
+            suppressHydrationWarning
+          >
             <CustomAvatar name={name} />
             {name}
+            <p className="text-xs font-normal" suppressHydrationWarning>
+              For the Hackathon :{" "}
+              <span className="font-bold text-sm">{hkNm}</span>
+            </p>
             <Link
               href={`mailTo:${email}`}
               className="text-xs font-normal hover:underline"
@@ -70,9 +98,9 @@ const ChatNavigation = ({
               {" "}
               {email}{" "}
             </Link>
-          </p>
+          </div>
           <ul className="mt-4">
-            <li className="mb-3" style={{width:"12rem"}}>
+            <li className="mb-3" style={{ width: "12rem" }}>
               <p className="text-sm text-textPrimary">{description}</p>
             </li>
             <li className="mb-3">
@@ -81,20 +109,20 @@ const ChatNavigation = ({
                 <button
                   className="cursor-pointer bg-transparent"
                   onMouseOver={() => {
-                    setOver2(true);
+                    setOver((prev) => ({ ...prev, over1: true }));
                   }}
                   onMouseOut={() => {
-                    setOver2(false);
+                    setOver((prev) => ({ ...prev, over1: false }));
                   }}
                   onClick={() => {
-                    setOpenAddLinks(true);
+                    setOpenIdx("addLinks");
                   }}
                 >
                   <FontAwesomeIcon className="cursor-pointer" icon={faPlus} />{" "}
                 </button>
                 <span
                   className={`bg-slate-500 text-textPrimary px-2 py-1 text-xs rounded-md absolute bottom-6 left-7 ${
-                    over2 ? "flex" : "hidden"
+                    over.over1 ? "flex" : "hidden"
                   } `}
                 >
                   Add new link
@@ -103,20 +131,20 @@ const ChatNavigation = ({
                 <button
                   className="cursor-pointer bg-transparent"
                   onMouseOver={() => {
-                    setOver3(true);
+                    setOver((prev) => ({ ...prev, over2: true }));
                   }}
                   onMouseOut={() => {
-                    setOver3(false);
+                    setOver((prev) => ({ ...prev, over2: false }));
                   }}
                   onClick={() => {
-                    setOpenLinks(true);
+                    setOpenIdx("openLinks");
                   }}
                 >
                   <FontAwesomeIcon className="text-textPrimary" icon={faEye} />
                 </button>
                 <span
                   className={`bg-slate-500 text-textPrimary px-2 py-1 text-xs rounded-md absolute bottom-6 left-7 ${
-                    over3 ? "flex" : "hidden"
+                    over.over2 ? "flex" : "hidden"
                   } `}
                 >
                   View all links
@@ -141,20 +169,20 @@ const ChatNavigation = ({
                 <button
                   className="cursor-pointer bg-transparent"
                   onMouseOver={() => {
-                    setOver4(true);
+                    setOver((prev) => ({ ...prev, over3: true }));
                   }}
                   onMouseOut={() => {
-                    setOver4(false);
+                    setOver((prev) => ({ ...prev, over3: false }));
                   }}
                   onClick={() => {
-                    setOpenMembersModal(true);
+                    setOpenIdx("members");
                   }}
                 >
                   <FontAwesomeIcon className="text-textPrimary" icon={faEye} />
                 </button>
                 <span
                   className={`bg-slate-500 text-textPrimary px-2 py-1 text-xs rounded-md absolute bottom-6 left-7 ${
-                    over4 ? "flex" : "hidden"
+                    over.over3 ? "flex" : "hidden"
                   } `}
                 >
                   View all Members
@@ -162,6 +190,58 @@ const ChatNavigation = ({
               </p>
             </li>
           </ul>
+        </div>
+        <div
+          className="flex p-5 relative gap-3 flex-wrap"
+          suppressHydrationWarning
+        >
+          <button
+            className="w-fit border-[1px] text-sm text-textPrimary border-textBgPrimaryHv hover:bg-textBgPrimaryHv hover:text-black  px-5 py-3 rounded-md"
+            onMouseOver={() => {
+              setOver((prev) => ({ ...prev, over4: true }));
+            }}
+            onMouseOut={() => {
+              setOver((prev) => ({ ...prev, over4: false }));
+            }}
+            onClick={()=>{
+                setOpenIdx("leaveTeam");
+            }}
+          >
+            <FontAwesomeIcon icon={faRightFromBracket} />
+          </button>
+          <span
+            className={`bg-slate-500 text-textPrimary px-2 py-1 text-sm rounded-md absolute -top-3 left-1 ${
+              over.over4 ? "flex" : "hidden"
+            } `}
+          >
+            Leave
+          </span>
+
+          {isAdmin && (
+            <>
+              <button
+                className="w-fit border-[1px] text-sm text-textPrimary border-textBgPrimaryHv hover:bg-textBgPrimaryHv hover:text-black  px-5 py-3 rounded-md"
+                onMouseOver={() => {
+                  setOver((prev) => ({ ...prev, over5: true }));
+                }}
+                onMouseOut={() => {
+                  setOver((prev) => ({ ...prev, over5: false }));
+                }}
+                onClick={() => {
+                  setOpenIdx("delTeam");
+                }}
+              >
+                <FontAwesomeIcon icon={faTrash} />
+              </button>
+              <span
+                className={`bg-slate-500 text-textPrimary px-2 py-1 text-sm rounded-md absolute -top-3 right-14 ${
+                  over.over5 ? "flex" : "hidden"
+                } `}
+              >
+                Delete
+              </span>
+            </>
+          )}
         </div>
       </div>
 

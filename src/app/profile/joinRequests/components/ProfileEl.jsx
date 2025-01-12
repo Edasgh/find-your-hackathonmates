@@ -60,6 +60,7 @@ export const ProfileEl = ({ userId, open}) => {
             placeItems: "center",
             visibility: open ? "visible" : "hidden",
             zIndex: open ? "10000" : "-1",
+            cursor:"default"
           }}
           suppressHydrationWarning
         >
@@ -76,7 +77,7 @@ export const ProfileEl = ({ userId, open}) => {
               </div>
             </div>
           ) : (
-            <div className="max-[800px]:h-[26rem] min-[800.1px]:h-[28rem] w-[19rem] m-auto">
+            <div className="h-fit w-fit m-auto">
               <div
                 className="bg-bgSecondary mx-4 p-6 border-[1px] border-textSecondary rounded-2xl flex flex-col items-start gap-3"
                 suppressHydrationWarning

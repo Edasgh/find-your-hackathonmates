@@ -24,13 +24,13 @@ const TeamEl = ({ teamId, open }) => {
         setTeam({
           name: TeamData.name,
           email: TeamData.email,
+          hkNm : TeamData.hackathonName,
           desc: TeamData.description,
           githubLink: TeamData.links[0].link,
           skills: [...TeamData.skills],
           members: [...TeamData.members],
         });
       } catch (err) {
-        //  setError(err.message);
         console.error(err.message);
       } finally {
         setLoading(false);
@@ -55,6 +55,7 @@ const TeamEl = ({ teamId, open }) => {
             placeItems: "center",
             visibility: open ? "visible" : "hidden",
             zIndex: open ? "10000" : "-1",
+            cursor:"default"
           }}
           suppressHydrationWarning
         >
@@ -72,6 +73,9 @@ const TeamEl = ({ teamId, open }) => {
                   <CustomAvatar name={team.name} />
                   <p className="text-textBgPrimaryHv font-semibold text-lg">
                     {team.name}
+                  </p>
+                  <p className="text-textBgPrimaryHv font-semibold text-lg">
+                    {team.hkNm}
                   </p>
                   <p className="text-textPrimary text-sm">{team.desc}</p>
                   <p className="text-textPrimary text-center text-xs flex justify-center">
