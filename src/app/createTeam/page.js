@@ -18,6 +18,16 @@ export default function createTeam() {
   const [loading, setLoading] = useState(isLoading);
   const userDetails = user;
 
+  if (error || user === null) {
+    return (
+      <>
+        <div className="w-screen h-screen">
+          <NotFoundUser />
+        </div>
+      </>
+    );
+  }
+
   // to show floating labels if focused on input fields
   const [isNameFocus, setIsNameFocus] = useState(false);
   const [isEmailFocus, setIsEmailFocus] = useState(false);
@@ -56,14 +66,9 @@ export default function createTeam() {
           throw new Error("Invalid github link");
         }
 
-        if (
-          !github.includes("github.com") ||
-          !github.includes("github.io")
-        ) {
+        if (!github.includes("github.com") || !github.includes("github.io")) {
           throw new Error("Not a GitHub link.");
-          
         }
-
 
         if (skills.includes(",") && skillsArr.length >= 5) {
           const response = await fetch("/api/createTeam", {
@@ -133,7 +138,7 @@ export default function createTeam() {
         <LoadingComponent />
       ) : (
         <>
-          {userDetails !== null ? (
+          {userDetails !== null && (
             <>
               <ToastContainer position="top-center" theme="dark" />
               <div className="main-div w-1/3 max-[900px]:w-full  p-7 m-auto mt-10 flex flex-col gap-2 justify-center items-center">
@@ -324,10 +329,6 @@ export default function createTeam() {
                   </button>
                 </form>
               </div>
-            </>
-          ) : (
-            <>
-              <NotFoundUser />
             </>
           )}
           <div className="mt-[30vh]">

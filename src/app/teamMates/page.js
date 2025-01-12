@@ -5,6 +5,7 @@ import LoadingComponent from "../loading";
 import TeamMate from "@/components/TeamMate";
 import Footer from "@/components/Footer";
 import { useCreds } from "@/hooks/useCreds";
+import NotFoundUser from "@/components/not-found-user";
 
 export default function TeamMatesPage() {
   const { user, isLoading, error } = useCreds();
@@ -43,6 +44,17 @@ export default function TeamMatesPage() {
   if (isLoading || loading) {
     return <LoadingComponent />;
   }
+
+    if(error || user===null )
+    {
+      return (
+        <>
+          <div className="w-screen h-screen">
+            <NotFoundUser />
+          </div>
+        </>
+      );
+    }
 
   return (
     <>

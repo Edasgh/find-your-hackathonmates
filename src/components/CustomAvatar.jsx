@@ -38,17 +38,7 @@ function CustomAvatar({ name }) {
 
   return (
     <>
-      {/* <span
-      style={{
-        backgroundColor: color,
-        color: parsedCol,
-      }}
-      className="w-[4rem] h-[4rem] rounded-full font-medium  text-2xl text-center flex justify-center items-center border-[1px] border-textSecondary "
-      >
-      {name.charAt(0).toUpperCase()}
-    </span> */}
-
-      <span>
+      <span suppressHydrationWarning>
         <span className="w-[4rem] h-[4rem] rounded-full font-medium  text-2xl text-center flex justify-center bg-gray-600 text-gray-300 items-center border-[1px] border-textSecondary">
           {" "}
           {name.charAt(0).toUpperCase()}

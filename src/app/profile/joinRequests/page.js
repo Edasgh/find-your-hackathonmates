@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import AlertEl from "./components/AlertEl";
 import { useCreds } from "@/hooks/useCreds";
 import { socket } from "@/lib/socket";
+import NotFoundUser from "@/components/not-found-user";
 
 const JoinRequests = () => {
   const { user, isLoading, error } = useCreds();
@@ -23,6 +24,17 @@ const JoinRequests = () => {
       });
     }
   }, [user]);
+
+  if(error || user===null )
+  {
+    return (
+      <>
+        <div className="w-screen h-screen">
+          <NotFoundUser />
+        </div>
+      </>
+    );
+  }
 
   const handleAccept = (
     message,
@@ -98,7 +110,10 @@ const JoinRequests = () => {
         </div>
       ) : (
         <>
-          <div className="flex mt-12 w-screen h-screen py-12 flex-col gap-3 justify-start bg-bgSecondary items-center">
+          <div
+            className="flex mt-12 w-screen h-screen py-12 flex-col gap-3 justify-start bg-bgSecondary items-center"
+            suppressHydrationWarning
+          >
             <h1 className="text-center section-title mb-5 text-textPrimary poppins-semibold text-3xl">
               Join Requests
             </h1>

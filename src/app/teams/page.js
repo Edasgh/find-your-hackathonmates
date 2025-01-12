@@ -6,6 +6,7 @@ import LoadingComponent from "../loading";
 import Team from "@/components/Team";
 import Footer from "@/components/Footer";
 import { useCreds } from "@/hooks/useCreds";
+import NotFound from "@/components/not-found";
 
 export default function Teams() {
   const { user, isLoading, error } = useCreds();
@@ -40,9 +41,7 @@ export default function Teams() {
 
   if (error) {
     return (
-      <div className="text-center">
-        <p className="text-red-500">{error}</p>
-      </div>
+      <NotFound/>
     );
   }
 

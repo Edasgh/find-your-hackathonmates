@@ -226,7 +226,7 @@ app.prepare().then(() => {
           const recieverName = getReciever.name;
 
           const requestData = {
-            message: `Hi ${recieverName}, ${myName} would like to join your team ${teamName}`,
+            message: `${myName} sent a request to join your team ${teamName}`,
             team: {
               name: teamName,
               id: teamId,

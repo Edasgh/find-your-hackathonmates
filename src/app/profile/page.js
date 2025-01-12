@@ -17,7 +17,6 @@ import {
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import EditProfile from "@/components/EditProfile";
-import { useState } from "react";
 import { useCreds } from "@/hooks/useCreds";
 
 export default function Profile() {

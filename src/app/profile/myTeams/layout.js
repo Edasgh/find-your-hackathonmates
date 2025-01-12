@@ -1,11 +1,23 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 
 import Sidebar from "./components/Sidebar";
 import useChat from "@/hooks/useChat";
+import { useCreds } from "@/hooks/useCreds";
+import NotFoundUser from "@/components/not-found-user";
 
 const TeamsLayout = ({ children }) => {
   const { isActive } = useChat();
+  const { user, isLoading, error } = useCreds();
+  if (error || user === null) {
+    return (
+      <>
+        <div className="w-screen h-screen">
+          <NotFoundUser />
+        </div>
+      </>
+    );
+  }
   return (
     <div className="mt-12 border-t-[2.5px] border-bgSecondary flex w-screen h-screen">
       <Sidebar />
