@@ -69,4 +69,3 @@ I myself find it challenging to find any team mates whenever I want to join any 
 2. Some file sharing feature (image, videos) via chat
 3. Users will be able to add their profile picture (instead of showing avatars)
 4. Real time read reciepts of chats & real time invite & application notifications
-5. Will try to make all the pages fully responsive.
