@@ -50,14 +50,12 @@ export const POST = async (request) => {
     const resp = await userExists.save();
 
     if (!resp) {
-      return new NextResponse("Something went wrong!", {
-        status: 500,
-      });
+      throw new Error("Something went wrong!");
     }
     return new NextResponse("Team created successfully!", { status: 201 });
   } catch (error) {
     console.log(error);
-    return new NextResponse("Something went wrong!", {
+    return new NextResponse(error.message, {
       status: 500,
     });
   }
@@ -77,6 +75,39 @@ export const GET = async (request) => {
   } catch (error) {
     console.log(error);
     return new NextResponse("Something went wrong!", {
+      status: 500,
+    });
+  }
+};
+
+//delete team
+export const DELETE = async (request) => {
+  const { teamId } = await request.json();
+  await dbConn();
+  //find the team
+  try {
+    const findTeam = await Team.findById(teamId);
+    if (!findTeam) {
+      throw new Error("Team not found!");
+    }
+
+    const updateUsers = await User.updateMany(
+      { _id: { $in: findTeam.members.map((m) => m.id) } },
+      { $pull: { teams: teamId } }
+    );
+
+    if (!updateUsers) {
+      throw new Error("Can't update profile!");
+    }
+
+    const deleteTeam = await Team.findByIdAndDelete(teamId);
+    if (!deleteTeam) {
+      throw new Error("Team not deleted!");
+    }
+
+    return new NextResponse("Team deleted successfully!", { status: 200 });
+  } catch (error) {
+    return new NextResponse(error.message, {
       status: 500,
     });
   }

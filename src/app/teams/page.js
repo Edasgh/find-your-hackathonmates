@@ -18,7 +18,7 @@ export default function Teams() {
     try {
       setLoading(true);
       const resp = await fetch(`/api/createTeam?id=${user._id}`);
-      if (resp.status!==200) throw new Error("Failed to fetch teams data.");
+      if (resp.status !== 200) throw new Error("Failed to fetch teams data.");
       const data = await resp.json();
       setTeamsData(data.teams);
     } catch (err) {
@@ -39,13 +39,7 @@ export default function Teams() {
     return <LoadingComponent />;
   }
 
-  if (error) {
-    return (
-      <NotFound/>
-    );
-  }
-
-  if (!user) {
+  if (error || user === null) {
     return (
       <>
         <NotFoundUser />
@@ -65,7 +59,7 @@ export default function Teams() {
             <Team
               key={index}
               id={t._id}
-              hkNm = {t.hackathonName}
+              hkNm={t.hackathonName}
               index={index}
               desc={t.description}
               email={t.email}

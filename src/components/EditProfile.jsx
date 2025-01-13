@@ -4,9 +4,8 @@ import { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-
 export default function EditProfile({
-    UserId,
+  UserId,
   UserName,
   UserEmail,
   UserCountry,
@@ -15,13 +14,13 @@ export default function EditProfile({
   UserSkills,
 }) {
   // to show floating labels if focused on input fields
-  const [isNameFocus, setIsNameFocus] = useState(true);
-
-  const [isEmailFocus, setIsEmailFocus] = useState(true);
-
-  const [isghFocus, setIsghFocus] = useState(true);
-  const [isDescFocus, setIsDescFocus] = useState(true);
-  const [isSkillsFocus, setIsSkillsFocus] = useState(true);
+  const [focusObj, setFocusObj] = useState({
+    nameFocus: true,
+    emailFocus: true,
+    ghFocus: true,
+    descFocus: true,
+    skillsFocus: true,
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -45,7 +44,7 @@ export default function EditProfile({
             "content-type": "application/json",
           },
           body: JSON.stringify({
-            id:UserId,
+            id: UserId,
             name,
             email,
             githubID,
@@ -63,9 +62,9 @@ export default function EditProfile({
             autoClose: 2000,
             closeButton: true,
           });
-           setTimeout(() => {
-             window.location.reload();
-           }, 300);
+          setTimeout(() => {
+            window.location.reload();
+          }, 300);
         } else {
           throw new Error("Something went wrong!");
         }
@@ -104,24 +103,20 @@ export default function EditProfile({
   return (
     <>
       <ToastContainer position="top-center" theme="dark" />
-      <form
-        onSubmit={handleSubmit}
-        className="login-signup-form"
-        id="signup"
-      >
+      <form onSubmit={handleSubmit} className="login-signup-form" id="signup">
         <div className="flex flex-wrap gap-2">
           <div className="input-div">
             <input
               type="text"
               defaultValue={UserName}
               onFocus={() => {
-                setIsNameFocus(true);
+                setFocusObj((prev) => ({ ...prev, nameFocus: true }));
               }}
               onBlur={(e) => {
                 if (e.target.value === "") {
-                  setIsNameFocus(false);
+                  setFocusObj((prev) => ({ ...prev, nameFocus: false }));
                 } else {
-                  setIsNameFocus(true);
+                  setFocusObj((prev) => ({ ...prev, nameFocus: true }));
                 }
               }}
               id="name"
@@ -134,7 +129,7 @@ export default function EditProfile({
             <label
               htmlFor="name"
               className="labelLine"
-              style={getStyle(isNameFocus)}
+              style={getStyle(focusObj.nameFocus)}
             >
               Name
             </label>
@@ -447,13 +442,19 @@ export default function EditProfile({
               type="email"
               defaultValue={UserEmail}
               onFocus={() => {
-                setIsEmailFocus(true);
+                setFocusObj((prev) => ({ ...prev, emailFocus: true }));
               }}
               onBlur={(e) => {
                 if (e.target.value === "") {
-                  setIsEmailFocus(false);
+                  setFocusObj((prev) => ({
+                    ...prev,
+                    emailFocus: false,
+                  }));
                 } else {
-                  setIsEmailFocus(true);
+                  setFocusObj((prev) => ({
+                    ...prev,
+                    emailFocus: true,
+                  }));
                 }
               }}
               id="email"
@@ -466,7 +467,7 @@ export default function EditProfile({
             <label
               htmlFor="email"
               className="labelLine"
-              style={getStyle(isEmailFocus)}
+              style={getStyle(focusObj.emailFocus)}
             >
               Email
             </label>
@@ -476,13 +477,13 @@ export default function EditProfile({
               type="text"
               defaultValue={UserGithubID}
               onFocus={() => {
-                setIsghFocus(true);
+                setFocusObj((prev) => ({ ...prev, ghFocus: true }));
               }}
               onBlur={(e) => {
                 if (e.target.value === "") {
-                  setIsghFocus(false);
+                  setFocusObj((prev) => ({ ...prev, ghFocus: false }));
                 } else {
-                  setIsghFocus(true);
+                  setFocusObj((prev) => ({ ...prev, ghFocus: true }));
                 }
               }}
               id="githubID"
@@ -495,7 +496,7 @@ export default function EditProfile({
             <label
               htmlFor="githubID"
               className="labelLine"
-              style={getStyle(isghFocus)}
+              style={getStyle(focusObj.ghFocus)}
             >
               Github ID
             </label>
@@ -513,13 +514,13 @@ export default function EditProfile({
             <textarea
               defaultValue={UserBio}
               onFocus={() => {
-                setIsDescFocus(true);
+                setFocusObj((prev) => ({ ...prev, descFocus: true }));
               }}
               onBlur={(e) => {
                 if (e.target.value === "") {
-                  setIsDescFocus(false);
+                  setFocusObj((prev) => ({ ...prev, descFocus: false }));
                 } else {
-                  setIsDescFocus(true);
+                  setFocusObj((prev) => ({ ...prev, descFocus: true }));
                 }
               }}
               id="bio"
@@ -534,7 +535,11 @@ export default function EditProfile({
             <label
               htmlFor="bio"
               className="labelLine"
-              style={isDescFocus ? { ...onFocusStyle } : { display: "inherit" }}
+              style={
+                focusObj.descFocus
+                  ? { ...onFocusStyle }
+                  : { display: "inherit" }
+              }
             >
               Bio
             </label>
@@ -550,13 +555,16 @@ export default function EditProfile({
             <textarea
               defaultValue={UserSkills}
               onFocus={() => {
-                setIsSkillsFocus(true);
+                setFocusObj((prev) => ({ ...prev, skillsFocus: true }));
               }}
               onBlur={(e) => {
                 if (e.target.value === "") {
-                  setIsSkillsFocus(false);
+                  setFocusObj((prev) => ({
+                    ...prev,
+                    skillsFocus: false,
+                  }));
                 } else {
-                  setIsSkillsFocus(true);
+                  setFocusObj((prev) => ({ ...prev, skillsFocus: true }));
                 }
               }}
               id="skills"
@@ -571,7 +579,7 @@ export default function EditProfile({
             <label
               htmlFor="skills"
               className="labelLine"
-              style={getStyle(isSkillsFocus)}
+              style={getStyle(focusObj.skillsFocus)}
             >
               Skills
             </label>

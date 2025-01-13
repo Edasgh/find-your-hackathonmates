@@ -1,8 +1,9 @@
 import React from "react";
 
-const LeaveAlert = ({ teamId, userId, teamName, open, setOpen }) => {
+const LeaveAlert = ({ teamId, userId, teamName, open, setOpen, leaveTeam }) => {
   const handleLeaveTeam = async () => {
     setOpen(null);
+    await leaveTeam();
   };
   return (
     <div

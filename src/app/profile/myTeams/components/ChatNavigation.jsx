@@ -18,6 +18,7 @@ import ViewMembersModal from "./ViewMembersModal";
 import DelAlert from "./delAlert";
 import useChat from "@/hooks/useChat";
 import LeaveAlert from "./leaveAlert";
+import { useRouter } from "next/navigation";
 
 const ChatNavigation = ({
   name,
@@ -27,6 +28,7 @@ const ChatNavigation = ({
   email,
   members,
   userId,
+  userName,
   adminId,
   handleAddLink,
   handleRemoveMember,
@@ -34,6 +36,7 @@ const ChatNavigation = ({
   const { teamId } = useChat();
   const [openIdx, setOpenIdx] = useState(null);
   const [opened, setOpened] = useState(false);
+  const router = useRouter();
 
   const isAdmin = userId === adminId;
 
@@ -44,6 +47,50 @@ const ChatNavigation = ({
     over4: false,
     over5: false,
   });
+
+  const LeaveTeam = async () => {
+    try {
+      const reqBody = {
+        myId: userId,
+        myName: userName,
+        teamId: teamId,
+        adminId,
+      };
+      const resp = await fetch("/api/profile/myTeams", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(reqBody),
+      });
+      if (resp.status !== 200) {
+        throw new Error("Something went wrong!");
+      }
+      router.push("/profile/myTeams");
+      setInterval(() => {
+        window.location.reload();
+      }, 800);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+  const DeleteTeam = async () => {
+    try {
+      const reqBody = { teamId: teamId };
+      const resp = await fetch("/api/createTeam", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(reqBody),
+      });
+      if (resp.status !== 200) {
+        throw new Error("Something went wrong!");
+      }
+      router.push("/profile/myTeams");
+      setInterval(() => {
+        window.location.reload();
+      }, 800);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   return (
     <div className="relative">
@@ -66,14 +113,16 @@ const ChatNavigation = ({
         setOpen={setOpenIdx}
         teamId={teamId}
         teamName={name}
+        deleteTeam={DeleteTeam}
       />
-      <DelAlert
+      <LeaveAlert
         open={openIdx}
         setOpen={setOpenIdx}
         teamId={teamId}
         teamName={name}
+        userId={userId}
+        leaveTeam={LeaveTeam}
       />
-      <LeaveAlert open={openIdx} setOpen={setOpenIdx} teamId={teamId} teamName={name} userId={userId} />
       <div
         className={`absolute z-50 top-0 -right-[15rem] bg-gray-800 text-white w-[14rem] h-fit overflow-y-auto transition-transform transform ${
           opened && "-translate-x-[15rem]"
@@ -203,8 +252,8 @@ const ChatNavigation = ({
             onMouseOut={() => {
               setOver((prev) => ({ ...prev, over4: false }));
             }}
-            onClick={()=>{
-                setOpenIdx("leaveTeam");
+            onClick={() => {
+              setOpenIdx("leaveTeam");
             }}
           >
             <FontAwesomeIcon icon={faRightFromBracket} />

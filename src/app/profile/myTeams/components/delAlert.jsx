@@ -1,9 +1,10 @@
 "use client";
 import React from "react";
 
-const DelAlert = ({ teamId, teamName, open, setOpen }) => {
+const DelAlert = ({ teamId, teamName, open, setOpen, deleteTeam }) => {
   const handleDelTeam = async () => {
     setOpen(null);
+    await deleteTeam();
   };
   return (
     <div

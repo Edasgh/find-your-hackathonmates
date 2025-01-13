@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -15,7 +15,6 @@ const urlRegex = /^(https?:\/\/[^\s< >\{\}\[\]]+)$/;
 export default function createTeam() {
   const router = useRouter();
   const { user, isLoading, error } = useCreds();
-  const [loading, setLoading] = useState(isLoading);
   const userDetails = user;
 
   // to show floating labels if focused on input fields
@@ -127,7 +126,7 @@ export default function createTeam() {
     }
   };
 
-  if (error || user === null) {
+  if (error) {
     return (
       <>
         <div className="w-screen h-screen">
@@ -139,7 +138,7 @@ export default function createTeam() {
 
   return (
     <>
-      {loading ? (
+      {isLoading ? (
         <LoadingComponent />
       ) : (
         <>
