@@ -6,7 +6,6 @@ import User from "@/model/user-model";
 export const POST = async (request) => {
   const { name, email, githubID, bio, skills, country, password } =
     await request.json();
-  console.log(name, email, githubID, bio, skills, country, password);
   //create a db connection
   await dbConn();
   //sign up the user & update the db

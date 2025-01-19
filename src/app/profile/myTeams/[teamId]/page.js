@@ -6,14 +6,16 @@ import CustomAvatar from "@/components/CustomAvatar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowLeft,
+  faLink,
   faPaperPlane,
-  faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 import ChatNavigation from "../components/ChatNavigation";
 import { socket } from "@/lib/socket";
 import { getDate } from "@/lib/getDate";
 import { useCreds } from "@/hooks/useCreds";
+import MessageEl from "../components/MessageEl";
+import ChooseFile from "../components/ChooseFile";
 
 const urlRegex = /^(https?:\/\/[^\s< >\{\}\[\]]+)$/;
 
@@ -73,6 +75,7 @@ const TeamChat = () => {
 
     const newMessage = {
       message: msg,
+      // attachments,
       sender: { name: userDetails.name, id: userDetails._id },
       sentOn: currentTimeStamp,
     };
@@ -81,6 +84,7 @@ const TeamChat = () => {
     socket.emit("message", {
       roomId: teamId,
       message: msg,
+      // attachments,
       senderId: userDetails._id,
       senderName: userDetails.name,
       sentOn: currentTimeStamp,
@@ -89,10 +93,17 @@ const TeamChat = () => {
     setMsg("");
   };
 
-  const handleDelMsg = ({ msg, sentOn, senderId, senderName }) => {
+  const handleDelMsg = ({
+    msg,
+    //  attachments,
+    sentOn,
+    senderId,
+    senderName,
+  }) => {
     socket.emit("remove-msg", {
       roomId: teamId,
       message: msg,
+      // attachments,
       senderId,
       senderName,
       sentOn,
@@ -102,12 +113,26 @@ const TeamChat = () => {
   useEffect(() => {
     socket.emit("join-room", teamId);
 
-    socket.on("message", ({ message, senderId, senderName, sentOn }) => {
-      setMessages((prev) => [
-        ...prev,
-        { message, sender: { name: senderName, id: senderId }, sentOn },
-      ]);
-    });
+    socket.on(
+      "message",
+      ({
+        message,
+        // attachments,
+        senderId,
+        senderName,
+        sentOn,
+      }) => {
+        setMessages((prev) => [
+          ...prev,
+          {
+            message,
+            // attachments,
+            sender: { name: senderName, id: senderId },
+            sentOn,
+          },
+        ]);
+      }
+    );
 
     socket.on("remove-msg", ({ data }) => {
       setMessages([...data]);
@@ -204,81 +229,62 @@ const TeamChat = () => {
             {/* Messages */}
             <div className="flex-1 overflow-y-auto p-4 bg-bgSecondary">
               {messages.map((m, idx) => (
-                <div
+                <MessageEl
+                  idx={idx}
                   key={idx}
-                  className={`flex ${
-                    m.sender.id === userDetails._id
-                      ? "justify-end"
-                      : "justify-start"
-                  } mb-4`}
-                >
-                  <div
-                    className={`max-w-[70%] rounded-lg p-3 ${
-                      m.sender.id === userDetails._id
-                        ? "bg-[#a600f0] text-white"
-                        : "bg-textBgPrimary text-textPrimary"
-                    }`}
-                  >
-                    <div className="flex gap-5 justify-between items-center relative">
-                      <h2 className="text-sm font-semibold">{m.sender.name}</h2>
-                      <span
-                        className={`bg-slate-600 text-textPrimary px-2 py-1 text-xs rounded-md absolute top-[-1.5rem] right-[-.9rem] ${
-                          over === idx ? "visible" : "hidden"
-                        }`}
-                      >
-                        Delete
-                      </span>
-                      {m.sender.id === userDetails._id && (
-                        <button
-                          onMouseOver={() => {
-                            setOver(idx);
-                          }}
-                          onMouseOut={() => {
-                            setOver(false);
-                          }}
-                          onClick={() => {
-                            handleDelMsg({
-                              msg: m.message,
-                              teamId: teamId,
-                              sentOn: m.sentOn,
-                              senderId: m.sender.id,
-                              senderName: m.sender.name,
-                            });
-                            setOver(false);
-                          }}
-                        >
-                          <FontAwesomeIcon
-                            icon={faTrashCan}
-                            className="text-white text-sm"
-                          />
-                        </button>
-                      )}
-                    </div>
-                    <p className="font-light">{m.message}</p>
-                    <span className="text-[.6rem] text-blue-100 mt-1 block">
-                      {m.sentOn}
-                    </span>
-                  </div>
-                </div>
+                  message={m.message}
+                  //attachments = {m.attachments}
+                  over={over}
+                  setOver={setOver}
+                  senderId={m.sender.id}
+                  senderName={m.sender.name}
+                  sentOn={m.sentOn}
+                  teamId={teamId}
+                  userId={userDetails._id}
+                  handleDelMsg={handleDelMsg}
+                />
               ))}
+
               {/* Scroll to the bottom */}
               <div ref={msgEndRef} />
             </div>
 
             {/* Message Input */}
-            <div className="p-4 bg-bgSecondary">
-              <form className="flex gap-2" onSubmit={handleSubmit}>
+            <div className="py-4 px-6 bg-bgSecondary relative">
+              <form className="flex gap-1.5" onSubmit={handleSubmit}>
+                <button
+                  className="bg-textBgPrimary p-2 rounded-md"
+                  style={{ border: "none", outline: "none" }}
+                  type="button"
+                  onClick={() => {
+                    setOver("open_list");
+                  }}
+                >
+                  <FontAwesomeIcon
+                    icon={faLink}
+                    className="text-2xl text-textPrimary rotate-[120deg]"
+                  />
+                </button>
+                <ChooseFile open={over} setOpen={setOver} />
                 <input
                   type="text"
                   name="msg"
                   value={msg}
                   className="flex-1 px-4 py-2 border-2 rounded-lg bg-textBgPrimary text-textPrimary focus:outline-none"
                   placeholder="Type your message here..."
+                  autoComplete="off"
+                  style={{ border: "none", outline: "none" }}
                   onChange={(e) => setMsg(e.target.value)}
+                  onFocus={() => {
+                    if (over === "open_list") {
+                      setOver(false);
+                    }
+                  }}
                 />
+
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-lg bg-[#a600f0] text-white"
+                  className="px-4 py-2 rounded-lg bg-[#a600f0] text-white text-2xl"
                 >
                   <FontAwesomeIcon icon={faPaperPlane} />
                 </button>

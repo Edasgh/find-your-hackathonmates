@@ -74,7 +74,7 @@ const TeamEl = ({ teamId, open }) => {
                   <p className="text-textBgPrimaryHv font-semibold text-lg">
                     {team.name}
                   </p>
-                  <p className="text-textBgPrimaryHv font-semibold text-lg">
+                  <p className="text-textPrimary font-semibold text-sm">
                     {team.hkNm}
                   </p>
                   <p className="text-textPrimary text-sm">{team.desc}</p>

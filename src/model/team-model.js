@@ -31,7 +31,18 @@ const teamModel = mongoose.Schema(
     messages: {
       type: Array,
       items: {
-        message: { type: String, required: true },
+        attachments: {
+          type: Array,
+          items: {
+            public_id: { type: String, required: true },
+            url: {
+              type: String,
+              required: true,
+              match: /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i,
+            },
+          },
+        },
+        message: { type: String },
         sentOn: { type: String, required: true },
         sender: {
           name: { type: String, required: true },
