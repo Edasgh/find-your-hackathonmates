@@ -30,9 +30,26 @@ const ChooseFile = ({ open, setOpen }) => {
               <button
                 key={index}
                 className="hover:bg-bgSecondary flex gap-5 p-2 cursor-pointer rounded-md w-full"
+                onClick={()=>{
+                  document.getElementById(`file-${type.name}`).click();
+                }}
               >
                 <FontAwesomeIcon icon={type.icon} className="text-2xl" />
                 {type.name}
+                <input
+                className="hidden"
+                  type="file"
+                  id={`file-${type.name}`}
+                  accept={
+                    type.name === "Image"
+                      ? ".png,.jpg,.jpeg,.gif"
+                      : type.name === "Audio"
+                      ? ".mp3,.wav"
+                      : type.name === "Video"
+                      ? ".mp4,.webm,.ogg"
+                      : ".pdf,.doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                  }
+                />
               </button>
             ))}
           </div>
