@@ -265,7 +265,9 @@ const TeamChat = () => {
                     className="text-2xl text-textPrimary rotate-[120deg]"
                   />
                 </button>
-                <ChooseFile open={over} setOpen={setOver} />
+                <ChooseFile open={over} setOpen={setOver} 
+                // msg={msg} handleSend={handleSubmit} 
+                />
                 <input
                   type="text"
                   name="msg"

@@ -10,12 +10,15 @@ const fileTypes = [
   { name: "File", icon: faFileLines },
 ];
 
-const ChooseFile = ({ open, setOpen }) => {
+const ChooseFile = ({ open, setOpen, 
+  // msg,handleSend
+
+ }) => {
   return (
     <>
       {open == "open_list" ? (
         <>
-          <div className="absolute bg-textBgPrimary text-textPrimary w-[10rem] h-fit py-3 px-2 rounded-md bottom-3 shadow-md shadow-bgPrimary transition-all duration-75">
+          <div className="absolute bg-textBgPrimary text-textPrimary w-[10rem] h-fit py-3 px-2 rounded-md bottom-3 shadow-xl shadow-bgPrimary transition-all duration-75">
             <div className="w-full flex justify-between items-center">
               <span></span>
               <button
@@ -40,6 +43,9 @@ const ChooseFile = ({ open, setOpen }) => {
                 className="hidden"
                   type="file"
                   id={`file-${type.name}`}
+                  onChange={(e)=>{
+                  console.log(e.target.value);
+                  }}
                   accept={
                     type.name === "Image"
                       ? ".png,.jpg,.jpeg,.gif"
