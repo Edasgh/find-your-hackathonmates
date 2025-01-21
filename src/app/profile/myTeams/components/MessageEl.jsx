@@ -2,9 +2,12 @@ import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { fileFormat } from "@/lib/features";
 import AttachmentEl from "../components/AttachmentEl";
+import Link from "next/link";
 
 const MessageEl = ({
   message,
+  public_id,
+  url,
   senderName,
   senderId,
   sentOn,
@@ -52,6 +55,8 @@ const MessageEl = ({
               onClick={() => {
                 handleDelMsg({
                   msg: message,
+                  public_id,
+                  url,
                   teamId: teamId,
                   sentOn: sentOn,
                   senderId: senderId,
@@ -68,18 +73,18 @@ const MessageEl = ({
           )}
         </div>
         <p className="font-light">{message}</p>
-        {/* {attachments.length>0 && attachments.map((attachment,index)=>{
-                const fileUrl = attachment.url;
-                const file = fileFormat(fileUrl);
-                return(
-                  <div>
-                    <Link href={fileUrl} target="_blank" download className="text-black">
-                     {AttachmentEl({file,fileUrl})}
-                    </Link>
-                  </div>
-                )
-
-              })} */}
+        {public_id !== "-1" && (
+          <div>
+            <Link
+              href={url}
+              target="_blank"
+              download
+              className="text-black"
+            >
+              {AttachmentEl({ file: fileFormat(url), fileUrl: url })}
+            </Link>
+          </div>
+        )}
         <span className="text-[.6rem] text-blue-100 mt-1 block">{sentOn}</span>
       </div>
     </div>

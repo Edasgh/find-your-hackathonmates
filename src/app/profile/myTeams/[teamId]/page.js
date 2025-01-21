@@ -8,16 +8,30 @@ import {
   faArrowLeft,
   faLink,
   faPaperPlane,
+  faFileAudio,
+  faFileVideo,
+  faImage,
+  faXmark,
 } from "@fortawesome/free-solid-svg-icons";
+import { faFileLines } from "@fortawesome/free-regular-svg-icons";
 import Link from "next/link";
 import ChatNavigation from "../components/ChatNavigation";
 import { socket } from "@/lib/socket";
 import { getDate } from "@/lib/getDate";
 import { useCreds } from "@/hooks/useCreds";
 import MessageEl from "../components/MessageEl";
-import ChooseFile from "../components/ChooseFile";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+const fileTypes = [
+  { name: "Image", icon: faImage },
+  { name: "Audio", icon: faFileAudio },
+  { name: "Video", icon: faFileVideo },
+  { name: "File", icon: faFileLines },
+];
 
 const urlRegex = /^(https?:\/\/[^\s< >\{\}\[\]]+)$/;
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
 const TeamChat = () => {
   const { teamId } = useChat();
@@ -68,14 +82,78 @@ const TeamChat = () => {
     fetchTeamData();
   }, []);
 
-  // Handle message submission
+  const uploadFile = async (file, fileName) => {
+    let tId = toast.loading("Sending...");
+    if (!file || file.size > MAX_FILE_SIZE) {
+      toast.update(tId, {
+        render: "Can't upload!",
+        type: "error",
+        isLoading: false,
+        autoClose: 2000,
+        closeButton: true,
+      });
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("fileName", fileName);
+    try {
+      const res = await fetch("/api/getAttachmentUrl", {
+        method: "POST",
+        body: formData,
+      });
+      setOver(false);
+      if (res.ok) {
+        toast.update(tId, {
+          render: `${fileName} Sent!`,
+          type: "success",
+          isLoading: false,
+          autoClose: 2000,
+          closeButton: true,
+        });
+        const data = await res.json();
+        const obj = {
+          message: msg,
+          attachment: { public_id: data.public_id, url: data.url },
+          sender: { name: userDetails.name, id: userDetails._id },
+          sentOn: currentTimeStamp,
+        };
+        console.log(obj);
+         setMessages((prev) => [...prev, obj]);
+          socket.emit("message", {
+            roomId: teamId,
+            message: obj.message,
+            public_id: obj.attachment.public_id,
+            url: obj.attachment.url,
+            senderId: userDetails._id,
+            senderName: userDetails.name,
+            sentOn: obj.sentOn,
+          });
+      } else {
+        throw new Error("Can't upload file!");
+      }
+    } catch (error) {
+      toast.update(tId, {
+        render: error.message,
+        type: "error",
+        isLoading: false,
+        autoClose: 2000,
+        closeButton: true,
+      });
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!msg.trim()) return;
 
     const newMessage = {
       message: msg,
-      // attachments,
+      attachment: {
+        public_id:"-1",
+        url:""
+      },
       sender: { name: userDetails.name, id: userDetails._id },
       sentOn: currentTimeStamp,
     };
@@ -84,7 +162,8 @@ const TeamChat = () => {
     socket.emit("message", {
       roomId: teamId,
       message: msg,
-      // attachments,
+      public_id: "-1",
+      url: "",
       senderId: userDetails._id,
       senderName: userDetails.name,
       sentOn: currentTimeStamp,
@@ -95,7 +174,8 @@ const TeamChat = () => {
 
   const handleDelMsg = ({
     msg,
-    //  attachments,
+    public_id,
+    url,
     sentOn,
     senderId,
     senderName,
@@ -103,7 +183,8 @@ const TeamChat = () => {
     socket.emit("remove-msg", {
       roomId: teamId,
       message: msg,
-      // attachments,
+      public_id,
+      url,
       senderId,
       senderName,
       sentOn,
@@ -115,18 +196,12 @@ const TeamChat = () => {
 
     socket.on(
       "message",
-      ({
-        message,
-        // attachments,
-        senderId,
-        senderName,
-        sentOn,
-      }) => {
+      ({ message, public_id, url, senderId, senderName, sentOn }) => {
         setMessages((prev) => [
           ...prev,
           {
             message,
-            // attachments,
+            attachment: { public_id, url },
             sender: { name: senderName, id: senderId },
             sentOn,
           },
@@ -191,6 +266,54 @@ const TeamChat = () => {
         teamData &&
         userDetails && (
           <>
+            <ToastContainer position="bottom-center" theme="dark" />
+            {over == "open_list" && (
+              <>
+                <form className="absolute bg-textBgPrimary text-textPrimary w-[10rem] h-fit py-3 px-2 rounded-md -bottom-24 z-40 shadow-xl shadow-bgPrimary transition-all duration-75">
+                  <div className="w-full flex justify-between items-center">
+                    <span></span>
+                    <button
+                      onClick={() => {
+                        setOver(false);
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faXmark} className="text-xl" />
+                    </button>
+                  </div>
+                  {fileTypes.map((type, index) => (
+                    <button
+                      type="button"
+                      key={index}
+                      className="hover:bg-bgSecondary flex gap-5 p-2 cursor-pointer rounded-md w-full"
+                      onClick={(e) => {
+                        document.getElementById(`file-${type.name}`).click();
+                      }}
+                    >
+                      <FontAwesomeIcon icon={type.icon} className="text-2xl" />
+                      {type.name}
+                      <input
+                        className="hidden"
+                        type="file"
+                        id={`file-${type.name}`}
+                        onChange={(e) =>
+                          uploadFile(e.target.files[0], type.name)
+                        }
+                        accept={
+                          type.name === "Image"
+                            ? ".png,.jpg,.jpeg,.gif"
+                            : type.name === "Audio"
+                            ? ".mp3,.wav"
+                            : type.name === "Video"
+                            ? ".mp4,.webm,.ogg"
+                            : ".pdf,.doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                        }
+                        maxLength={1}
+                      />
+                    </button>
+                  ))}
+                </form>
+              </>
+            )}
             <div className="p-3 bg-bgPrimary border-b-[.1px] border-bgSecondary flex gap-2 items-center">
               <Link
                 className="text-lg mr-2 max-[750px]:flex min-[750.1px]:hidden text-textPrimary"
@@ -233,6 +356,8 @@ const TeamChat = () => {
                   idx={idx}
                   key={idx}
                   message={m.message}
+                  public_id={m.attachment.public_id}
+                  url={m.attachment.url}
                   //attachments = {m.attachments}
                   over={over}
                   setOver={setOver}
@@ -265,9 +390,7 @@ const TeamChat = () => {
                     className="text-2xl text-textPrimary rotate-[120deg]"
                   />
                 </button>
-                <ChooseFile open={over} setOpen={setOver} 
-                // msg={msg} handleSend={handleSubmit} 
-                />
+
                 <input
                   type="text"
                   name="msg"

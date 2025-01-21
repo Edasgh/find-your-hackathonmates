@@ -37,13 +37,25 @@ app.prepare().then(() => {
 
     socket.on(
       "message",
-      async ({ roomId, message, senderId, senderName, sentOn }) => {
+      async ({
+        roomId,
+        public_id,
+        url,
+        message,
+        senderId,
+        senderName,
+        sentOn,
+      }) => {
         try {
           const saveMsg = await Team.findByIdAndUpdate(
             { _id: roomId },
             {
               $push: {
                 messages: {
+                  attachment: {
+                    public_id,
+                    url,
+                  },
                   message: message,
                   sentOn: sentOn,
                   sender: {
@@ -63,7 +75,14 @@ app.prepare().then(() => {
           }
           socket
             .to(roomId)
-            .emit("message", { message, senderId, senderName, sentOn });
+            .emit("message", {
+              message,
+              public_id,
+              url,
+              senderId,
+              senderName,
+              sentOn,
+            });
         } catch (error) {
           console.log(error);
           console.log(error.message);
@@ -73,13 +92,22 @@ app.prepare().then(() => {
 
     socket.on(
       "remove-msg",
-      async ({ roomId, message, senderId, senderName, sentOn }) => {
+      async ({
+        roomId,
+        public_id,
+        url,
+        message,
+        senderId,
+        senderName,
+        sentOn,
+      }) => {
         try {
           const delMsg = await Team.findByIdAndUpdate(
             roomId,
             {
               $pull: {
                 messages: {
+                  attachment: { public_id, url },
                   message: message,
                   sentOn: sentOn,
                   sender: {

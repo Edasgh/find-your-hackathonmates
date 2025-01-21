@@ -23,7 +23,7 @@ const AttachmentEl = ({ file, fileUrl }) => {
       return <audio src={fileUrl} preload="none" controls />;
 
     default:
-      return <FontAwesomeIcon icon={faFileLines} className="text-2xl" />;
+      return <FontAwesomeIcon icon={faFileLines} className="text-2xl p-1" />;
   }
 };
 
