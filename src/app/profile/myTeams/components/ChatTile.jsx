@@ -28,7 +28,11 @@ const ChatTile = ({ team, myId }) => {
               messages[messages.length - 1].sender.id === myId
                 ? "You"
                 : messages[messages.length - 1].sender.name
-            } : ${messages[messages.length - 1].message.slice(0, 20)}`}</>
+            } : ${
+              messages[messages.length - 1].message !== ""
+                ? messages[messages.length - 1].message.slice(0, 20)
+                : "📄 File "
+            }`}</>
           ) : (
             <>
               {`${members.length} ${

@@ -89,8 +89,7 @@ const TeamChat = () => {
         render: "Can't upload!",
         type: "error",
         isLoading: false,
-        autoClose: 2000,
-        closeButton: true,
+        autoClose: 1500,
       });
       return;
     }
@@ -109,8 +108,7 @@ const TeamChat = () => {
           render: `${fileName} Sent!`,
           type: "success",
           isLoading: false,
-          autoClose: 2000,
-          closeButton: true,
+          autoClose: 1500,
         });
         const data = await res.json();
         const obj = {
@@ -120,26 +118,25 @@ const TeamChat = () => {
           sentOn: currentTimeStamp,
         };
         console.log(obj);
-         setMessages((prev) => [...prev, obj]);
-          socket.emit("message", {
-            roomId: teamId,
-            message: obj.message,
-            public_id: obj.attachment.public_id,
-            url: obj.attachment.url,
-            senderId: userDetails._id,
-            senderName: userDetails.name,
-            sentOn: obj.sentOn,
-          });
+        setMessages((prev) => [...prev, obj]);
+        socket.emit("message", {
+          roomId: teamId,
+          message: obj.message,
+          public_id: obj.attachment.public_id,
+          url: obj.attachment.url,
+          senderId: userDetails._id,
+          senderName: userDetails.name,
+          sentOn: obj.sentOn,
+        });
       } else {
-        throw new Error("Can't upload file!");
+        throw new Error("Something went wrong!");
       }
     } catch (error) {
       toast.update(tId, {
         render: error.message,
         type: "error",
         isLoading: false,
-        autoClose: 2000,
-        closeButton: true,
+        autoClose: 1500,
       });
     }
   };
@@ -151,8 +148,8 @@ const TeamChat = () => {
     const newMessage = {
       message: msg,
       attachment: {
-        public_id:"-1",
-        url:""
+        public_id: "-1",
+        url: "",
       },
       sender: { name: userDetails.name, id: userDetails._id },
       sentOn: currentTimeStamp,
