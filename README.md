@@ -14,11 +14,13 @@
 6. After Joining the team, chat with team members `[go to the "/profile/myTeams" route to find all your teams, you can chat in a specific team chat after going to the "/profile/myTeams/[teamId]" route]`, add various links into your team links to add Github Link or Design Links etc.
 7. View all the team members, remove any team member from team by clicking the "-" sign button (only admin can remove members)
 8. Accept or Reject the join requests or invitations , view all types of requests in the `"/profile/joinRequests"` route.
-9. `Fully responsive web app`
+9. View the `user's profile` & the `teams' description` from the `notifications` and the `chat` page
+10. `Send attachments via group chat or team chat`
 
 ## Motivation:
 
 I myself find it challenging to find any team mates whenever I want to join any hackathon.So, I wanted to create myself an app where hackathon participants can create their own team, find another team mate who fulfill the team's skill requirements, chat with members,have all the links related to hackathons inside their team for referrence.
+I know there are already many successful apps in the market, but I just built something what I want an app like this will be.
 
 **Inspiration** : <a href="https://hack-bud.vercel.app/" target="_blank" > `Hackbud` </a>
 
@@ -43,3 +45,4 @@ I myself find it challenging to find any team mates whenever I want to join any 
 1. I plan to add video calling feature here so that team mates can discuss their project better
 2. Users will be able to add their profile picture (instead of showing avatars)
 3. Real time read reciepts of chats & real time invite & application notifications
+4. I plan to make all the parts fully responsive
