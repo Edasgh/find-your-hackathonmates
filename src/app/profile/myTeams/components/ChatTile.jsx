@@ -56,7 +56,7 @@ const ChatTile = ({ team, myId }) => {
         </p>
       </div>
       {notifications.includes(team._id) && (
-        <span className="abolute right-0 px-5">
+        <span className="absolute right-0 px-7">
           <FontAwesomeIcon icon={faCircle} className="text-green-600" />
         </span>
       )}
