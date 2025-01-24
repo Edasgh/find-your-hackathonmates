@@ -23,6 +23,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/navigation";
 import { useCreds } from "@/hooks/useCreds";
 import { socket } from "@/lib/socket";
+import useChat from "@/hooks/useChat";
 
 const UserNav = ({ menuItems, opened }) => {
   return (
@@ -51,11 +52,12 @@ const UserNav = ({ menuItems, opened }) => {
 export default function Navbar() {
   const { user, isLoading, error } = useCreds();
   const router = useRouter();
-
+  const {teamId} = useChat();
   const [opened, setOpened] = useState(false);
   const [hoverIndex, setHoverIndex] = useState(null);
   const [over, setOver] = useState(false);
   const [alerts, setAlerts] = useState([]);
+  const [notifications,setNotifications] = useState([]);
 
   const handleLogOut = async () => {
     const response = await fetch("/api/logout");
@@ -73,8 +75,17 @@ export default function Navbar() {
       socket.on("get_alerts", ({ data }) => {
         setAlerts([...data]);
       });
+      socket.on("new-msg-notification", ({roomId}) => {
+        setNotifications((prev)=>[...prev,roomId]);
+        
+      });
+      if(notifications.includes(teamId))
+      {
+        setNotifications(notifications.filter((e) => e !== teamId));
+        
+      }
     }
-  }, [user]);
+  }, [user,teamId]);
 
   // console.log(alerts);
 
@@ -164,6 +175,11 @@ export default function Navbar() {
                 {m.name === "Notifications" && (
                   <span className="absolute -top-1 right-3 bg-blue-100 text-blue-800 text-xs font-medium me-2 px-1.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
                     {alerts.length}
+                  </span>
+                )}
+                {m.name === "Teams" && (
+                  <span className="absolute -top-3 left-[1.5rem] bg-blue-100 text-blue-800 text-xs font-medium me-2 px-1.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
+                    {notifications.length}
                   </span>
                 )}
                 <span

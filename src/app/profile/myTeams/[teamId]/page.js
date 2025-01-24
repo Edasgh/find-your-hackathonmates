@@ -86,7 +86,7 @@ const TeamChat = () => {
     let tId = toast.loading("Sending...");
     if (!file || file.size > MAX_FILE_SIZE) {
       toast.update(tId, {
-        render: "Can't upload!",
+        render: "File size exceeded!",
         type: "error",
         isLoading: false,
         autoClose: 1500,
@@ -112,18 +112,17 @@ const TeamChat = () => {
         });
         const data = await res.json();
         const obj = {
-          message: msg,
           attachment: { public_id: data.public_id, url: data.url },
+          message: "",
           sender: { name: userDetails.name, id: userDetails._id },
           sentOn: currentTimeStamp,
         };
-        console.log(obj);
         setMessages((prev) => [...prev, obj]);
         socket.emit("message", {
           roomId: teamId,
-          message: obj.message,
-          public_id: obj.attachment.public_id,
-          url: obj.attachment.url,
+          message: "",
+          public_id: data.public_id,
+          url: data.url,
           senderId: userDetails._id,
           senderName: userDetails.name,
           sentOn: obj.sentOn,
@@ -337,6 +336,7 @@ const TeamChat = () => {
                   hkNm={teamData.hackathonName}
                   adminId={teamData.admin}
                   name={teamData.name}
+                  skills={teamData.skills}
                   description={teamData.description}
                   members={newMembers}
                   links={newLinks}
@@ -355,7 +355,6 @@ const TeamChat = () => {
                   message={m.message}
                   public_id={m.attachment.public_id}
                   url={m.attachment.url}
-                  //attachments = {m.attachments}
                   over={over}
                   setOver={setOver}
                   senderId={m.sender.id}

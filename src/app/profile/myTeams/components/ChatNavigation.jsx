@@ -8,6 +8,7 @@ import {
   faEye,
   faRightFromBracket,
   faTrash,
+  faPenToSquare,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
@@ -19,6 +20,7 @@ import DelAlert from "./delAlert";
 import useChat from "@/hooks/useChat";
 import LeaveAlert from "./leaveAlert";
 import { useRouter } from "next/navigation";
+import EditSkillsModal from "./EditSkillsModal";
 
 const ChatNavigation = ({
   name,
@@ -26,6 +28,7 @@ const ChatNavigation = ({
   links,
   hkNm,
   email,
+  skills,
   members,
   userId,
   userName,
@@ -46,6 +49,7 @@ const ChatNavigation = ({
     over3: false,
     over4: false,
     over5: false,
+    over6: false,
   });
 
   const LeaveTeam = async () => {
@@ -94,6 +98,7 @@ const ChatNavigation = ({
 
   return (
     <div className="relative">
+      <EditSkillsModal open={openIdx} setOpen={setOpenIdx} skillsArr={skills} />
       <ViewMembersModal
         members={members}
         userId={userId}
@@ -237,6 +242,25 @@ const ChatNavigation = ({
                   View all Members
                 </span>
               </p>
+            </li>
+            <li className="mb-3">
+              <button
+                className="cursor-pointer bg-transparent flex gap-3 justify-center items-start"
+                onMouseOver={() => {
+                  setOver((prev) => ({ ...prev, over6: true }));
+                }}
+                onMouseOut={() => {
+                  setOver((prev) => ({ ...prev, over6: false }));
+                }}
+                onClick={() => {
+                  setOpenIdx("skills");
+                }}
+              >
+                <FontAwesomeIcon icon={faPenToSquare} className="text-xl" />
+                <p className="relative mb-2 font-semibold hover:underline cursor-pointer">
+                  View Skills
+                </p>
+              </button>
             </li>
           </ul>
         </div>

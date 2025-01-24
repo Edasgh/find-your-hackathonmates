@@ -1,21 +1,34 @@
 "use client";
 import CustomAvatar from "@/components/CustomAvatar";
 import useChat from "@/hooks/useChat";
+import { socket } from "@/lib/socket";
+import { faCircle } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const ChatTile = ({ team, myId }) => {
   const { teamId } = useChat();
   const [messages, setMessages] = useState([...team.messages]);
   const [members, setMembers] = useState([...team.members]);
+  const [notifications, setNotifications] = useState([]);
+
+  useEffect(() => {
+    socket.on("new-msg-notification", ({ roomId }) => {
+      setNotifications((prev) => [...prev, roomId]);
+    });
+    if (notifications.includes(teamId)) {
+      setNotifications(notifications.filter((e) => e !== teamId));
+    }
+  }, [teamId]);
 
   return (
     <Link
       key={team._id}
       href={`/profile/myTeams/${team._id}`}
       title={`${members.length} ${members.length == 1 ? "Member" : "Members"}`}
-      className={`flex items-center p-4 cursor-pointer hover:bg-bgPrimary border-b border-textBgPrimary ${
+      className={`flex items-center p-4 cursor-pointer relative hover:bg-bgPrimary border-b border-textBgPrimary ${
         teamId === team._id && "bg-bgPrimary"
       } `}
     >
@@ -42,6 +55,11 @@ const ChatTile = ({ team, myId }) => {
           )}
         </p>
       </div>
+      {notifications.includes(team._id) && (
+        <span className="abolute right-0 px-5">
+          <FontAwesomeIcon icon={faCircle} className="text-green-600" />
+        </span>
+      )}
     </Link>
   );
 };

@@ -2,6 +2,34 @@
 import { cloudinary } from "@/lib/cloudinaryConfig";
 import { NextResponse } from "next/server";
 
+// Utility function to handle Cloudinary upload with timeout
+const uploadToCloudinary = (buffer, fileName, timeout = 10000) => {
+  return Promise.race([
+    new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        {
+          resource_type: "auto",
+          folder: "fyh-folder",
+        },
+        (error, result) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(result);
+          }
+        }
+      );
+
+      uploadStream.end(buffer); // Properly end the stream
+    }),
+    new Promise((_, reject) =>
+      setTimeout(() => {
+        reject(new Error("Upload timed out"));
+      }, timeout)
+    ),
+  ]);
+};
+
 export const POST = async (request) => {
   try {
     // Parse the form data
@@ -16,10 +44,6 @@ export const POST = async (request) => {
       );
     }
 
-    // Debug: Inspect the file object
-    // console.log("File object:", file);
-    // console.log("File name:", fileName);
-
     // Convert the file to a buffer
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
@@ -28,10 +52,8 @@ export const POST = async (request) => {
       throw new Error("File buffer is empty or invalid");
     }
 
-    // console.log("Buffer size:", buffer.length); // Debug buffer size
-
-    // Upload to Cloudinary
-    const result = await uploadToCloudinary(buffer, fileName);
+    // Upload to Cloudinary with a timeout
+    const result = await uploadToCloudinary(buffer, fileName, 65000); // 10 seconds timeout
 
     // Return a successful response
     return NextResponse.json(
@@ -51,26 +73,4 @@ export const POST = async (request) => {
       { status: 500 }
     );
   }
-};
-
-// Utility function to handle Cloudinary upload
-const uploadToCloudinary = (buffer, fileName) => {
-  return new Promise((resolve, reject) => {
-    const uploadStream = cloudinary.uploader.upload_stream(
-      {
-        resource_type: "auto",
-        folder: "fyh-folder",
-      },
-      (error, result) => {
-        if (error) {
-          // console.error("Cloudinary upload error:", error);
-          reject(error);
-        } else {
-          resolve(result);
-        }
-      }
-    );
-
-    uploadStream.end(buffer); // Properly end the stream
-  });
 };
