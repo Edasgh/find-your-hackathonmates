@@ -20,7 +20,9 @@
 ## Motivation:
 
 I myself find it challenging to find any team mates whenever I want to join any hackathon.So, I wanted to create myself an app where hackathon participants can create their own team, find another team mate who fulfill the team's skill requirements, chat with members,have all the links related to hackathons inside their team for referrence.
-I know there are already many successful apps in the market, but I just built something what I want an app like this will be.
+
+
+`I know there are already many successful apps in the market, but I just built something what I want an app like this will be.`
 
 **Inspiration** : <a href="https://hack-bud.vercel.app/" target="_blank" > `Hackbud` </a>
 
