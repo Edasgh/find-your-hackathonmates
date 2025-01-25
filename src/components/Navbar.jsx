@@ -171,7 +171,7 @@ export default function Navbar() {
                     {alerts.length}
                   </span>
                 )}
-                {m.name === "Teams" && (
+                {m.name === "TeamChats" && (
                   <span className="absolute -top-3 left-[1.5rem] bg-blue-100 text-blue-800 text-xs font-medium me-2 px-1.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
                     {notifications.length}
                   </span>
