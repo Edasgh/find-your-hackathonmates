@@ -24,7 +24,6 @@ import { useRouter } from "next/navigation";
 import { useCreds } from "@/hooks/useCreds";
 import { socket } from "@/lib/socket";
 import useChat from "@/hooks/useChat";
-import Cookies from "js-cookie";
 
 const UserNav = ({ menuItems, opened }) => {
   return (
