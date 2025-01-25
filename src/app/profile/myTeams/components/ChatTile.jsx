@@ -1,36 +1,31 @@
 "use client";
 import CustomAvatar from "@/components/CustomAvatar";
 import useChat from "@/hooks/useChat";
+import { useCreds } from "@/hooks/useCreds";
 import { socket } from "@/lib/socket";
 import { faCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Cookies from "js-cookie";
+
 
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
 const ChatTile = ({ team, myId }) => {
+  const {user,isLoading,error} = useCreds();
   const { teamId } = useChat();
   const [messages, setMessages] = useState([...team.messages]);
   const [members, setMembers] = useState([...team.members]);
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
-    socket.on("new-msg-notification", ({ roomId }) => {
-      const arr = [...notifications, roomId];
-      Cookies.set("notifications", JSON.stringify(arr));
-      setNotifications((prev) => [...prev, roomId]);
-    });
-    if (notifications.includes(teamId)) {
-      const arr = [...notifications].filter((e) => e != teamId);
-      Cookies.set("notifications", JSON.stringify(arr));
-      setNotifications(notifications.filter((e) => e !== teamId));
-    }
-    const storedNotifications = JSON.parse(
-      Cookies.get("notifications") || "[]"
-    );
-    setNotifications(storedNotifications);
-  }, [teamId]);
+     if(user)
+     {
+      socket.emit("get_notifs", { userId: user._id });
+      socket.on("get_notifs", ({ data }) => {
+        setNotifications([...data]);
+      });
+     }
+  }, [user]);
 
   return (
     <Link
@@ -64,7 +59,7 @@ const ChatTile = ({ team, myId }) => {
           )}
         </p>
       </div>
-      {notifications.includes(team._id) && (
+      {notifications.find(n=>n.team===team._id)!==undefined && (
         <span className="absolute right-0 px-7">
           <FontAwesomeIcon icon={faCircle} className="text-green-600" />
         </span>

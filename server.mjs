@@ -4,6 +4,7 @@ import next from "next";
 import Team from "./src/model/team-model.js";
 import User from "./src/model/user-model.js";
 import Request from "./src/model/request-model.js";
+import Unread from "./src/model/unread-model.js";
 import { createTransport } from "nodemailer";
 
 const onlineUsers = new Map();
@@ -44,81 +45,136 @@ app.prepare().then(() => {
       onlineUsers.set(userId, socket.id);
     });
 
-   socket.on(
-     "message",
-     async ({
-       roomId,
-       public_id,
-       url,
-       message,
-       senderId,
-       senderName,
-       sentOn,
-     }) => {
-       try {
-         // Save the message in the database
-         const saveMsg = await Team.findByIdAndUpdate(
-           { _id: roomId },
-           {
-             $push: {
-               messages: {
-                 attachment: {
-                   public_id,
-                   url,
-                 },
-                 message: message,
-                 sentOn: sentOn,
-                 sender: {
-                   name: senderName,
-                   id: senderId,
-                 },
-               },
-             },
-           }
-         );
-         if (!saveMsg) {
-           throw new Error("Message not saved");
-         }
-
-         const currentTeam = await Team.findById(roomId);
-         if (!currentTeam) {
-           throw new Error("Team not found!");
-         }
-
-         // Broadcast the message to all users in the room
-         socket.to(roomId).emit("message", {
-           message,
-           public_id,
-           url,
-           senderId,
-           senderName,
-           sentOn,
-         });
-
-        for (const [userId, userSocketId] of onlineUsers.entries()) {
-          // Skip users not in the team
-          if (!currentTeam.members.some((m) => m.id === userId)) continue;
-
-          const userSocket = io.sockets.sockets.get(userSocketId); // Get the socket instance
-          if (!userSocket) {
-            console.log(`Socket not found for user: ${userId}`);
-            continue;
+    socket.on(
+      "message",
+      async ({
+        roomId,
+        public_id,
+        url,
+        message,
+        senderId,
+        senderName,
+        sentOn,
+      }) => {
+        try {
+          // Save the message in the database
+          const saveMsg = await Team.findByIdAndUpdate(
+            { _id: roomId },
+            {
+              $push: {
+                messages: {
+                  attachment: {
+                    public_id,
+                    url,
+                  },
+                  message: message,
+                  sentOn: sentOn,
+                  sender: {
+                    name: senderName,
+                    id: senderId,
+                  },
+                },
+              },
+            }
+          );
+          if (!saveMsg) {
+            throw new Error("Message not saved");
           }
 
-          const isInRoom = userSocket.rooms.has(roomId); // Check room membership
-          if (!isInRoom) {
-            io.to(userSocketId).emit("new-msg-notification", {
-              roomId, // Include additional data if needed
-            });
-          } 
+          const currentTeam = await Team.findById(roomId);
+          if (!currentTeam) {
+            throw new Error("Team not found!");
+          }
+
+          // Broadcast the message to all users in the room
+          socket.to(roomId).emit("message", {
+            message,
+            public_id,
+            url,
+            senderId,
+            senderName,
+            sentOn,
+          });
+
+          //notify the online users
+          for (const [userId, userSocketId] of onlineUsers.entries()) {
+            // Skip users not in the team
+            if (!currentTeam.members.some((m) => m.id === userId)) continue;
+
+            const userSocket = io.sockets.sockets.get(userSocketId); // Get the socket instance
+            if (!userSocket) continue;
+
+            const isInRoom = userSocket.rooms.has(roomId); // Check room membership
+            if (!isInRoom) {
+              const addNotif = await Unread.create({
+                team: roomId,
+                reciever: userId,
+              });
+              if (!addNotif) {
+                throw new Error("notification not sent!");
+              }
+              const findAlerts = await Unread.find({ reciever: userId });
+              if (!findAlerts) {
+                throw new Error("notifications not found!");
+              }
+              io.to(userSocketId).emit("get_notifs", { data: findAlerts });
+            }
+          }
+
+          //notify the offline users too
+          const members = await currentTeam.members;
+          for (const { name, id } of members) {
+            if (onlineUsers.has(id)) {
+              continue;
+            } else {
+              const addNotif = await Unread.create({
+                team: roomId,
+                reciever: id,
+              });
+              if (!addNotif) {
+                throw new Error("notification not sent!");
+              }
+            }
+          }
+        } catch (error) {
+          console.log(error.message);
         }
+      }
+    );
 
+    socket.on("get_notifs", async ({ userId }) => {
+      try {
+        const findAlerts = await Unread.find({ reciever: userId });
+        if (!findAlerts) {
+          throw new Error("notifications not found!");
+        }
+        socket.emit("get_notifs", { data: findAlerts });
+      } catch (error) {
+        console.log(error.message);
+      }
+    });
 
-       } catch (error) {
-         console.log(error.message);
-       }
-     }
-   );
+    socket.on("read_msg", async ({ userId, roomId }) => {
+      try {
+        const delAlerts = await Unread.deleteMany({
+          team: roomId,
+          reciever: userId,
+        });
+        if (!delAlerts) {
+          throw new Error("notifications not deleted!");
+        }
+        const findAlerts = await Unread.find({ reciever: userId });
+        if (!findAlerts) {
+          throw new Error("notifications not found!");
+        }
+        const findSocketId = getKeyByValue(onlineUsers, userId);
+        if (findSocketId !== null || findSocketId !== undefined) {
+          io.to(findSocketId).emit("get_notifs", { data: findAlerts });
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+    });
 
     socket.on(
       "remove-msg",
@@ -572,9 +628,8 @@ app.prepare().then(() => {
     });
 
     socket.on("disconnect", () => {
-      const key = getKeyByValue(onlineUsers,socket.id);
-      if(key!==null)
-      {
+      const key = getKeyByValue(onlineUsers, socket.id);
+      if (key !== null) {
         onlineUsers.delete(key);
       }
       console.log(`Disconnected ${socket.id}`);

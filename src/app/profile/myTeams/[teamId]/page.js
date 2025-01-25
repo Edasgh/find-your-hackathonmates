@@ -217,12 +217,15 @@ const TeamChat = () => {
       setNewMembers((prev) => prev.filter((m) => m.id !== memberId));
     });
 
+    socket.emit("read_msg", { userId:user._id, roomId:teamId });
+
     return () => {
       socket.off("join-room");
       socket.off("message");
       socket.off("remove-msg");
       socket.off("set_link");
       socket.off("set_member");
+      socket.off("read_msg");
     };
   }, [teamId]);
 

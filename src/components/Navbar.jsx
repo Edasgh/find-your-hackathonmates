@@ -58,9 +58,7 @@ export default function Navbar() {
   const [hoverIndex, setHoverIndex] = useState(null);
   const [over, setOver] = useState(false);
   const [alerts, setAlerts] = useState([]);
-  const [notifications, setNotifications] = useState(
-    JSON.parse(Cookies.get("notifications") || "[]")
-  );
+  const [notifications, setNotifications] = useState([]);
 
   const handleLogOut = async () => {
     const response = await fetch("/api/logout");
@@ -77,22 +75,11 @@ export default function Navbar() {
       socket.on("get_alerts", ({ data }) => {
         setAlerts([...data]);
       });
-      socket.on("new-msg-notification", ({ roomId }) => {
-        const arr = [...notifications, roomId];
-        Cookies.set("notifications", JSON.stringify(arr));
-        setNotifications((prev) => [...prev, roomId]);
+      socket.emit("get_notifs",({userId:user._id}));
+      socket.on("get_notifs", ({ data }) => {
+        setNotifications([...data]);
       });
-
-      if (notifications.includes(teamId)) {
-        const arr = [...notifications].filter((e) => e != teamId);
-        Cookies.set("notifications", JSON.stringify(arr));
-        setNotifications(notifications.filter((e) => e != teamId));
-      }
-
-      const storedNotifications = JSON.parse(
-        Cookies.get("notifications") || "[]"
-      );
-      setNotifications(storedNotifications);
+      
     }
   }, [user, teamId]);
 
