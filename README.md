@@ -16,7 +16,10 @@ I myself find it challenging to find any team mates whenever I want to join any 
 5. `Get real time notifications for join requests, invitations & new (unread) messages in your team chat`
 6. `Search teams & team mates`
 7. `View profiles & teams from the join requests to consider joining`
-8. `User friendly interface to navigate between pages`
+8. `View all the team members, remove any team member from team by clicking the "-" sign button (only admin can remove members)`
+
+
+9. `User friendly interface to navigate between pages`
 
 **Inspiration** : <a href="https://hack-bud.vercel.app/" target="_blank" > `Hackbud` </a>
 
