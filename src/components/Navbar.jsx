@@ -100,7 +100,7 @@ export default function Navbar() {
       href: "/profile/myTeams",
       icon: faMessage,
       hoverIcon: msgIcon,
-      name: "Teams",
+      name: "TeamChats",
     },
     {
       href: "/profile/joinRequests",
@@ -177,7 +177,7 @@ export default function Navbar() {
                   </span>
                 )}
                 <span
-                  className={`bg-slate-600 text-textPrimary px-2 py-1 text-sm rounded-md absolute bottom-[2.2rem] ${
+                  className={`bg-slate-600 z-40 text-textPrimary px-2 py-1 text-sm rounded-md absolute bottom-[2.2rem] ${
                     m.name === "Notifications" ? "-left-11" : "-left-3"
                   } ${hoverIndex === i ? "visible" : "hidden"}`}
                 >
