@@ -15,7 +15,6 @@ export const GET = async (request) => {
       throw new Error("Can't fetch details, try again later!");
     }
   } catch (error) {
-    console.log(error);
     return new NextResponse(error.message, {
       status: 500,
     });

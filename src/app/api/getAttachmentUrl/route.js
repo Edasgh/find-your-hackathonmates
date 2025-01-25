@@ -65,8 +65,6 @@ export const POST = async (request) => {
       { status: 200 }
     );
   } catch (err) {
-    console.error("Error during upload:", err.message);
-
     // Return an error response
     return NextResponse.json(
       { message: "File upload failed", error: err.message },

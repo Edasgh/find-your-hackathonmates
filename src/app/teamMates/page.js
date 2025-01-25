@@ -28,8 +28,8 @@ export default function TeamMatesPage() {
       const data = await resp.json();
       setTeamMates(data.users || []);
     } catch (err) {
-      console.error(err.message);
       setTeamMates([]);
+      console.error(err.message);
     } finally {
       setLoading(false);
     }

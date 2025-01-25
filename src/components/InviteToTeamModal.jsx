@@ -25,8 +25,9 @@ const InviteToTeamModal = ({ open, setOpen, userId, userName, email }) => {
         throw new Error("No teams found!");
       }
     } catch (error) {
-      console.log(error);
       setMyTeams([]);
+      console.log(error);
+    } finally {
       setLoading(false);
     }
   };
@@ -44,7 +45,7 @@ const InviteToTeamModal = ({ open, setOpen, userId, userName, email }) => {
   const handleInvite = async (e) => {
     e.preventDefault();
     handleClose();
-    let tId = toast.loading("Sending Invitation...",{containerId:"A"});
+    let tId = toast.loading("Sending Invitation...", { containerId: "A" });
     const data = new FormData(e.target);
     const team = JSON.parse(data.get("team"));
     const invitationData = {
@@ -57,7 +58,7 @@ const InviteToTeamModal = ({ open, setOpen, userId, userName, email }) => {
       email: email,
     };
     try {
-      socket.emit("invite",invitationData);
+      socket.emit("invite", invitationData);
       socket.on("invite", (res) => {
         if (res.status === 200) {
           toast.update(tId, {
@@ -65,7 +66,7 @@ const InviteToTeamModal = ({ open, setOpen, userId, userName, email }) => {
             type: "success",
             isLoading: false,
             autoClose: 1500,
-            containerId:"A"
+            containerId: "A",
           });
         } else if (res.status === 403) {
           toast.update(tId, {
@@ -73,22 +74,20 @@ const InviteToTeamModal = ({ open, setOpen, userId, userName, email }) => {
             type: "error",
             isLoading: false,
             autoClose: 1500,
-            containerId:"A"
+            containerId: "A",
           });
-          
         } else {
           toast.update(tId, {
             render: "Something went wrong!",
             type: "error",
             isLoading: false,
             autoClose: 1500,
-            containerId:"A"
+            containerId: "A",
           });
         }
       });
     } catch (error) {
       console.log(error);
-      
     }
   };
 

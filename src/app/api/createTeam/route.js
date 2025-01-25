@@ -54,7 +54,6 @@ export const POST = async (request) => {
     }
     return new NextResponse("Team created successfully!", { status: 201 });
   } catch (error) {
-    console.log(error);
     return new NextResponse(error.message, {
       status: 500,
     });
@@ -73,7 +72,6 @@ export const GET = async (request) => {
       return NextResponse.json({ teams: teams }, { status: 200 });
     }
   } catch (error) {
-    console.log(error);
     return new NextResponse("Something went wrong!", {
       status: 500,
     });

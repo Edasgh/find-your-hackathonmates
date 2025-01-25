@@ -35,7 +35,6 @@ export const ProfileEl = ({ userId, open}) => {
           teams: [...userData.teams],
         });
       } catch (err) {
-        //  setError(err.message);
         console.error(err.message);
       } finally {
         setLoading(false);

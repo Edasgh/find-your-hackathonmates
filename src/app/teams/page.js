@@ -22,8 +22,8 @@ export default function Teams() {
       const data = await resp.json();
       setTeamsData(data.teams);
     } catch (err) {
-      console.error("Error fetching teams:", err.message);
       setTeamsData([]);
+      console.error("Error fetching teams:", err.message);
     } finally {
       setLoading(false);
     }
