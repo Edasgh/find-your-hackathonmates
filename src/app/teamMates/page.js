@@ -65,9 +65,14 @@ export default function TeamMatesPage() {
     }
 
     // Filter teamMates based on the input value (case-insensitive)
-    const filteredTeamMate = teamMates.filter((e) =>
-      e.name.toUpperCase().includes(value.toUpperCase())
+    const filteredTeamMate = teamMates.filter(
+      (e) =>
+        (e.skills &&
+          e.skills.some(
+            (m) => m.toString().trim().toUpperCase() === value.toUpperCase().trim()
+          ))
     );
+
 
     // Set the filtered result as the new teamMates state
     setTeamMates(filteredTeamMate);
@@ -93,7 +98,7 @@ export default function TeamMatesPage() {
           }
           name="search_teamMates"
           id="search_teamMates"
-          placeholder="Start searching..."
+          placeholder="Search by skill..."
           onKeyUp={(e) => {
             setSearchTerm(e.target.value);
           }}

@@ -19,7 +19,7 @@ I myself find it challenging to find any team mates whenever I want to join any 
 3. `Send invitation & application to email`,
 4. `Chat real time with team mates on "TeamChats" page`,`Send attachments , save links to your design in the team itself`,
 5. `Get real time notifications for join requests, invitations & new (unread) messages in your team chat`
-6. `Search teams & team mates`
+6. `Search teams & team mates by a specific skill`
 7. `View profiles & teams from the join requests to consider joining`
 8. `View all the team members, remove any team member from team by clicking the "-" sign button (only admin can remove members)`
 
