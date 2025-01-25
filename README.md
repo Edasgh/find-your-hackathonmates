@@ -6,6 +6,8 @@ I myself find it challenging to find any team mates whenever I want to join any 
 
 `I know there are already many successful apps in the market, but I just built something what I want an app like this will be.`
 
+**Inspiration** : <a href="https://hack-bud.vercel.app/" target="_blank" > `Hackbud` </a>
+
 ## Live link :
 
 (will be updated sortly)
@@ -23,8 +25,6 @@ I myself find it challenging to find any team mates whenever I want to join any 
 
 
 9. `User friendly interface to navigate between pages`
-
-**Inspiration** : <a href="https://hack-bud.vercel.app/" target="_blank" > `Hackbud` </a>
 
 ## Challenges I faced :
 
