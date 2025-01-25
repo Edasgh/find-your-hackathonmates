@@ -24,6 +24,7 @@ import { useRouter } from "next/navigation";
 import { useCreds } from "@/hooks/useCreds";
 import { socket } from "@/lib/socket";
 import useChat from "@/hooks/useChat";
+import Cookies from "js-cookie";
 
 const UserNav = ({ menuItems, opened }) => {
   return (
@@ -52,12 +53,14 @@ const UserNav = ({ menuItems, opened }) => {
 export default function Navbar() {
   const { user, isLoading, error } = useCreds();
   const router = useRouter();
-  const {teamId} = useChat();
+  const { teamId } = useChat();
   const [opened, setOpened] = useState(false);
   const [hoverIndex, setHoverIndex] = useState(null);
   const [over, setOver] = useState(false);
   const [alerts, setAlerts] = useState([]);
-  const [notifications,setNotifications] = useState([]);
+  const [notifications, setNotifications] = useState(
+    JSON.parse(Cookies.get("notifications") || "[]")
+  );
 
   const handleLogOut = async () => {
     const response = await fetch("/api/logout");
@@ -68,26 +71,30 @@ export default function Navbar() {
       }, 500);
     }
   };
-
   useEffect(() => {
     if (user) {
       socket.emit("get_alerts", { userId: user._id });
       socket.on("get_alerts", ({ data }) => {
         setAlerts([...data]);
       });
-      socket.on("new-msg-notification", ({roomId}) => {
-        setNotifications((prev)=>[...prev,roomId]);
-        
+      socket.on("new-msg-notification", ({ roomId }) => {
+        const arr = [...notifications, roomId];
+        Cookies.set("notifications", JSON.stringify(arr));
+        setNotifications((prev) => [...prev, roomId]);
       });
-      if(notifications.includes(teamId))
-      {
-        setNotifications(notifications.filter((e) => e !== teamId));
-        
-      }
-    }
-  }, [user,teamId]);
 
-  // console.log(alerts);
+      if (notifications.includes(teamId)) {
+        const arr = [...notifications].filter((e) => e != teamId);
+        Cookies.set("notifications", JSON.stringify(arr));
+        setNotifications(notifications.filter((e) => e != teamId));
+      }
+
+      const storedNotifications = JSON.parse(
+        Cookies.get("notifications") || "[]"
+      );
+      setNotifications(storedNotifications);
+    }
+  }, [user, teamId]);
 
   const menuItems = [
     { href: "/createTeam", icon: faPlus, label: "Create your Team" },

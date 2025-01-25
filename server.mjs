@@ -12,6 +12,15 @@ const dev = process.env.NODE_ENV !== "production";
 const hostname = process.env.HOSTNAME || "localhost";
 const port = process.env.PORT || 3000;
 
+function getKeyByValue(map, searchValue) {
+  for (let [key, value] of map) {
+    if (value === searchValue) {
+      return key;
+    }
+  }
+  return null; // Value not found
+}
+
 const app = next({ dev });
 const handle = app.getRequestHandler();
 app.prepare().then(() => {
@@ -563,6 +572,11 @@ app.prepare().then(() => {
     });
 
     socket.on("disconnect", () => {
+      const key = getKeyByValue(onlineUsers,socket.id);
+      if(key!==null)
+      {
+        onlineUsers.delete(key);
+      }
       console.log(`Disconnected ${socket.id}`);
     });
   });

@@ -4,6 +4,7 @@ import useChat from "@/hooks/useChat";
 import { socket } from "@/lib/socket";
 import { faCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Cookies from "js-cookie";
 
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -16,11 +17,19 @@ const ChatTile = ({ team, myId }) => {
 
   useEffect(() => {
     socket.on("new-msg-notification", ({ roomId }) => {
+      const arr = [...notifications, roomId];
+      Cookies.set("notifications", JSON.stringify(arr));
       setNotifications((prev) => [...prev, roomId]);
     });
     if (notifications.includes(teamId)) {
+      const arr = [...notifications].filter((e) => e != teamId);
+      Cookies.set("notifications", JSON.stringify(arr));
       setNotifications(notifications.filter((e) => e !== teamId));
     }
+    const storedNotifications = JSON.parse(
+      Cookies.get("notifications") || "[]"
+    );
+    setNotifications(storedNotifications);
   }, [teamId]);
 
   return (
