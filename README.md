@@ -1,5 +1,5 @@
 # Find Your HackathonMates - An app for finding a team when you wish to join hackathons & to find appropriate team members for your hackathon team
-Introducing `Find Your HackathonMates` - An app for finding a team when you wish to join hackathons & to find appropriate team members for your hackathon team
+**Introducing `Find Your HackathonMates` - An app for finding a team when you wish to join hackathons & to find appropriate team members for your hackathon team**
 
 
 I myself find it challenging to find any team mates whenever I want to join any hackathon.So, I wanted to create myself an app where hackathon participants can create their own team, find another team mate who fulfill the team's skill requirements, chat with members,have all the links related to hackathons inside their team for referrence.
