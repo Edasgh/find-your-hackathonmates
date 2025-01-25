@@ -12,6 +12,7 @@ export default function Teams() {
   const { user, isLoading, error } = useCreds();
   const [teamsData, setTeamsData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   // Fetch teams data
   const fetchTeams = async () => {
@@ -48,11 +49,67 @@ export default function Teams() {
     );
   }
 
+  const searchTeam = async (ev, value) => {
+    ev.preventDefault();
+
+    if (value === "") {
+      await fetchTeams();
+      return;
+    }
+
+    // Filter teamMates based on the input value (case-insensitive)
+    const filteredTeam = teamsData.filter((e) =>
+      e.name.toUpperCase().includes(value.toUpperCase())
+    );
+
+    // Set the filtered result as the new teamMates state
+    setTeamsData(filteredTeam);
+  };
   return (
     <>
       <h1 className="text-center section-title my-12 text-textPrimary poppins-semibold text-4xl">
         Join new Teams
       </h1>
+      <form
+        id="teams_form"
+        className="flex gap-2 justify-center items-center mb-10"
+        onSubmit={(e) => searchTeam(e, searchTerm)}
+      >
+        <input
+          type="text"
+          className={
+            teamsData.length === 0
+              ? "w-fit text-textPrimary bg-bgPrimary py-2 px-5 border-[1px] border-textPrimary rounded-md outline-none"
+              : "w-fit text-textPrimary bg-black py-2 px-5 border-[1px] border-textPrimary rounded-md outline-none"
+          }
+          name="search_teams"
+          id="search_teams"
+          placeholder="Start searching..."
+          onKeyUp={(e) => {
+            setSearchTerm(e.target.value);
+          }}
+          disabled={teamsData.length === 0}
+        />
+        <button
+          type="submit"
+          disabled={teamsData.length === 0}
+          className={
+            teamsData.length === 0
+              ? "w-fit border-[1px] border-textBgPrimaryHv bg-textBgPrimaryHv text-black px-6 py-2 rounded-md cursor-not-allowed"
+              : "w-fit border-[1px] border-textBgPrimaryHv bg-textBgPrimaryHv text-black px-6 py-2 rounded-md cursor-pointer"
+          }
+        >
+          Search
+        </button>
+        <button
+          onClick={() => fetchTeams()}
+          type="button"
+          className="w-fit border-[1px] border-textBgPrimaryHv bg-textBgPrimaryHv text-black px-6 py-2 rounded-md cursor-pointer"
+        >
+          Reset
+        </button>
+      </form>
+
       <div className="w-full flex flex-wrap gap-3">
         {teamsData.length ? (
           teamsData.map((t, index) => (

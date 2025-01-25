@@ -11,6 +11,7 @@ export default function TeamMatesPage() {
   const { user, isLoading, error } = useCreds();
   const [loading, setLoading] = useState(false);
   const [teamMates, setTeamMates] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const fetchTeammates = async () => {
     setLoading(true);
@@ -45,22 +46,79 @@ export default function TeamMatesPage() {
     return <LoadingComponent />;
   }
 
-    if(error || user===null )
-    {
-      return (
-        <>
-          <div className="w-screen h-screen">
-            <NotFoundUser />
-          </div>
-        </>
-      );
+  if (error || user === null) {
+    return (
+      <>
+        <div className="w-screen h-screen">
+          <NotFoundUser />
+        </div>
+      </>
+    );
+  }
+
+  const searchTeamMates = async (ev, value) => {
+    ev.preventDefault();
+
+    if (value === "") {
+      await fetchTeammates();
+      return;
     }
+
+    // Filter teamMates based on the input value (case-insensitive)
+    const filteredTeamMate = teamMates.filter((e) =>
+      e.name.toUpperCase().includes(value.toUpperCase())
+    );
+
+    // Set the filtered result as the new teamMates state
+    setTeamMates(filteredTeamMate);
+  };
 
   return (
     <>
       <h1 className="text-center section-title my-12 text-textPrimary poppins-semibold text-4xl">
         Connect with Teammates
       </h1>
+
+      <form
+        id="team_mates_form"
+        className="flex justify-center gap-2 items-center mb-10"
+        onSubmit={(e) => searchTeamMates(e, searchTerm)}
+      >
+        <input
+          type="text"
+          className={
+            teamMates.length === 0
+              ? "w-fit text-textPrimary bg-bgPrimary py-2 px-5 border-[1px] border-textPrimary rounded-md outline-none"
+              : "w-fit text-textPrimary bg-black py-2 px-5 border-[1px] border-textPrimary rounded-md outline-none"
+          }
+          name="search_teamMates"
+          id="search_teamMates"
+          placeholder="Start searching..."
+          onKeyUp={(e) => {
+            setSearchTerm(e.target.value);
+          }}
+          disabled={teamMates.length === 0}
+        />
+        <button
+          type="submit"
+          disabled={teamMates.length === 0}
+          className={
+            teamMates.length === 0
+              ? "w-fit border-[1px] border-textBgPrimaryHv bg-textBgPrimaryHv text-black px-6 py-2 rounded-md cursor-not-allowed"
+              : "w-fit border-[1px] border-textBgPrimaryHv bg-textBgPrimaryHv text-black px-6 py-2 rounded-md cursor-pointer"
+          }
+        >
+          Search
+        </button>
+        <button
+          onClick={() => fetchTeammates()}
+          type="button"
+          className="w-fit border-[1px] border-textBgPrimaryHv bg-textBgPrimaryHv text-black px-6 py-2 rounded-md cursor-pointer"
+        >
+          Reset
+        </button>
+      </form>
+
       <div className="w-full flex flex-wrap gap-3 justify-center items-center">
         {teamMates.length > 0 ? (
           teamMates.map((t, index) => (
