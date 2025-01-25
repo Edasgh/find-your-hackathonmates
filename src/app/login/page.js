@@ -77,7 +77,9 @@ export default function Login() {
           closeButton: true,
         });
         router.push(`/teams`);
-        window.location.reload();
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
       } else {
         throw new Error("Wrong email or password!");
       }
