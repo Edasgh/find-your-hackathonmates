@@ -3,15 +3,12 @@
 import CustomAvatar from "@/components/CustomAvatar";
 import SkillsCloud from "@/components/SkillsCloud";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
-import {
-  faEnvelope,
-  faPeopleGroup,
-} from "@fortawesome/free-solid-svg-icons";
+import { faEnvelope, faPeopleGroup } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-export const ProfileEl = ({ userId, open}) => {
+export const ProfileEl = ({ userId, open }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -35,7 +32,7 @@ export const ProfileEl = ({ userId, open}) => {
           teams: [...userData.teams],
         });
       } catch (err) {
-        console.error(err.message);
+        console.log(err.message);
       } finally {
         setLoading(false);
       }
@@ -46,7 +43,7 @@ export const ProfileEl = ({ userId, open}) => {
   }, [user]);
   return (
     <>
-      {user !== null && (
+      {user !== null ? (
         <div
           style={{
             position: "fixed",
@@ -59,7 +56,7 @@ export const ProfileEl = ({ userId, open}) => {
             placeItems: "center",
             visibility: open ? "visible" : "hidden",
             zIndex: open ? "10000" : "-1",
-            cursor:"default"
+            cursor: "default",
           }}
           suppressHydrationWarning
         >
@@ -138,6 +135,35 @@ export const ProfileEl = ({ userId, open}) => {
               </div>
             </div>
           )}
+        </div>
+      ) : (
+        <div
+          style={{
+            position: "fixed",
+            top: "0",
+            left: "0",
+            width: "100%",
+            height: "100%",
+            background: " #0a0b0cba",
+            display: "grid",
+            placeItems: "center",
+            visibility: open ? "visible" : "hidden",
+            zIndex: open ? "10000" : "-1",
+            cursor: "default",
+          }}
+          suppressHydrationWarning
+        >
+          <div
+            className="mx-4 p-6 flex flex-1 flex-col items-start gap-3"
+            suppressHydrationWarning
+          >
+            <div
+              className="flex justify-center items-center m-auto text-4xl text-center"
+              suppressHydrationWarning
+            >
+              <span className="loader m-auto"></span>
+            </div>
+          </div>
         </div>
       )}
     </>

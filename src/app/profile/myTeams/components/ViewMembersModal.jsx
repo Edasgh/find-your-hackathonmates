@@ -18,9 +18,11 @@ const ViewMembersModal = ({
   };
 
   const [over1, setOver1] = useState(false);
-  const [openProfile, setOpenProfile] = useState(false);
-  let openId = undefined;
-  const [id,setId] = useState(openId);
+   const [openProfileId, setOpenProfileId] = useState(null); // For controlling which ProfileEl is open
+
+   const toggleProfile = (memberId) => {
+     setOpenProfileId((prevId) => (prevId === memberId ? null : memberId)); // Toggle the profile view
+   };
   return (
     <div
       style={{
@@ -70,14 +72,10 @@ const ViewMembersModal = ({
                 >
                   <div
                     className="text-lg hover:underline"
-                    onClick={() => {
-                      openId=m.id
-                      setOpenProfile(!openProfile);
-                      setId(openId);
-                    }}
+                    onClick={() => toggleProfile(m.id)}
                   >
                     <p>{m.name}</p>
-                    <ProfileEl open={openProfile} userId={id} />
+                    <ProfileEl open={openProfileId === m.id} userId={m.id} />
                   </div>
                   {isAdmin && (
                     <>
