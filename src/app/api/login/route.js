@@ -31,7 +31,7 @@ export const POST = async (request) => {
         { message: "Logged in successfully!" },
         { status: 200 }
       );
-      response.cookies.set("token", JSON.stringify(user), { httpOnly: true });
+      response.cookies.set("token", JSON.stringify(user.token), { httpOnly: true });
       return response;
     } else {
       return new NextResponse("User doesn't exist", {
