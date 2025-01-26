@@ -19,6 +19,8 @@ const ViewMembersModal = ({
 
   const [over1, setOver1] = useState(false);
   const [openProfile, setOpenProfile] = useState(false);
+  let openId = undefined;
+  const [id,setId] = useState(openId);
   return (
     <div
       style={{
@@ -69,11 +71,13 @@ const ViewMembersModal = ({
                   <div
                     className="text-lg hover:underline"
                     onClick={() => {
+                      openId=m.id
                       setOpenProfile(!openProfile);
+                      setId(openId);
                     }}
                   >
                     <p>{m.name}</p>
-                    <ProfileEl open={openProfile} userId={m.id} />
+                    <ProfileEl open={openProfile} userId={id} />
                   </div>
                   {isAdmin && (
                     <>

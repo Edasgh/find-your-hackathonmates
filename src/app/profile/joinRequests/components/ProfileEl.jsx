@@ -40,7 +40,7 @@ export const ProfileEl = ({ userId, open}) => {
         setLoading(false);
       }
     };
-    if (user == null && userId !== undefined) {
+    if (user == null || userId !== undefined) {
       fetchUser();
     }
   }, [user]);
