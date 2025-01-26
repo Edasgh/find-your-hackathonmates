@@ -20,7 +20,6 @@ import { useState } from "react";
 export default function Team({
   id,
   name,
-  hkNm,
   desc,
   skills,
   members,
@@ -72,9 +71,6 @@ export default function Team({
           <div className="team-card-front flex flex-col gap-4 justify-center items-center">
             <CustomAvatar name={name} />
             <p className="text-textBgPrimaryHv font-semibold text-lg">{name}</p>
-            <p className="text-textPrimary text-sm">
-              For the Hackathon : <span className="font-bold">{hkNm}</span>
-            </p>
             <p className="text-textPrimary text-sm">{desc}</p>
             <p className="text-textPrimary text-center text-xs">
               <FontAwesomeIcon

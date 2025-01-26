@@ -3,7 +3,6 @@ import mongoose from "mongoose";
 const teamModel = mongoose.Schema(
   {
     name: { type: String, required: true, unique: true },
-    hackathonName: { type: String, required: true },
     description: { type: String, maxlength: 100, required: true },
     email: { type: String, required: true },
     members: {

@@ -10,7 +10,6 @@ export const POST = async (request) => {
     email,
     description,
     members,
-    hackathonName,
     admin,
     skills,
     links,
@@ -23,7 +22,6 @@ export const POST = async (request) => {
   const tm = {
     name,
     email,
-    hackathonName,
     description,
     members,
     admin,

@@ -6,7 +6,6 @@ import LoadingComponent from "../loading";
 import Team from "@/components/Team";
 import Footer from "@/components/Footer";
 import { useCreds } from "@/hooks/useCreds";
-import NotFound from "@/components/not-found";
 
 export default function Teams() {
   const { user, isLoading, error } = useCreds();
@@ -121,7 +120,6 @@ export default function Teams() {
             <Team
               key={index}
               id={t._id}
-              hkNm={t.hackathonName}
               index={index}
               desc={t.description}
               email={t.email}
