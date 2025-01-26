@@ -1,6 +1,7 @@
 import { dbConn } from "@/lib/mongo";
 import User from "@/model/user-model";
 import { getLoggedInUser } from "@/queries/users";
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export const GET = async () => {
@@ -41,7 +42,26 @@ export const POST = async (request) => {
       bio: bio,
     });
     if (resp) {
-      return new NextResponse("User updated successfully!", { status: 200 });
+      const token = JSON.parse((await cookies()).get("token").value);
+      const user = {
+        _id: token._id,
+        name: name,
+        email: email,
+        country: country,
+        githubID: githubID,
+        skills: skills,
+        bio: bio,
+        teams: token.teams,
+        isAdmin: token.isAdmin,
+        token: token.token,
+        success: true,
+      };
+      const response = new NextResponse("User updated successfully!", {
+        status: 200,
+      });
+      //reset the cookie
+      response.cookies.set("token", JSON.stringify(user), { httpOnly: true });
+      return response;
     } else {
       throw new Error("Something went wrong!");
     }
