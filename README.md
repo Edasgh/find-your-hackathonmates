@@ -8,9 +8,16 @@ I myself find it challenging to find any team mates whenever I want to join any 
 
 **Inspiration** : <a href="https://hack-bud.vercel.app/" target="_blank" > `Hackbud` </a>
 
-## Live link :
+## Live link : 
+https://find-your-hackathonmates.onrender.com/
 
-(will be updated sortly)
+## Demo Video :
+**Part 1 :** 
+https://www.loom.com/share/d9eb98f6dfc84c8295e65574e5019188?sid=6619c495-2731-4a14-94be-22bd73b06b88
+
+**Part 2 :**
+https://www.loom.com/share/4346977296864a52851b701d99254628?sid=43029c57-889e-4d37-a3e2-c78c7683818b
+
 
 ## Features :
 
