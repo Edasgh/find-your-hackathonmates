@@ -103,7 +103,11 @@ export default function EditProfile({
   return (
     <>
       <ToastContainer position="top-center" theme="dark" />
-      <form onSubmit={handleSubmit} className="login-signup-form" id="signup">
+      <form
+        onSubmit={(e) => handleSubmit(e)}
+        className="login-signup-form"
+        id="signup"
+      >
         <div className="flex flex-wrap gap-2">
           <div className="input-div">
             <input
