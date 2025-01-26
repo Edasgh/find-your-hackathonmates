@@ -20,6 +20,7 @@ export default function createTeam() {
   // to show floating labels if focused on input fields
   const [focusObj, setFocusObj] = useState({
     nameFocus: false,
+    hkNmFocus: false,
     emailFocus: false,
     ghFocus: false,
     descFocus: false,
@@ -41,6 +42,7 @@ export default function createTeam() {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
     const name = data.get("TeamName");
+    const hkNm = data.get("hkNm");
     const desc = data.get("desc");
     const github = data.get("github");
     const skills = data.get("TeamSkills");
@@ -69,6 +71,7 @@ export default function createTeam() {
             },
             body: JSON.stringify({
               name: name,
+              hackathonName: hkNm,
               email: email,
               members: members,
               admin: userDetails._id,
@@ -187,6 +190,45 @@ export default function createTeam() {
                         style={getStyle(focusObj.nameFocus)}
                       >
                         Name
+                      </label>
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <div className="input-div">
+                      <input
+                        type="text"
+                        onFocus={() => {
+                          setFocusObj((prev) => ({
+                            ...prev,
+                            hkNmFocus: true,
+                          }));
+                        }}
+                        onBlur={(e) => {
+                          if (e.target.value === "") {
+                            setFocusObj((prev) => ({
+                              ...prev,
+                              hkNmFocus: false,
+                            }));
+                          } else {
+                            setFocusObj((prev) => ({
+                              ...prev,
+                              hkNmFocus: true,
+                            }));
+                          }
+                        }}
+                        id="hkNm"
+                        name="hkNm"
+                        aria-describedby="hkNm"
+                        className="text-textPrimary"
+                        suppressHydrationWarning
+                        required
+                      />
+                      <label
+                        htmlFor="hkNm"
+                        className="labelLine"
+                        style={getStyle(focusObj.hkNmFocus)}
+                      >
+                        Hackathon Name
                       </label>
                     </div>
                   </div>
