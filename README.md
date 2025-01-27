@@ -21,17 +21,12 @@ https://www.loom.com/share/4346977296864a52851b701d99254628?sid=43029c57-889e-4d
 
 ## Features :
 
-1. `search & send applications to join to teams` ,
-2. `Invite team mates to join your team (if not already created, create one first) & won't send invitation if already a member of that team`,
-3. `Send invitation & application to email`,
-4. `Chat real time with team mates on "TeamChats" page`,`Send attachments , save links to your design in the team itself`,
-5. `Get real time notifications for join requests, invitations & new (unread) messages in your team chat`
-6. `Search teams & team mates by a specific skill`
-7. `View profiles & teams from the join requests to consider joining`
-8. `View all the team members, remove any team member from team by clicking the "-" sign button (only admin can remove members)`
-
-
-9. `User friendly interface to navigate between pages`
+- `Search teams & team mates by a specific skill to fulfill your team's requirements`
+- `Send applications to join to teams for your hackathons`
+- `Invite team mates to join your team (if not already created, create one first) & won't send invitation if already a member of that team`
+- `Send invitation & application to email`
+- `Chat real time with team mates on "TeamChats" page,Send attachments , save links to your design etc in the team itself`
+- `User friendly interface to navigate between pages`
 
 ## Challenges I faced :
 
