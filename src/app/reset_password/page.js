@@ -7,20 +7,20 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/navigation";
 import { useState, use, useLayoutEffect } from "react";
 
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import LoadingComponent from "../loading";
 import Footer from "@/components/Footer";
 import { useCreds } from "@/hooks/useCreds";
 
 export default function ResetPassword({ searchParams }) {
-  const {user, isLoading,error} = useCreds();
+  const { user, isLoading, error } = useCreds();
   const router = useRouter();
   const { id } = use(searchParams);
 
- const [loading, setLoading] = useState(isLoading);
- const [userDetails, setUserDetails] = useState(user!==null?user:null);
- 
+  const [loading, setLoading] = useState(isLoading);
+  const [userDetails, setUserDetails] = useState(user !== null ? user : null);
+
   // access password & confirm password value
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -92,16 +92,16 @@ export default function ResetPassword({ searchParams }) {
           if (userDetails !== null) {
             setTimeout(() => {
               router.push("/profile");
-              setTimeout(()=>{
+              setTimeout(() => {
                 window.location.reload();
-              },500)
+              }, 500);
             }, 3000);
           } else {
             setTimeout(() => {
               router.push("/login");
-               setTimeout(() => {
-                 window.location.reload();
-               }, 500);
+              setTimeout(() => {
+                window.location.reload();
+              }, 500);
             }, 3000);
           }
         }
@@ -128,145 +128,142 @@ export default function ResetPassword({ searchParams }) {
   };
 
   return (
-   <>
-   {loading && (
-    <LoadingComponent/>
-   )}
-   {id?(
-     <>
-      <ToastContainer position="bottom-left" theme="dark" />
-      <div className="main-div w-1/3 max-[900px]:w-full p-7 m-auto mt-10 flex flex-col gap-3 justify-center items-center">
-        <h1 className="text-center section-title text-textPrimary poppins-semibold text-[28px]">
-          Create new Password
-        </h1>
-        <form className="login-signup-form" onSubmit={handleSubmit}>
-          <span
-            className={
-              isSame
-                ? "text-xs mb-3.5 text-textSecondary opacity-100 w-auto max-[480px]:max-w-56"
-                : "text-xs mb-3.5 text-[#fa6d6d] opacity-100 w-auto max-[480px]:max-w-56"
-            }
-          >
-            *password & confirm password should be same*
-          </span>
-          <div className="flex flex-col gap-2">
-            <div className="input-div">
-              <input
-                type={isShown ? "text" : "password"}
-                className="form-control text-textPrimary"
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                  matchWCPassword(e);
-                }}
-                onFocus={(e) => {
-                  setIsPasswordFocus(true);
-                  matchWCPassword(e);
-                }}
-                onBlur={(e) => {
-                  if (e.target.value === "") {
-                    setIsPasswordFocus(false);
-                  } else {
-                    setIsPasswordFocus(true);
-                  }
-
-                  matchWCPassword(e);
-                }}
-                name="password"
-                id="password"
-                minLength={8}
-                required
-              />
-              <span
-                className={
-                  "absolute top-2 left-[62%] w-[6.5rem] bg-transparent z-10"
-                }
-              >
-                <FontAwesomeIcon
-                  icon={isShown ? faEyeSlash : faEye}
-                  className="cursor-pointer"
-                  onClick={() => {
-                    setIsShown(!isShown);
-                    document.getElementById("password").focus();
-                  }}
-                />
-              </span>
-              <label
-                htmlFor="password"
-                className="labelLine"
-                style={getStyle(isPasswordFocus)}
-              >
-                Password
-              </label>
-            </div>
-
-            <div className="input-div">
-              <input
-                type={isCPShown ? "text" : "password"}
-                className="form-control text-textPrimary"
-                value={confirmPassword}
-                onChange={(e) => {
-                  setConfirmPassword(e.target.value);
-                  matchWPassword(e);
-                }}
-                onFocus={(e) => {
-                  setIsCPasswordFocus(true);
-                  matchWPassword(e);
-                }}
-                onBlur={(e) => {
-                  if (e.target.value === "") {
-                    setIsCPasswordFocus(false);
-                  } else {
-                    setIsCPasswordFocus(true);
-                  }
-
-                  matchWPassword(e);
-                }}
-                name="confirmPassword"
-                id="confirmPassword"
-                minLength={8}
-                required
-              />
-              <span
-                className={
-                  "absolute top-2 left-[62%] w-[6.5rem] bg-transparent z-10"
-                }
-              >
-                <FontAwesomeIcon
-                  icon={isCPShown ? faEyeSlash : faEye}
-                  className="cursor-pointer"
-                  onClick={() => {
-                    setIsCPShown(!isCPShown);
-                    document.getElementById("confirmPassword").focus();
-                  }}
-                />
-              </span>
-              <label
-                htmlFor="confirmPassword"
-                className="labelLine"
-                style={getStyle(isCPasswordFocus)}
-              >
-                Confirm Password
-              </label>
-            </div>
-          </div>
-          <button
-            className="reset-password-submit text-textPrimary hover:bg-textBgPrimaryHv hover:text-black hover:text-center px-1 py-2 w-[10rem] border-[1px] rounded-md border-textBgPrimaryHv"
-            type="submit"
-            id="reset-password-btn"
-          >
-            Create
-          </button>
-        </form>
-      </div>
-      <Footer/>
-    </>
-   ):(
     <>
-    <NotFound/>
-    <Footer/>
+      {loading && <LoadingComponent />}
+      {id ? (
+        <>
+          <div className="main-div w-1/3 max-[900px]:w-full p-7 m-auto mt-10 flex flex-col gap-3 justify-center items-center">
+            <h1 className="text-center section-title text-textPrimary poppins-semibold text-[28px]">
+              Create new Password
+            </h1>
+            <form className="login-signup-form" onSubmit={handleSubmit}>
+              <span
+                className={
+                  isSame
+                    ? "text-xs mb-3.5 text-textSecondary opacity-100 w-auto max-[480px]:max-w-56"
+                    : "text-xs mb-3.5 text-[#fa6d6d] opacity-100 w-auto max-[480px]:max-w-56"
+                }
+              >
+                *password & confirm password should be same*
+              </span>
+              <div className="flex flex-col gap-2">
+                <div className="input-div">
+                  <input
+                    type={isShown ? "text" : "password"}
+                    className="form-control text-textPrimary"
+                    value={password}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      matchWCPassword(e);
+                    }}
+                    onFocus={(e) => {
+                      setIsPasswordFocus(true);
+                      matchWCPassword(e);
+                    }}
+                    onBlur={(e) => {
+                      if (e.target.value === "") {
+                        setIsPasswordFocus(false);
+                      } else {
+                        setIsPasswordFocus(true);
+                      }
+
+                      matchWCPassword(e);
+                    }}
+                    name="password"
+                    id="password"
+                    minLength={8}
+                    required
+                  />
+                  <span
+                    className={
+                      "absolute top-2 left-[62%] w-[6.5rem] bg-transparent z-10"
+                    }
+                  >
+                    <FontAwesomeIcon
+                      icon={isShown ? faEyeSlash : faEye}
+                      className="cursor-pointer"
+                      onClick={() => {
+                        setIsShown(!isShown);
+                        document.getElementById("password").focus();
+                      }}
+                    />
+                  </span>
+                  <label
+                    htmlFor="password"
+                    className="labelLine"
+                    style={getStyle(isPasswordFocus)}
+                  >
+                    Password
+                  </label>
+                </div>
+
+                <div className="input-div">
+                  <input
+                    type={isCPShown ? "text" : "password"}
+                    className="form-control text-textPrimary"
+                    value={confirmPassword}
+                    onChange={(e) => {
+                      setConfirmPassword(e.target.value);
+                      matchWPassword(e);
+                    }}
+                    onFocus={(e) => {
+                      setIsCPasswordFocus(true);
+                      matchWPassword(e);
+                    }}
+                    onBlur={(e) => {
+                      if (e.target.value === "") {
+                        setIsCPasswordFocus(false);
+                      } else {
+                        setIsCPasswordFocus(true);
+                      }
+
+                      matchWPassword(e);
+                    }}
+                    name="confirmPassword"
+                    id="confirmPassword"
+                    minLength={8}
+                    required
+                  />
+                  <span
+                    className={
+                      "absolute top-2 left-[62%] w-[6.5rem] bg-transparent z-10"
+                    }
+                  >
+                    <FontAwesomeIcon
+                      icon={isCPShown ? faEyeSlash : faEye}
+                      className="cursor-pointer"
+                      onClick={() => {
+                        setIsCPShown(!isCPShown);
+                        document.getElementById("confirmPassword").focus();
+                      }}
+                    />
+                  </span>
+                  <label
+                    htmlFor="confirmPassword"
+                    className="labelLine"
+                    style={getStyle(isCPasswordFocus)}
+                  >
+                    Confirm Password
+                  </label>
+                </div>
+              </div>
+              <button
+                className="reset-password-submit text-textPrimary hover:bg-textBgPrimaryHv hover:text-black hover:text-center px-1 py-2 w-[10rem] border-[1px] rounded-md border-textBgPrimaryHv"
+                type="submit"
+                id="reset-password-btn"
+              >
+                Create
+              </button>
+            </form>
+          </div>
+          <Footer />
+        </>
+      ) : (
+        <>
+          <NotFound />
+          <Footer />
+        </>
+      )}
     </>
-   )}
-   </>
   );
 }

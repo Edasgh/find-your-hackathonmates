@@ -3,7 +3,7 @@ import LoadingComponent from "@/app/loading";
 
 import React, { useEffect, useLayoutEffect, useState } from "react";
 
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AlertEl from "./components/AlertEl";
 import { useCreds } from "@/hooks/useCreds";
@@ -25,8 +25,7 @@ const JoinRequests = () => {
     }
   }, [user]);
 
-  if(error || user===null )
-  {
+  if (error || user === null) {
     return (
       <>
         <div className="w-screen h-screen">
@@ -103,7 +102,6 @@ const JoinRequests = () => {
 
   return (
     <>
-      <ToastContainer position="top-center" theme="dark" />
       {loading ? (
         <div className="w-screen">
           <LoadingComponent />

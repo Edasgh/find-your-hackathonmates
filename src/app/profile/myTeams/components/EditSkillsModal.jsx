@@ -3,7 +3,7 @@ import useChat from "@/hooks/useChat";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const EditSkillsModal = ({ open, setOpen, skillsArr }) => {
@@ -22,12 +22,10 @@ const EditSkillsModal = ({ open, setOpen, skillsArr }) => {
       if (resp.status !== 200) {
         throw new Error("Something went wrong!");
       } else {
-        toast.success("Skills updated successfully!", {
-          containerId: "edit_skills",
-        });
+        toast.success("Skills updated successfully!");
       }
     } catch (error) {
-      toast.error(error.message, { containerId: "edit_skills" });
+      toast.error(error.message);
       console.log(error);
     } finally {
       setTimeout(() => {
@@ -51,11 +49,6 @@ const EditSkillsModal = ({ open, setOpen, skillsArr }) => {
         zIndex: open === "skills" ? "100" : "-1",
       }}
     >
-      <ToastContainer
-        position="top-center"
-        theme="dark"
-        containerId={"edit_skills"}
-      />
       <div
         style={{
           display: "flex",

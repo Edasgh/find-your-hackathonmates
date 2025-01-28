@@ -2,6 +2,9 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import { dbConn } from "@/lib/mongo";
 import { CredsProvider } from "@/hooks/useCreds";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 export const metadata = {
   title: "Find Your Hackathon Mates - Build your team for hackathons, connect with potential teammates,make project plans together",
@@ -13,7 +16,8 @@ const Layout = async({children}) => {
   return (
     <>
       <CredsProvider>
-        <Navbar/>
+        <Navbar />
+        <ToastContainer position="top-center" theme="dark" />
         {children}
       </CredsProvider>
     </>

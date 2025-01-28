@@ -5,7 +5,7 @@ import { getToken } from "@/lib/verifyToken";
 import { redirect } from "next/navigation";
 import { useLayoutEffect, useState } from "react";
 
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function ForgotPassword() {
@@ -68,7 +68,6 @@ export default function ForgotPassword() {
 
   return (
     <>
-      <ToastContainer position="top-center" theme="dark" />
       <div className="main-div w-1/3 max-[900px]:w-full p-7 m-auto mt-10 flex flex-col gap-3 justify-center items-center">
         <h1 className="text-center section-title text-textPrimary poppins-semibold text-[28px]">
           Verify Email
@@ -110,7 +109,7 @@ export default function ForgotPassword() {
           </button>
         </form>
       </div>
-      <Footer/>
+      <Footer />
     </>
   );
 }

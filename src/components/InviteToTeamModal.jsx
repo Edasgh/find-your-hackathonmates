@@ -1,17 +1,24 @@
 "use client";
 import { useCreds } from "@/hooks/useCreds";
 import { socket } from "@/lib/socket";
-import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCircleCheck,
+  faCircleNotch,
+  faEnvelope,
+  faXmark,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import React, { useLayoutEffect, useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const InviteToTeamModal = ({ open, setOpen, userId, userName, email }) => {
   const { user, isLoading, error } = useCreds();
   const [loading, setLoading] = useState(isLoading);
   const [myTeams, setMyTeams] = useState([]);
+  const [pending, setPending] = useState(false);
+  const [applySuccess, setApplySuccess] = useState(false);
 
   const getMyTeams = async () => {
     setLoading(true);
@@ -44,8 +51,7 @@ const InviteToTeamModal = ({ open, setOpen, userId, userName, email }) => {
 
   const handleInvite = async (e) => {
     e.preventDefault();
-    handleClose();
-    let tId = toast.loading("Sending Invitation...", { containerId: "A" });
+    setPending(true);
     const data = new FormData(e.target);
     const team = JSON.parse(data.get("team"));
     const invitationData = {
@@ -61,29 +67,23 @@ const InviteToTeamModal = ({ open, setOpen, userId, userName, email }) => {
       socket.emit("invite", invitationData);
       socket.on("invite", (res) => {
         if (res.status === 200) {
-          toast.update(tId, {
-            render: "Invite Sent!",
-            type: "success",
-            isLoading: false,
-            autoClose: 1500,
-            containerId: "A",
-          });
+          setApplySuccess(true);
+          setPending(false);
+          setTimeout(() => {
+            handleClose();
+          }, 500);
         } else if (res.status === 403) {
-          toast.update(tId, {
-            render: "Already a member of the team!",
-            type: "error",
-            isLoading: false,
-            autoClose: 1500,
-            containerId: "A",
-          });
+          setPending(false);
+          toast.error("Already a member of the team!");
+          setTimeout(() => {
+            handleClose();
+          }, 1500);
         } else {
-          toast.update(tId, {
-            render: "Something went wrong!",
-            type: "error",
-            isLoading: false,
-            autoClose: 1500,
-            containerId: "A",
-          });
+          setPending(false);
+          toast.error("Something went wrong!");
+          setTimeout(() => {
+            handleClose();
+          }, 1500);
         }
       });
     } catch (error) {
@@ -93,7 +93,6 @@ const InviteToTeamModal = ({ open, setOpen, userId, userName, email }) => {
 
   return (
     <>
-      <ToastContainer position="top-center" theme="dark" containerId={"A"} />
       {!loading && myTeams.length !== 0 ? (
         <>
           <div
@@ -155,9 +154,38 @@ const InviteToTeamModal = ({ open, setOpen, userId, userName, email }) => {
                 </select>
                 <button
                   type="submit"
-                  className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-md"
+                  className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-md flex justify-center items-start"
                 >
-                  Invite
+                  {pending ? (
+                    <>
+                      <FontAwesomeIcon
+                        className="text-2xl poopins-light"
+                        icon={faCircleNotch}
+                        spin
+                      />
+                      &nbsp;&nbsp; Sending
+                    </>
+                  ) : (
+                    <>
+                      {applySuccess ? (
+                        <>
+                          <FontAwesomeIcon
+                            icon={faCircleCheck}
+                            className="text-2xl"
+                          />
+                          &nbsp;&nbsp; Invited
+                        </>
+                      ) : (
+                        <>
+                          <FontAwesomeIcon
+                            className="text-2xl"
+                            icon={faEnvelope}
+                          />
+                          &nbsp;&nbsp; Invite
+                        </>
+                      )}
+                    </>
+                  )}
                 </button>
               </form>
             </div>
