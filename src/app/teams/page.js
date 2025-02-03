@@ -6,6 +6,7 @@ import LoadingComponent from "../loading";
 import Team from "@/components/Team";
 import Footer from "@/components/Footer";
 import { useCreds } from "@/hooks/useCreds";
+import ChatBotUI from "@/components/ChatBotUI";
 
 export default function Teams() {
   const { user, isLoading, error } = useCreds();
@@ -137,6 +138,7 @@ export default function Teams() {
           </h1>
         )}
       </div>
+      <ChatBotUI />
       <div className="mt-[30vh]">
         <Footer />
       </div>

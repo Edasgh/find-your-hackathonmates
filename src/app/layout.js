@@ -6,10 +6,11 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 
+
 export const metadata = {
   title: "Find Your Hackathon Mates - Build your team for hackathons, connect with potential teammates,make project plans together",
   description:
-    "An app to find hackathon teammates,video chat with teammates,share project plans together,assign works to teammates.",
+    "An app to find hackathon teammates,chat with teammates,share project plans together,assign works to teammates.",
 };
 
 const Layout = async({children}) => {

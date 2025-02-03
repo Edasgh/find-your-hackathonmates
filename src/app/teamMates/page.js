@@ -6,6 +6,7 @@ import TeamMate from "@/components/TeamMate";
 import Footer from "@/components/Footer";
 import { useCreds } from "@/hooks/useCreds";
 import NotFoundUser from "@/components/not-found-user";
+import ChatBotUI from "@/components/ChatBotUI";
 
 export default function TeamMatesPage() {
   const { user, isLoading, error } = useCreds();
@@ -145,6 +146,7 @@ export default function TeamMatesPage() {
           </h1>
         )}
       </div>
+      <ChatBotUI />
       <div className="mt-[30vh]">
         <Footer />
       </div>
