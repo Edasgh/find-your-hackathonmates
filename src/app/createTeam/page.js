@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -9,7 +9,6 @@ import Footer from "@/components/Footer";
 import NotFoundUser from "@/components/not-found-user";
 import { useCreds } from "@/hooks/useCreds";
 import { useRouter } from "next/navigation";
-import ChatBotUI from "@/components/ChatBotUI";
 
 const urlRegex = /^(https?:\/\/[^\s< >\{\}\[\]]+)$/;
 
@@ -419,7 +418,6 @@ export default function createTeam() {
               </div>
             </>
           )}
-          <ChatBotUI />
           <div className="mt-[30vh]">
             <Footer />
           </div>
