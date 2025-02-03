@@ -12,6 +12,7 @@ export default function TeamMatesPage() {
   const { user, isLoading, error } = useCreds();
   const [loading, setLoading] = useState(false);
   const [teamMates, setTeamMates] = useState([]);
+  const [allData, setAllData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
   const fetchTeammates = async () => {
@@ -29,8 +30,10 @@ export default function TeamMatesPage() {
 
       const data = await resp.json();
       setTeamMates(data.users || []);
+      setAllData(data.users || []);
     } catch (err) {
       setTeamMates([]);
+      setAllData([]);
       console.error(err.message);
     } finally {
       setLoading(false);
@@ -60,20 +63,22 @@ export default function TeamMatesPage() {
   const searchTeamMates = async (ev, value) => {
     ev.preventDefault();
 
+    const data = [...allData];
+
     if (value === "") {
       await fetchTeammates();
       return;
     }
 
     // Filter teamMates based on the input value (case-insensitive)
-    const filteredTeamMate = teamMates.filter(
+    const filteredTeamMate = data.filter(
       (e) =>
-        (e.skills &&
-          e.skills.some(
-            (m) => m.toString().trim().toUpperCase() === value.toUpperCase().trim()
-          ))
+        e.skills &&
+        e.skills.some(
+          (m) =>
+            m.toString().trim().toUpperCase() === value.toUpperCase().trim()
+        )
     );
-
 
     // Set the filtered result as the new teamMates state
     setTeamMates(filteredTeamMate);

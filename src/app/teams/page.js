@@ -11,6 +11,7 @@ import ChatBotUI from "@/components/ChatBotUI";
 export default function Teams() {
   const { user, isLoading, error } = useCreds();
   const [teamsData, setTeamsData] = useState([]);
+  const [allData, setAllData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -22,6 +23,7 @@ export default function Teams() {
       if (resp.status !== 200) throw new Error("Failed to fetch teams data.");
       const data = await resp.json();
       setTeamsData(data.teams);
+      setAllData(data.teams);
     } catch (err) {
       setTeamsData([]);
       console.error("Error fetching teams:", err.message);
@@ -52,13 +54,15 @@ export default function Teams() {
   const searchTeam = async (ev, value) => {
     ev.preventDefault();
 
+    const data = [...allData];
+
     if (value === "") {
       await fetchTeams();
       return;
     }
 
     // Filter teamMates based on the input value (case-insensitive)
-    const filteredTeam = teamsData.filter(
+    const filteredTeam = data.filter(
       (e) =>
         e.skills &&
         e.skills.some(

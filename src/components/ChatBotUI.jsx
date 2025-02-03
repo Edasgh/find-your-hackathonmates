@@ -121,10 +121,13 @@ const ChatBotUI = ({}) => {
       message: <ChatLoaderComp color={"bg-gray-400"} />,
     };
     setBotMessages((prev) => [...prev, msgObj]);
-    setBotMessages((prev) => [...prev, loadingObj]);
+    setTimeout(() => {
+      setBotMessages((prev) => [...prev, loadingObj]);
+    }, 900);
     setBotMsg("");
     setHide(true);
-    const result = await chat.sendMessage(message);
+    setTimeout(async() => {
+      const result = await chat.sendMessage(message);
     const botMsg = result.response.text().split("\n");
     for (const msg of botMsg) {
       if (msg.trim() !== "") {
@@ -141,6 +144,7 @@ const ChatBotUI = ({}) => {
           !(e.sender === loadingObj.sender && e.message === loadingObj.message)
       );
     });
+    }, 1800);
   };
 
   useEffect(() => {
