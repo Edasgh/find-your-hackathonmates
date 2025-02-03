@@ -10,6 +10,7 @@ import { useCreds } from "@/hooks/useCreds";
 export default function Teams() {
   const { user, isLoading, error } = useCreds();
   const [teamsData, setTeamsData] = useState([]);
+  const [allTeamsData, setAllTeamsData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -21,8 +22,10 @@ export default function Teams() {
       if (resp.status !== 200) throw new Error("Failed to fetch teams data.");
       const data = await resp.json();
       setTeamsData(data.teams);
+      setAllTeamsData(data.teams);
     } catch (err) {
       setTeamsData([]);
+      setAllTeamsData([]);
       console.error("Error fetching teams:", err.message);
     } finally {
       setLoading(false);
@@ -51,13 +54,15 @@ export default function Teams() {
   const searchTeam = async (ev, value) => {
     ev.preventDefault();
 
+    const data = [...allTeamsData];
+
     if (value === "") {
       await fetchTeams();
       return;
     }
 
     // Filter teamMates based on the input value (case-insensitive)
-    const filteredTeam = teamsData.filter(
+    const filteredTeam = data.filter(
       (e) =>
         e.skills &&
         e.skills.some(
