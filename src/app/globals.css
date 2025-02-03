@@ -267,3 +267,61 @@ a {
       0 3em 0 -1em, -2em 2em 0 0, -3em 0em 0 0, -2em -2em 0 0.2em;
   }
 }
+
+/* Styling the chatbot */
+/* Custom Scrollbar Styles */
+*::-webkit-scrollbar {
+  width: 8px; /* Width of the scrollbar */
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--text-bg-primary); /* scrollbar thumb */
+  border-radius: 80rem; /* Rounded edges for the scrollbar thumb */
+  box-shadow: 0 0 10px 2px #d27df6; /* Glow effect */
+}
+*::-webkit-scrollbar-track {
+  background: #111111; /* Background color for the track */
+}
+/* Styling custom bot notification component */
+.chatbot-container .imessage {
+  border-radius: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto 1rem;
+  max-width: 600px;
+  padding: 0.5rem 1.5rem;
+}
+.chatbot-container .imessage > span {
+  border-radius: 1.15rem;
+  padding: 0.5rem 0.875rem;
+  position: relative;
+  word-wrap: break-word;
+}
+.chatbot-container .imessage > span::before,
+.chatbot-container .imessage > span::after {
+  bottom: -0.1rem;
+  content: "";
+  height: 1rem;
+  position: absolute;
+}
+.chatbot-container span.from-bot {
+  align-self: flex-end;
+  background-color: #248bf5;
+  color: #fff;
+}
+.chatbot-container span.from-bot::before {
+  border-bottom-left-radius: 0.8rem 0.7rem;
+  border-right: 1rem solid #248bf5;
+  right: -0.35rem;
+  transform: translate(0, -0.1rem);
+}
+.chatbot-container span.from-bot::after {
+  background-color: var(--bg-primary);
+  border-bottom-left-radius: 0.5rem;
+  right: -40px;
+  transform: translate(-30px, -2px);
+  width: 10px;
+}
+.chatbot-container span[class^="from-"] {
+  margin: 0.5rem 0;
+  width: fit-content;
+}

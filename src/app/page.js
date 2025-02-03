@@ -1,5 +1,6 @@
 "use client";
 
+import ChatBot from "@/components/ChatBot";
 import Footer from "@/components/Footer";
 import Image from "next/image";
 import Link from "next/link";
@@ -29,7 +30,7 @@ export default function Home() {
           height={885}
         />
       </div>
-
+      <ChatBot/>
       <Footer />
     </>
   );
