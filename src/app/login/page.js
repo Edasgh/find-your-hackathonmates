@@ -1,23 +1,29 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useLayoutEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useLayoutEffect, useState } from "react";
 import Link from "next/link";
 
 import { faEye, faEyeSlash } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import LoadingComponent from "../loading";
 import Footer from "@/components/Footer";
 import { useCreds } from "@/hooks/useCreds";
+import { GoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
+import { faGithub, faLinkedin } from "@fortawesome/free-brands-svg-icons";
 
 export default function Login() {
   const { user, isLoading, error } = useCreds();
+  const [loading, setLoading] = useState(false);
   //router
   const router = useRouter();
+  const params = useSearchParams();
+  const codeToken = params.get("code");
 
   useLayoutEffect(() => {
     if (!isLoading && user) {
@@ -27,6 +33,61 @@ export default function Login() {
       }, 80);
     }
   }, [isLoading, user, router]);
+
+  useEffect(() => {
+    if ((!user || user === null) && codeToken !== null) {
+      const func = async () => {
+        let tId = toast.loading("Logging you in....");
+        setLoading(true);
+        try {
+          const response = await fetch("/api/githubLogin", {
+            method: "POST",
+            headers: {
+              "content-type": "application/json",
+            },
+            body: JSON.stringify({
+              provider: "github",
+              email: "",
+              code: codeToken,
+            }),
+          });
+          const resp = await response.json();
+          if (response.status === 200) {
+            toast.update(tId, {
+              render: resp.message,
+              type: "success",
+              isLoading: false,
+              autoClose: 2000,
+              closeButton: true,
+            });
+            router.push(`/teams`);
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+          } else if (response.status === 401) {
+            toast.error(resp.message, { autoClose: 950 });
+            setTimeout(() => {
+              router.push(`/signup`);
+            }, 1500);
+          } else {
+            throw new Error("Something went wrong!");
+          }
+        } catch (error) {
+          toast.update(tId, {
+            render: error.message,
+            type: "error",
+            isLoading: false,
+            autoClose: 2000,
+            closeButton: true,
+          });
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      func();
+    }
+  }, [user, codeToken]);
 
   //to show floating labels if focused on input fields
   const [isPasswordFocus, setIsPasswordFocus] = useState(false);
@@ -48,7 +109,6 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     let tId;
-
     try {
       const data = new FormData(e.currentTarget);
       const email = data.get("emailLogin");
@@ -68,7 +128,6 @@ export default function Login() {
       });
 
       if (response.status === 200) {
-        const data = await response.json();
         toast.update(tId, {
           render: "Logged in Successfully!",
           type: "success",
@@ -94,9 +153,62 @@ export default function Login() {
     }
   };
 
+  const oauthLogin = async ({ provider, email }) => {
+    if (provider === "google") {
+      let tId = toast.loading("Logging you in....");
+      setLoading(true);
+      try {
+        const response = await fetch("/api/googleLogin", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+          }),
+        });
+        const resp = await response.json();
+        if (response.status === 200) {
+          toast.update(tId, {
+            render: resp.message,
+            type: "success",
+            isLoading: false,
+            autoClose: 2000,
+            closeButton: true,
+          });
+          router.push(`/teams`);
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+        } else if (response.status === 401) {
+          toast.error(resp.message, { autoClose: 950 });
+          setTimeout(() => {
+            router.push(`/signup`);
+          }, 1500);
+        } else {
+          throw new Error("Something went wrong!");
+        }
+      } catch (error) {
+        toast.update(tId, {
+          render: error.message,
+          type: "error",
+          isLoading: false,
+          autoClose: 2000,
+          closeButton: true,
+        });
+      } finally {
+        setLoading(false);
+      }
+    } else if (provider === "github") {
+      window.location.assign(
+        `https://github.com/login/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID}`
+      );
+    }
+  };
+
   return (
     <>
-      {isLoading ? (
+      {isLoading || loading ? (
         <>
           <LoadingComponent />
         </>
@@ -188,12 +300,6 @@ export default function Login() {
                 >
                   Forgot Password?
                 </Link>
-                <p className="text-sm my-2 text-textPrimary">
-                  Don't have an account ?{" "}
-                  <Link href="/signup" className="text-textSecondary underline">
-                    Create here
-                  </Link>
-                </p>
               </div>
               <button
                 className="login-submit hover:bg-textBgPrimaryHv text-textPrimary hover:text-black hover:text-center px-1 py-2 w-[10rem] border-[1px] rounded-md border-textBgPrimaryHv"
@@ -203,6 +309,55 @@ export default function Login() {
               >
                 Log In
               </button>
+              <div className="form-flex mt-5 relative">
+                <hr style={{
+                  borderBlockColor:"gray"
+                }} />
+                <p 
+                style={{
+                  left:"109px",
+                  top:"-24px"
+                }}
+                className="text-sm absolute bg-bgSecondary px-1 font-semibold text-gray-300 my-4">
+                  Or
+                  </p>
+
+                <div className="flex flex-col gap-4 justify-start items-center my-4">
+                  <GoogleLogin
+                    type="standard"
+                    text="continue_with"
+                    theme="filled_black"
+                    onSuccess={async (e) => {
+                      const email = jwtDecode(e.credential).email;
+                      await oauthLogin({ provider: "google", email });
+                    }}
+                    onError={(e) => console.log(e)}
+                  />
+                  <button
+                    type="button"
+                    className="flex justify-start items-center rounded-sm hover:ring-2 ring-[#555658]"
+                    onClick={async () => {
+                      await oauthLogin({ provider: "github", email: "" });
+                    }}
+                  >
+                    <FontAwesomeIcon
+                      className="text-black text-2xl bg-white py-2 px-2 rounded-sm"
+                      icon={faGithub}
+                    />
+                    <p
+                     className="text-textPrimary bg-[#202124] text-[.85rem] py-2.5 px-2 hover:bg-[#555658]">
+                      Continue with Github
+                    </p>
+                  </button>
+                </div>
+
+                <p className="text-sm mt-10 text-textPrimary">
+                  Don't have an account ?{" "}
+                  <Link href="/signup" className="text-textSecondary underline">
+                    Create here
+                  </Link>
+                </p>
+              </div>
             </form>
           </div>
           <Footer />

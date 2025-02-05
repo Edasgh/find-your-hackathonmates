@@ -112,7 +112,7 @@ export default function Signup() {
             });
             router.push("/login");
           } else {
-            throw new Error("Something went wrong!");
+            throw new Error("Something went wrong! try another email");
           }
         } else {
           toast.update(tId, {
