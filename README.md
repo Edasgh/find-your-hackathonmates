@@ -14,7 +14,7 @@ https://find-your-hackathonmates.onrender.com/
 ## Demo Video :
 https://youtu.be/y1rbUe-5gpk
 
-<a href="https://youtu.be/y1rbUe-5gpk" target="_blank" >
+<a href="https://youtu.be/y1rbUe-5gpk" target="_blank" title="Click to watch" >
 <img src="https://github.com/user-attachments/assets/77eb03bd-a2b0-4780-ac41-664fe2a31a8f"/ >
  </a>
 
