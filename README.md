@@ -29,7 +29,7 @@ https://find-your-hackathonmates.onrender.com/
 - `Send invitation & application to email`
 - `Chat real time with team mates on "TeamChats" page,Send attachments , save links to your design etc in the team itself`
 - `Interactive **chatbot** to help users know more about the app`
-- `Login with Google & Github`
+- `Login with Google & Github [Oauth2.0]`
 - `User friendly interface to navigate between pages`
 
 ## Challenges I faced :
@@ -54,4 +54,3 @@ https://find-your-hackathonmates.onrender.com/
 1. I plan to add video calling feature here so that team mates can discuss their project better
 2. Users will be able to add their profile picture (instead of showing avatars)
 3. I plan to make all the parts fully responsive
-4. Oauth with github , google
