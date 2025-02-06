@@ -28,6 +28,8 @@ https://find-your-hackathonmates.onrender.com/
 - `Invite team mates to join your team (if not already created, create one first) & won't send invitation if already a member of that team`
 - `Send invitation & application to email`
 - `Chat real time with team mates on "TeamChats" page,Send attachments , save links to your design etc in the team itself`
+- `Interactive **chatbot** to help users know more about the app`
+- `Login with Google & Github`
 - `User friendly interface to navigate between pages`
 
 ## Challenges I faced :
@@ -45,6 +47,7 @@ https://find-your-hackathonmates.onrender.com/
 4. `Socket.io` (WebSocket integration);
 5. `Nodemailer` (To send emails);
 6. `Cloudinary` (To send attachments via chat)
+7. `Gemini API` (Chatbot integration)
 
 
 ## Future Feature Plans :
