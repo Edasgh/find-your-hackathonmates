@@ -19,6 +19,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.7.1",
     "@fortawesome/react-fontawesome": "^0.2.2",
     "@google/generative-ai": "^0.21.0",
+    "@greatsumini/react-facebook-login": "^3.4.0",
     "@nextui-org/avatar": "^2.2.4",
     "@nextui-org/react": "^2.6.8",
     "@react-oauth/google": "^0.12.1",

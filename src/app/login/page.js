@@ -15,7 +15,8 @@ import Footer from "@/components/Footer";
 import { useCreds } from "@/hooks/useCreds";
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
-import { faGithub, faLinkedin } from "@fortawesome/free-brands-svg-icons";
+import { faGithub } from "@fortawesome/free-brands-svg-icons";
+import FacebookLoginObj from "@/components/FacebookLogin";
 
 export default function Login() {
   const { user, isLoading, error } = useCreds();
@@ -65,7 +66,13 @@ export default function Login() {
               window.location.reload();
             }, 1000);
           } else if (response.status === 401) {
-            toast.error(resp.message, { autoClose: 950 });
+            toast.update(tId, {
+              render: resp.message,
+              type: "error",
+              isLoading: false,
+              autoClose: 950,
+              closeButton: true,
+            });
             setTimeout(() => {
               router.push(`/signup`);
             }, 1500);
@@ -154,7 +161,7 @@ export default function Login() {
   };
 
   const oauthLogin = async ({ provider, email }) => {
-    if (provider === "google") {
+    if (provider === "google" || provider === "facebook") {
       let tId = toast.loading("Logging you in....");
       setLoading(true);
       try {
@@ -181,7 +188,13 @@ export default function Login() {
             window.location.reload();
           }, 1000);
         } else if (response.status === 401) {
-          toast.error(resp.message, { autoClose: 950 });
+          toast.update(tId, {
+            render: resp.message,
+            type: "error",
+            isLoading: false,
+            autoClose: 950,
+            closeButton: true,
+          });
           setTimeout(() => {
             router.push(`/signup`);
           }, 1500);
@@ -310,22 +323,24 @@ export default function Login() {
                 Log In
               </button>
               <div className="form-flex mt-5 relative">
-                <hr style={{
-                  borderBlockColor:"gray"
-                }} />
-                <p 
-                style={{
-                  left:"109px",
-                  top:"-24px"
-                }}
-                className="text-sm absolute bg-bgSecondary px-1 font-semibold text-gray-300 my-4">
-                  Or
-                  </p>
+                <hr
+                  style={{
+                    borderBlockColor: "gray",
+                  }}
+                />
+                <p
+                  style={{
+                    left: "70px",
+                    top: "-24px",
+                  }}
+                  className="text-sm absolute bg-bgSecondary px-1 font-medium text-gray-400 my-4"
+                >
+                  Or Continue With
+                </p>
 
-                <div className="flex flex-col gap-4 justify-start items-center my-4">
+                <div className="flex gap-4 justify-center items-center my-3 mt-8">
                   <GoogleLogin
-                    type="standard"
-                    text="continue_with"
+                    type="icon"
                     theme="filled_black"
                     onSuccess={async (e) => {
                       const email = jwtDecode(e.credential).email;
@@ -341,14 +356,11 @@ export default function Login() {
                     }}
                   >
                     <FontAwesomeIcon
-                      className="text-black text-2xl bg-white py-2 px-2 rounded-sm"
+                      className="text-black text-2xl bg-white py-1.5 px-2 rounded-sm"
                       icon={faGithub}
                     />
-                    <p
-                     className="text-textPrimary bg-[#202124] text-[.85rem] py-2.5 px-2 hover:bg-[#555658]">
-                      Continue with Github
-                    </p>
                   </button>
+                  <FacebookLoginObj oauthLogin={oauthLogin} />
                 </div>
 
                 <p className="text-sm mt-10 text-textPrimary">
