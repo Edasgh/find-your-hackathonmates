@@ -7,7 +7,7 @@ import Link from "next/link";
 import { faEye, faEyeSlash } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import LoadingComponent from "../loading";
 import Footer from "@/components/Footer";
@@ -34,6 +34,7 @@ export default function Signup() {
   const [confirmPassword, setConfirmPassword] = useState("");
   // to get if the password & confirm password are the same
   const [isSame, setIsSame] = useState(true);
+  const [isStrong, setIsStrong] = useState(false);
 
   // to show floating labels if focused on input fields
   const [focusObj, setFocusObj] = useState({
@@ -65,80 +66,103 @@ export default function Signup() {
     }
   }
 
+  const passwordRegex =
+    /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+
+  function checkPasswordStrngth(password = "") {
+    if (passwordRegex.test(password)) {
+      setIsStrong(true);
+    } else {
+      setIsStrong(false);
+    }
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     let tId = toast.loading("Signing you up....");
-    if (isSame) {
-      try {
-        const data = new FormData(e.currentTarget);
-        const name = data.get("name");
-        const country = data.get("country");
-        const bio = data.get("bio");
-        const githubID = data.get("githubID");
-        const skills = data.get("skills");
-        const email = data.get("email");
-        const password = data.get("password");
+    if (!isStrong) {
+      toast.update(tId, {
+        render: "Weak Password!",
+        type: "error",
+        isLoading: false,
+        autoClose: 2000,
+      });
 
-        const skillsArr = [...skills.split(",")];
+      return;
+    }
+    if (!isSame) {
+      toast.update(tId, {
+        render: "Password & Confirm Password should be same",
+        type: "error",
+        isLoading: false,
+        autoClose: 2000,
+      });
 
-        if (urlRegex.test(githubID)) {
-          throw new Error("Not a valid github ID");
-        }
+      return;
+    }
 
-        if (skills.includes(",") && skillsArr.length >= 5) {
-          const response = await fetch("/api/signup", {
-            method: "POST",
-            headers: {
-              "content-type": "application/json",
-            },
-            body: JSON.stringify({
-              name,
-              email,
-              githubID,
-              bio,
-              skills: skillsArr,
-              country,
-              password,
-            }),
-          });
+    try {
+      const data = new FormData(e.currentTarget);
+      const name = data.get("name");
+      const country = data.get("country");
+      const bio = data.get("bio");
+      const githubID = data.get("githubID");
+      const skills = data.get("skills");
+      const email = data.get("email");
+      const password = data.get("password");
 
-          if (response.status === 201) {
-            toast.update(tId, {
-              render: "Signed up Successfully!",
-              type: "success",
-              isLoading: false,
-              autoClose: 2000,
-              closeButton: true,
-            });
-            router.push("/login");
-          } else {
-            throw new Error("Something went wrong! try another email");
-          }
-        } else {
+      const skillsArr = [...skills.split(",")];
+
+      if (urlRegex.test(githubID)) {
+        throw new Error("Not a valid github ID");
+      }
+
+      if (skills.includes(",") && skillsArr.length >= 5) {
+        const response = await fetch("/api/signup", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({
+            name,
+            email,
+            githubID,
+            bio,
+            skills: skillsArr,
+            country,
+            password,
+          }),
+        });
+
+        if (response.status === 201) {
           toast.update(tId, {
-            render:
-              "Skills should be ',' separated and Atleast 5 skills should be added!",
-            type: "error",
+            render: "Signed up Successfully!",
+            type: "success",
             isLoading: false,
             autoClose: 2000,
             closeButton: true,
           });
+          router.push("/login");
+        } else {
+          throw new Error("Something went wrong! try another email");
         }
-      } catch (error) {
+      } else {
         toast.update(tId, {
-          render: error.message,
+          render:
+            "Skills should be ',' separated and Atleast 5 skills should be added!",
           type: "error",
           isLoading: false,
           autoClose: 2000,
           closeButton: true,
         });
       }
-    } else {
+    } catch (error) {
       toast.update(tId, {
-        render: "Password & Confirm Password should be same",
+        render: error.message,
         type: "error",
         isLoading: false,
         autoClose: 2000,
+        closeButton: true,
       });
     }
   };
@@ -603,11 +627,10 @@ export default function Signup() {
                     }}
                     onBlur={(e) => {
                       if (e.target.value === "") {
-                                              setFocusObj((prev) => ({
-                                                ...prev,
-                                                descFocus: false,
-                                              }));
-
+                        setFocusObj((prev) => ({
+                          ...prev,
+                          descFocus: false,
+                        }));
                       } else {
                         setFocusObj((prev) => ({ ...prev, descFocus: true }));
                       }
@@ -624,7 +647,9 @@ export default function Signup() {
                     htmlFor="bio"
                     className="labelLine"
                     style={
-                      focusObj.descFocus ? { ...onFocusStyle } : { display: "inherit" }
+                      focusObj.descFocus
+                        ? { ...onFocusStyle }
+                        : { display: "inherit" }
                     }
                   >
                     Bio
@@ -641,21 +666,18 @@ export default function Signup() {
                   <textarea
                     onFocus={() => {
                       setFocusObj((prev) => ({ ...prev, skillsFocus: true }));
-
                     }}
                     onBlur={(e) => {
                       if (e.target.value === "") {
-                                              setFocusObj((prev) => ({
-                                                ...prev,
-                                                skillsFocus: false,
-                                              }));
-
+                        setFocusObj((prev) => ({
+                          ...prev,
+                          skillsFocus: false,
+                        }));
                       } else {
-                                              setFocusObj((prev) => ({
-                                                ...prev,
-                                                skillsFocus: true,
-                                              }));
-
+                        setFocusObj((prev) => ({
+                          ...prev,
+                          skillsFocus: true,
+                        }));
                       }
                     }}
                     id="skills"
@@ -684,6 +706,19 @@ export default function Signup() {
               >
                 *password & confirm password should be same*
               </span>
+              {password !== "" && (
+                <span
+                  className={
+                    isStrong
+                      ? "text-xs mb-3.5 text-green-500 opacity-100 w-auto max-[480px]:max-w-56"
+                      : "text-xs mb-3.5 text-[#fa6d6d] opacity-100 w-auto max-[480px]:max-w-56"
+                  }
+                >
+                  {isStrong
+                    ? "*Password Strength : Strong*"
+                    : "*Password Strength : Weak*"}
+                </span>
+              )}
               <div className="flex flex-wrap gap-2">
                 <div className="input-div">
                   <input
@@ -693,22 +728,25 @@ export default function Signup() {
                     onChange={(e) => {
                       setPassword(e.target.value);
                       matchWCPassword(e);
+                      checkPasswordStrngth(e.target.value);
                     }}
                     onFocus={(e) => {
                       setFocusObj((prev) => ({ ...prev, passWFocus: true }));
                       matchWCPassword(e);
+                      checkPasswordStrngth(e.target.value);
                     }}
                     onBlur={(e) => {
                       if (e.target.value === "") {
-                          setFocusObj((prev) => ({
-                            ...prev,
-                            passWFocus: false,
-                          }));
+                        setFocusObj((prev) => ({
+                          ...prev,
+                          passWFocus: false,
+                        }));
                       } else {
-                         setFocusObj((prev) => ({ ...prev, passWFocus: true }));
+                        setFocusObj((prev) => ({ ...prev, passWFocus: true }));
                       }
 
                       matchWCPassword(e);
+                      checkPasswordStrngth(e.target.value);
                     }}
                     name="password"
                     id="password"
@@ -749,14 +787,17 @@ export default function Signup() {
                       matchWPassword(e);
                     }}
                     onFocus={(e) => {
-                        setFocusObj((prev) => ({ ...prev, CpassWFocus: true }));
+                      setFocusObj((prev) => ({ ...prev, CpassWFocus: true }));
                       matchWPassword(e);
                     }}
                     onBlur={(e) => {
                       if (e.target.value === "") {
-                        setFocusObj((prev) => ({ ...prev, CpassWFocus: false }));
+                        setFocusObj((prev) => ({
+                          ...prev,
+                          CpassWFocus: false,
+                        }));
                       } else {
-                          setFocusObj((prev) => ({ ...prev, CpassWFocus: true }));
+                        setFocusObj((prev) => ({ ...prev, CpassWFocus: true }));
                       }
 
                       matchWPassword(e);
