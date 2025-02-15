@@ -78,6 +78,33 @@ export const GET = async (request) => {
   }
 };
 
+//update team
+export const PATCH = async (request) => {
+  const { teamId, name, hackathonName, email, description } =
+    await request.json();
+  await dbConn();
+  try {
+    const resp = await Team.findByIdAndUpdate(teamId, {
+      name: name,
+      hackathonName: hackathonName,
+      email: email,
+      description: description,
+    });
+    if (resp) {
+      return new NextResponse("Team updated successfully!", {
+        status: 200,
+      });
+    } else {
+      throw new Error("Something went wrong!");
+    }
+  } catch (error) {
+    console.log(error);
+    return new NextResponse(error.message, {
+      status: 500,
+    });
+  }
+};
+
 //delete team
 export const DELETE = async (request) => {
   const { teamId } = await request.json();

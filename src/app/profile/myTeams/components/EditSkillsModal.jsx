@@ -12,7 +12,8 @@ const EditSkillsModal = ({ open, setOpen, skillsArr }) => {
   const handleEditSkills = async () => {
     const obj = {
       teamId: teamId,
-      skillsArr: skills.split(","),
+      skillsArr:
+        typeof skills === "object" ? skills : skills.split(","),
     };
     try {
       const resp = await fetch("/api/updateSkills", {

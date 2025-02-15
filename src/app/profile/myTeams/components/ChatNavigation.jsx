@@ -21,6 +21,7 @@ import useChat from "@/hooks/useChat";
 import LeaveAlert from "./leaveAlert";
 import { useRouter } from "next/navigation";
 import EditSkillsModal from "./EditSkillsModal";
+import EditTeam from "./EditTeam";
 
 const ChatNavigation = ({
   name,
@@ -98,6 +99,14 @@ const ChatNavigation = ({
 
   return (
     <div className="relative">
+      <EditTeam
+        open={openIdx}
+        setOpen={setOpenIdx}
+        name={name}
+        hackathonName={hkNm}
+        email={email}
+        description={description}
+      />
       <EditSkillsModal open={openIdx} setOpen={setOpenIdx} skillsArr={skills} />
       <ViewMembersModal
         members={members}
@@ -140,7 +149,12 @@ const ChatNavigation = ({
             suppressHydrationWarning
           >
             <CustomAvatar name={name} />
-            {name}
+            <span className="flex gap-3 justify-start items-center">
+              {name}
+              {isAdmin && <FontAwesomeIcon className="cursor-pointer" onClick={()=>{
+                setOpenIdx("edit-team");
+              }} icon={faPenToSquare} />}
+            </span>
             <p className="text-xs font-normal" suppressHydrationWarning>
               For the Hackathon :{" "}
               <span className="font-bold text-sm">{hkNm}</span>
