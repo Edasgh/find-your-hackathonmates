@@ -69,7 +69,7 @@ export default function Signup() {
   const passwordRegex =
     /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
 
-  function checkPasswordStrngth(password = "") {
+  function checkPasswordStrength(password = "") {
     if (passwordRegex.test(password)) {
       setIsStrong(true);
     } else {
@@ -728,12 +728,12 @@ export default function Signup() {
                     onChange={(e) => {
                       setPassword(e.target.value);
                       matchWCPassword(e);
-                      checkPasswordStrngth(e.target.value);
+                      checkPasswordStrength(e.target.value);
                     }}
                     onFocus={(e) => {
                       setFocusObj((prev) => ({ ...prev, passWFocus: true }));
                       matchWCPassword(e);
-                      checkPasswordStrngth(e.target.value);
+                      checkPasswordStrength(e.target.value);
                     }}
                     onBlur={(e) => {
                       if (e.target.value === "") {
@@ -746,7 +746,7 @@ export default function Signup() {
                       }
 
                       matchWCPassword(e);
-                      checkPasswordStrngth(e.target.value);
+                      checkPasswordStrength(e.target.value);
                     }}
                     name="password"
                     id="password"

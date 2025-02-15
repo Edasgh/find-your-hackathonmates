@@ -5,7 +5,7 @@ import { faEye, faEyeSlash } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { useRouter } from "next/navigation";
-import { useState, use, useLayoutEffect } from "react";
+import { useState, use } from "react";
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -17,36 +17,54 @@ export default function ResetPassword({ searchParams }) {
   const { user, isLoading, error } = useCreds();
   const router = useRouter();
   const { id } = use(searchParams);
-
-  const [loading, setLoading] = useState(isLoading);
-  const [userDetails, setUserDetails] = useState(user !== null ? user : null);
-
   // access password & confirm password value
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [pwObj, setPwObj] = useState({
+    password: "",
+    confirmPassword: "",
+  });
+
   // to get if the password & confirm password are the same
-  const [isSame, setIsSame] = useState(true);
+  const [checkObj, setCheckObj] = useState({
+    isSame: true,
+    isStrong: false,
+  });
+
   // to show floating labels if focused on input fields
-  const [isPasswordFocus, setIsPasswordFocus] = useState(false);
-  const [isCPasswordFocus, setIsCPasswordFocus] = useState(false);
+  const [focusObj, setFocusObj] = useState({
+    isPasswordFocus: false,
+    isCPasswordFocus: false,
+  });
 
   // to show / hide the password
-  const [isShown, setIsShown] = useState(false);
-  const [isCPShown, setIsCPShown] = useState(false);
+  const [showObj, setShowObj] = useState({
+    isShown: false,
+    isCPShown: false,
+  });
 
   function matchWPassword(e) {
-    if (e.target.value === password) {
-      setIsSame(true);
+    if (e.target.value === pwObj.password) {
+      setCheckObj((prev) => ({ ...prev, isSame: true }));
     } else {
-      setIsSame(false);
+      setCheckObj((prev) => ({ ...prev, isSame: false }));
     }
   }
 
   function matchWCPassword(e) {
-    if (e.target.value === confirmPassword) {
-      setIsSame(true);
+    if (e.target.value === pwObj.confirmPassword) {
+      setCheckObj((prev) => ({ ...prev, isSame: true }));
     } else {
-      setIsSame(false);
+      setCheckObj((prev) => ({ ...prev, isSame: false }));
+    }
+  }
+
+  const passwordRegex =
+    /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+
+  function checkPasswordStrength(password = "") {
+    if (passwordRegex.test(password)) {
+      setCheckObj((prev) => ({ ...prev, isStrong: true }));
+    } else {
+      setCheckObj((prev) => ({ ...prev, isStrong: false }));
     }
   }
 
@@ -64,59 +82,19 @@ export default function ResetPassword({ searchParams }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     let tId = toast.loading("Please wait....");
-    if (isSame) {
-      try {
-        const data = new FormData(e.currentTarget);
-        const password = data.get("password");
-        const Id = id.split(":");
 
-        const response = await fetch("/api/reset_password", {
-          method: "POST",
-          headers: {
-            "content-type": "application/json",
-          },
-          body: JSON.stringify({
-            id: Id[0],
-            password,
-          }),
-        });
+    if (checkObj.isStrong !== true) {
+      toast.update(tId, {
+        render: "Weak Password!",
+        type: "error",
+        isLoading: false,
+        autoClose: 2000,
+      });
 
-        if (response.status === 200) {
-          toast.update(tId, {
-            render: "Password updated successfully!",
-            type: "success",
-            isLoading: false,
-            autoClose: 2000,
-            closeButton: true,
-          });
-          if (userDetails !== null) {
-            setTimeout(() => {
-              router.push("/profile");
-              setTimeout(() => {
-                window.location.reload();
-              }, 500);
-            }, 3000);
-          } else {
-            setTimeout(() => {
-              router.push("/login");
-              setTimeout(() => {
-                window.location.reload();
-              }, 500);
-            }, 3000);
-          }
-        }
-      } catch (error) {
-        toast.update(tId, {
-          render: "Something went wrong!",
-          type: "error",
-          isLoading: false,
-          autoClose: 2000,
-          closeButton: true,
-        });
+      return;
+    }
 
-        console.error(error.message);
-      }
-    } else {
+    if (checkObj.isSame !== true) {
       toast.update(tId, {
         render: "Password & Confirm password should be same!",
         type: "error",
@@ -124,12 +102,65 @@ export default function ResetPassword({ searchParams }) {
         autoClose: 2000,
         closeButton: true,
       });
+      return;
+    }
+
+    try {
+      const data = new FormData(e.currentTarget);
+      const password = data.get("password");
+      const Id = id.split(":");
+
+      const response = await fetch("/api/reset_password", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          id: Id[0],
+          password,
+        }),
+      });
+
+      if (response.status === 200) {
+        toast.update(tId, {
+          render: "Password updated successfully!",
+          type: "success",
+          isLoading: false,
+          autoClose: 2000,
+          closeButton: true,
+        });
+        if (!user || error) {
+          setTimeout(() => {
+            router.push("/profile");
+            setTimeout(() => {
+              window.location.reload();
+            }, 500);
+          }, 3000);
+        } else {
+          setTimeout(() => {
+            router.push("/login");
+            setTimeout(() => {
+              window.location.reload();
+            }, 500);
+          }, 3000);
+        }
+      }
+    } catch (error) {
+      toast.update(tId, {
+        render: "Something went wrong!",
+        type: "error",
+        isLoading: false,
+        autoClose: 2000,
+        closeButton: true,
+      });
+
+      console.error(error.message);
     }
   };
 
   return (
     <>
-      {loading && <LoadingComponent />}
+      {isLoading && <LoadingComponent />}
       {id ? (
         <>
           <div className="main-div w-1/3 max-[900px]:w-full p-7 m-auto mt-10 flex flex-col gap-3 justify-center items-center">
@@ -139,35 +170,63 @@ export default function ResetPassword({ searchParams }) {
             <form className="login-signup-form" onSubmit={handleSubmit}>
               <span
                 className={
-                  isSame
+                  checkObj.isSame
                     ? "text-xs mb-3.5 text-textSecondary opacity-100 w-auto max-[480px]:max-w-56"
                     : "text-xs mb-3.5 text-[#fa6d6d] opacity-100 w-auto max-[480px]:max-w-56"
                 }
               >
                 *password & confirm password should be same*
               </span>
+              {pwObj.password !== "" && (
+                <span
+                  className={
+                    checkObj.isStrong
+                      ? "text-xs mb-3.5 text-green-500 opacity-100 w-auto max-[480px]:max-w-56"
+                      : "text-xs mb-3.5 text-[#fa6d6d] opacity-100 w-auto max-[480px]:max-w-56"
+                  }
+                >
+                  {checkObj.isStrong
+                    ? "*Password Strength : Strong*"
+                    : "*Password Strength : Weak*"}
+                </span>
+              )}
               <div className="flex flex-col gap-2">
                 <div className="input-div">
                   <input
-                    type={isShown ? "text" : "password"}
+                    type={showObj.isShown ? "text" : "password"}
                     className="form-control text-textPrimary"
-                    value={password}
+                    value={pwObj.password}
                     onChange={(e) => {
-                      setPassword(e.target.value);
+                      setPwObj((prev) => ({
+                        ...prev,
+                        password: e.target.value,
+                      }));
                       matchWCPassword(e);
+                      checkPasswordStrength(e.target.value);
                     }}
                     onFocus={(e) => {
-                      setIsPasswordFocus(true);
+                      setFocusObj((prev) => ({
+                        ...prev,
+                        isPasswordFocus: true,
+                      }));
                       matchWCPassword(e);
+                      checkPasswordStrength(e.target.value);
                     }}
                     onBlur={(e) => {
                       if (e.target.value === "") {
-                        setIsPasswordFocus(false);
+                        setFocusObj((prev) => ({
+                          ...prev,
+                          isPasswordFocus: false,
+                        }));
                       } else {
-                        setIsPasswordFocus(true);
+                        setFocusObj((prev) => ({
+                          ...prev,
+                          isPasswordFocus: true,
+                        }));
                       }
 
                       matchWCPassword(e);
+                      checkPasswordStrength(e.target.value);
                     }}
                     name="password"
                     id="password"
@@ -180,10 +239,13 @@ export default function ResetPassword({ searchParams }) {
                     }
                   >
                     <FontAwesomeIcon
-                      icon={isShown ? faEyeSlash : faEye}
+                      icon={showObj.isShown ? faEyeSlash : faEye}
                       className="cursor-pointer"
                       onClick={() => {
-                        setIsShown(!isShown);
+                        setShowObj((prev) => ({
+                          ...prev,
+                          isShown: !showObj.isShown,
+                        }));
                         document.getElementById("password").focus();
                       }}
                     />
@@ -191,7 +253,7 @@ export default function ResetPassword({ searchParams }) {
                   <label
                     htmlFor="password"
                     className="labelLine"
-                    style={getStyle(isPasswordFocus)}
+                    style={getStyle(focusObj.isPasswordFocus)}
                   >
                     Password
                   </label>
@@ -199,22 +261,36 @@ export default function ResetPassword({ searchParams }) {
 
                 <div className="input-div">
                   <input
-                    type={isCPShown ? "text" : "password"}
+                    type={showObj.isCPShown ? "text" : "password"}
                     className="form-control text-textPrimary"
-                    value={confirmPassword}
+                    value={pwObj.confirmPassword}
                     onChange={(e) => {
-                      setConfirmPassword(e.target.value);
+                      setPwObj((prev) => ({
+                        ...prev,
+                        confirmPassword: e.target.value,
+                      }));
+
                       matchWPassword(e);
                     }}
                     onFocus={(e) => {
-                      setIsCPasswordFocus(true);
+                      setFocusObj((prev) => ({
+                        ...prev,
+                        isCPasswordFocus: true,
+                      }));
+
                       matchWPassword(e);
                     }}
                     onBlur={(e) => {
                       if (e.target.value === "") {
-                        setIsCPasswordFocus(false);
+                        setFocusObj((prev) => ({
+                          ...prev,
+                          isCPasswordFocus: false,
+                        }));
                       } else {
-                        setIsCPasswordFocus(true);
+                        setFocusObj((prev) => ({
+                          ...prev,
+                          isCPasswordFocus: true,
+                        }));
                       }
 
                       matchWPassword(e);
@@ -230,10 +306,13 @@ export default function ResetPassword({ searchParams }) {
                     }
                   >
                     <FontAwesomeIcon
-                      icon={isCPShown ? faEyeSlash : faEye}
+                      icon={showObj.isCPShown ? faEyeSlash : faEye}
                       className="cursor-pointer"
                       onClick={() => {
-                        setIsCPShown(!isCPShown);
+                        setShowObj((prev) => ({
+                          ...prev,
+                          isCPShown: !showObj.isCPShown,
+                        }));
                         document.getElementById("confirmPassword").focus();
                       }}
                     />
@@ -241,7 +320,7 @@ export default function ResetPassword({ searchParams }) {
                   <label
                     htmlFor="confirmPassword"
                     className="labelLine"
-                    style={getStyle(isCPasswordFocus)}
+                    style={getStyle(focusObj.isCPasswordFocus)}
                   >
                     Confirm Password
                   </label>
