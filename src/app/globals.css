@@ -271,7 +271,7 @@ a {
 /* Styling the chatbot */
 /* Custom Scrollbar Styles */
 *::-webkit-scrollbar {
-  width: 8px; /* Width of the scrollbar */
+  width: 5px; /* Width of the scrollbar */
 }
 *::-webkit-scrollbar-thumb {
   background: var(--text-bg-primary); /* scrollbar thumb */

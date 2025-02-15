@@ -9,8 +9,9 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import ChatBotMsgEl from "./ChatBotMsgEl";
 
-const AIAvatar = () => {
+export const AIAvatar = () => {
   return (
     <span className="relative flex shrink-0 overflow-hidden rounded-full w-8 h-8">
       <div className="rounded-full bg-gray-100 border p-1">
@@ -35,7 +36,7 @@ const AIAvatar = () => {
   );
 };
 
-const UserAvatar = () => {
+export const UserAvatar = () => {
   return (
     <span className="relative flex shrink-0 overflow-hidden rounded-full w-8 h-8">
       <div className="rounded-full bg-gray-100 border p-1">
@@ -119,29 +120,31 @@ const ChatBot = ({}) => {
       message: <ChatLoaderComp color={"bg-gray-400"} />,
     };
     setBotMessages((prev) => [...prev, msgObj]);
-   setTimeout(() => {
-     setBotMessages((prev) => [...prev, loadingObj]);
-   }, 900);
+    setTimeout(() => {
+      setBotMessages((prev) => [...prev, loadingObj]);
+    }, 900);
     setBotMsg("");
     setHide(true);
-    setTimeout(async() => {
-        const result = await chat.sendMessage(message);
-    const botMsg = result.response.text().split("\n");
-    for (const msg of botMsg) {
-      if (msg.trim() !== "") {
-        const botMsgObj = {
-          sender: "AI",
-          message: msg,
-        };
-        setBotMessages((prev) => [...prev, botMsgObj]);
+    setTimeout(async () => {
+      const result = await chat.sendMessage(message);
+      const botMsg = result.response.text().split("\n");
+      for (const msg of botMsg) {
+        if (msg.trim() !== "") {
+          const botMsgObj = {
+            sender: "AI",
+            message: msg,
+          };
+          setBotMessages((prev) => [...prev, botMsgObj]);
+        }
       }
-    }
-    setBotMessages((prevMessages) => {
-      return prevMessages.filter(
-        (e) =>
-          !(e.sender === loadingObj.sender && e.message === loadingObj.message)
-      );
-    });
+      setBotMessages((prevMessages) => {
+        return prevMessages.filter(
+          (e) =>
+            !(
+              e.sender === loadingObj.sender && e.message === loadingObj.message
+            )
+        );
+      });
     }, 1800);
   };
 
@@ -240,34 +243,13 @@ const ChatBot = ({}) => {
           >
             {botMessages.length !== 0 &&
               botMessages.map((e, index) => (
-                <div
+                <ChatBotMsgEl
+                  index={index}
                   key={index}
-                  className={`flex ${
-                    e.sender === "AI"
-                      ? "justify-start text-gray-200"
-                      : "justify-end text-gray-400"
-                  } gap-3 my-4 ${index === botMessages.length - 1 && "mb-16"}
-                   text-sm flex-1`}
-                >
-                  {e.sender === "AI" ? <AIAvatar /> : <UserAvatar />}
-                  <p
-                    className={`${
-                      e.sender === "AI"
-                        ? "max-w-[12rem] bg-textBgPrimary"
-                        : "max-w-[8rem] bg-indigo-900"
-                    } font-light rounded-lg p-2`}
-                    suppressHydrationWarning
-                  >
-                    <span
-                      className={`block font-bold 
-                       text-gray-200
-                      `}
-                    >
-                      {e.sender === "AI" ? "DevBot" : "You"}
-                    </span>
-                    {e.message}
-                  </p>
-                </div>
+                  botMessages={botMessages}
+                  message={e.message}
+                  sender={e.sender}
+                />
               ))}
             {/* Scroll to the bottom */}
             <div ref={endRef} />
