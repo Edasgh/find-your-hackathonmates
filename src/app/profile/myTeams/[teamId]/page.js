@@ -374,12 +374,13 @@ const TeamChat = () => {
             </div>
 
             {/* Message Input */}
-            <div className="py-4 px-6 bg-bgSecondary relative">
+            <div className="w-full py-4 px-0 md:px-1.5 lg:px-3 bg-bgSecondary relative">
               <form className="flex gap-1.5" onSubmit={handleSubmit}>
                 <button
                   className="bg-textBgPrimary p-2 rounded-md"
                   style={{ border: "none", outline: "none" }}
                   type="button"
+                  title="Send a file"
                   onClick={() => {
                     setOver("open_list");
                   }}
@@ -390,8 +391,7 @@ const TeamChat = () => {
                   />
                 </button>
 
-                <input
-                  type="text"
+                <textarea
                   name="msg"
                   value={msg}
                   className="flex-1 px-4 py-2 border-2 rounded-lg bg-textBgPrimary text-textPrimary focus:outline-none"

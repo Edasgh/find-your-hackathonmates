@@ -32,14 +32,14 @@ const ChatTile = ({ team, myId }) => {
       key={team._id}
       href={`/profile/myTeams/${team._id}`}
       title={`${members.length} ${members.length == 1 ? "Member" : "Members"}`}
-      className={`flex items-center p-4 cursor-pointer relative hover:bg-bgPrimary border-b border-textBgPrimary ${
+      className={`flex flex-wrap justify-center items-center py-4 px-1.5 lg:px-4 cursor-pointer relative hover:bg-bgPrimary border-b border-textBgPrimary ${
         teamId === team._id && "bg-bgPrimary"
       } `}
     >
       <CustomAvatar name={team.name} />
       <div className="ml-4 flex-1">
-        <h3 className="text-textPrimary font-semibold mb-1">{team.name}</h3>
-        <p className="text-gray-400 text-sm truncate overflow-hidden">
+        <h3 className="text-textPrimary font-semibold text-xs lg:text-lg mb-1">{team.name}</h3>
+        <p className="text-gray-400 text-xs lg:text-sm truncate overflow-hidden">
           {messages.length !== 0 ? (
             <>{`${
               messages[messages.length - 1].sender.id === myId

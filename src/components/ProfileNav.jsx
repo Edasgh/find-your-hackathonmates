@@ -40,7 +40,7 @@ const ProfileNav = () => {
       {!isLoading && user !== null && (
         <>
           <div
-            className={`absolute left-0 bg-gray-800 text-white w-52 min-h-screen overflow-y-auto transition-transform transform ${
+            className={`absolute z-50 left-0 bg-gray-800 text-white w-52 min-h-screen overflow-y-auto transition-transform transform ${
               opened && "-translate-x-[30rem]"
             }  ease-in-out duration-200 `}
             id="sidebar"
@@ -108,7 +108,7 @@ const ProfileNav = () => {
               <div className="container mx-auto">
                 <div className="flex gap-2 py-1 px-2">
                   <button
-                    className="text-gray-500 hover:text-gray-600 border-[.5px] p-1 px-2 border-gray-600"
+                    className="text-gray-500 z-[100] hover:text-gray-600 border-[.5px] p-1 px-2 border-gray-600"
                     id="open-sidebar"
                     onClick={() => {
                       setOpened(!opened);

@@ -92,7 +92,7 @@ export default function TeamMatesPage() {
 
       <form
         id="team_mates_form"
-        className="flex justify-center gap-2 items-center mb-10"
+        className="flex flex-wrap justify-center gap-2 items-center mb-10"
         onSubmit={(e) => searchTeamMates(e, searchTerm)}
       >
         <input

@@ -139,7 +139,7 @@ const ChatNavigation = ({
       />
       <div
         className={`absolute z-50 top-0 -right-[15rem] bg-gray-800 text-white w-[14rem] h-fit overflow-y-auto transition-transform transform ${
-          opened && "-translate-x-[15rem]"
+          opened ? "visible -translate-x-[15rem]":"hidden"
         }  ease-in-out duration-200 `}
         id="sidebar"
       >
@@ -151,9 +151,15 @@ const ChatNavigation = ({
             <CustomAvatar name={name} />
             <span className="flex gap-3 justify-start items-center">
               {name}
-              {isAdmin && <FontAwesomeIcon className="cursor-pointer" onClick={()=>{
-                setOpenIdx("edit-team");
-              }} icon={faPenToSquare} />}
+              {isAdmin && (
+                <FontAwesomeIcon
+                  className="cursor-pointer"
+                  onClick={() => {
+                    setOpenIdx("edit-team");
+                  }}
+                  icon={faPenToSquare}
+                />
+              )}
             </span>
             <p className="text-xs font-normal" suppressHydrationWarning>
               For the Hackathon :{" "}

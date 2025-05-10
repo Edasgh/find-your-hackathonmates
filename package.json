@@ -26,6 +26,7 @@
     "axios": "^1.8.2",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^2.0.0",
+    "convex": "^1.24.1",
     "js-cookie": "^3.0.5",
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",
@@ -36,7 +37,8 @@
     "react-dom": "^19.0.0",
     "react-toastify": "^10.0.6",
     "socket.io": "^4.8.1",
-    "socket.io-client": "^4.8.1"
+    "socket.io-client": "^4.8.1",
+    "zod": "^3.24.4"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

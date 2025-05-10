@@ -19,7 +19,7 @@ export const POST = async (request) => {
     <p>Hi, ${userExists.name},</p>
     <p>Here's your password recovery link</p>
     <a href="${process.env.NEXT_PUBLIC_BASE_URL}/reset_password?id=${userExists._id}">Reset password here</a>
-    <p>Best regards, happy Hacking!</p>
+    <p>Best regards, Happy Hacking!</p>
   `;
 
       const transporter = createTransport({
