@@ -46,7 +46,7 @@ https://find-your-hackathonmates.onrender.com/
 3. `MongoDb` (DataBase);
 4. `Socket.io` (WebSocket integration);
 5. `Nodemailer` (To send emails);
-6. `Cloudinary` (To send attachments via chat)
+6. `Convex Cloud` (To send attachments [files] via chat) `Instead of Cloudinary (for longer timeout)`
 7. `Gemini API` (Chatbot integration)
 
 

@@ -3,7 +3,7 @@ import { transformImage } from "@/lib/features";
 import { faFileLines } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const AttachmentEl = ({ file, fileUrl }) => {
+const AttachmentEl = ({ file, fileUrl,fileName }) => {
   switch (file) {
     case "video":
       return <video src={fileUrl} preload="none" width={"200px"} controls />;
@@ -29,7 +29,7 @@ const AttachmentEl = ({ file, fileUrl }) => {
             icon={faFileLines}
             className="text-3xl p-1 text-textPrimary"
           />
-          <p className="text-textPrimary font-semibold text-lg">File</p>
+          <p className="text-textPrimary font-semibold text-lg">{fileName}</p>
         </div>
       );
   }

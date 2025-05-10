@@ -50,6 +50,7 @@ app.prepare().then(() => {
       async ({
         roomId,
         public_id,
+        fileName,
         url,
         message,
         senderId,
@@ -66,6 +67,7 @@ app.prepare().then(() => {
                   attachment: {
                     public_id,
                     url,
+                    name:fileName,
                   },
                   message: message,
                   sentOn: sentOn,
@@ -91,6 +93,7 @@ app.prepare().then(() => {
             message,
             public_id,
             url,
+            fileName,
             senderId,
             senderName,
             sentOn,
@@ -182,6 +185,7 @@ app.prepare().then(() => {
         roomId,
         public_id,
         url,
+        fileName,
         message,
         senderId,
         senderName,
@@ -193,7 +197,7 @@ app.prepare().then(() => {
             {
               $pull: {
                 messages: {
-                  attachment: { public_id, url },
+                  attachment: { public_id, url,name:fileName, },
                   message: message,
                   sentOn: sentOn,
                   sender: {

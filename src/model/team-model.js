@@ -34,6 +34,7 @@ const teamModel = mongoose.Schema(
         attachment: {
           public_id: { type: String, required: true },
           url: { type: String, required: true },
+          name:{type:String},
         },
         message: { type: String },
         sentOn: { type: String, required: true },

@@ -112,7 +112,7 @@ const TeamChat = () => {
         });
         const data = await res.json();
         const obj = {
-          attachment: { public_id: data.public_id, url: data.url },
+          attachment: { public_id: data.public_id, url: data.url,name:fileName },
           message: "",
           sender: { name: userDetails.name, id: userDetails._id },
           sentOn: currentTimeStamp,
@@ -123,6 +123,7 @@ const TeamChat = () => {
           message: "",
           public_id: data.public_id,
           url: data.url,
+          fileName,
           senderId: userDetails._id,
           senderName: userDetails.name,
           sentOn: obj.sentOn,
@@ -171,6 +172,7 @@ const TeamChat = () => {
   const handleDelMsg = ({
     msg,
     public_id,
+    fileName,
     url,
     sentOn,
     senderId,
@@ -181,6 +183,7 @@ const TeamChat = () => {
       message: msg,
       public_id,
       url,
+      fileName,
       senderId,
       senderName,
       sentOn,
@@ -192,12 +195,12 @@ const TeamChat = () => {
 
     socket.on(
       "message",
-      ({ message, public_id, url, senderId, senderName, sentOn }) => {
+      ({ message, public_id, url,fileName, senderId, senderName, sentOn }) => {
         setMessages((prev) => [
           ...prev,
           {
             message,
-            attachment: { public_id, url },
+            attachment: { public_id, url,name:fileName },
             sender: { name: senderName, id: senderId },
             sentOn,
           },
@@ -358,6 +361,7 @@ const TeamChat = () => {
                   message={m.message}
                   public_id={m.attachment.public_id}
                   url={m.attachment.url}
+                  name={m.attachment.name}
                   over={over}
                   setOver={setOver}
                   senderId={m.sender.id}
