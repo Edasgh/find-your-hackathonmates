@@ -13,7 +13,7 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
-import type * as getUploadUrl from "../getUploadUrl.js";
+import type * as fileControls from "../fileControls.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -24,7 +24,7 @@ import type * as getUploadUrl from "../getUploadUrl.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
-  getUploadUrl: typeof getUploadUrl;
+  fileControls: typeof fileControls;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,

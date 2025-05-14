@@ -17,11 +17,13 @@ import { faFileLines } from "@fortawesome/free-regular-svg-icons";
 import Link from "next/link";
 import ChatNavigation from "../components/ChatNavigation";
 import { socket } from "@/lib/socket";
+import { useMutation, useQuery } from "convex/react";
 import { getDate } from "@/lib/getDate";
 import { useCreds } from "@/hooks/useCreds";
 import MessageEl from "../components/MessageEl";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { api } from "../../../../../convex/_generated/api";
 
 const fileTypes = [
   { name: "Image", icon: faImage },
@@ -47,6 +49,8 @@ const TeamChat = () => {
 
   const [msg, setMsg] = useState("");
   const [over, setOver] = useState(false);
+
+  const deleteFile = useMutation(api.fileControls.deleteFileById);
 
   const msgEndRef = useRef(null);
 
@@ -112,7 +116,11 @@ const TeamChat = () => {
         });
         const data = await res.json();
         const obj = {
-          attachment: { public_id: data.public_id, url: data.url,name:fileName },
+          attachment: {
+            public_id: data.public_id,
+            url: data.url,
+            name: fileName,
+          },
           message: "",
           sender: { name: userDetails.name, id: userDetails._id },
           sentOn: currentTimeStamp,
@@ -188,6 +196,10 @@ const TeamChat = () => {
       senderName,
       sentOn,
     });
+
+    deleteFile({
+      storageId: public_id,
+    });
   };
 
   useEffect(() => {
@@ -195,12 +207,12 @@ const TeamChat = () => {
 
     socket.on(
       "message",
-      ({ message, public_id, url,fileName, senderId, senderName, sentOn }) => {
+      ({ message, public_id, url, fileName, senderId, senderName, sentOn }) => {
         setMessages((prev) => [
           ...prev,
           {
             message,
-            attachment: { public_id, url,name:fileName },
+            attachment: { public_id, url, name: fileName },
             sender: { name: senderName, id: senderId },
             sentOn,
           },
@@ -220,7 +232,7 @@ const TeamChat = () => {
       setNewMembers((prev) => prev.filter((m) => m.id !== memberId));
     });
 
-    socket.emit("read_msg", { userId:user._id, roomId:teamId });
+    socket.emit("read_msg", { userId: user._id, roomId: teamId });
 
     return () => {
       socket.off("join-room");
@@ -268,7 +280,6 @@ const TeamChat = () => {
         teamData &&
         userDetails && (
           <>
-            <ToastContainer position="bottom-center" theme="dark" />
             {over == "open_list" && (
               <>
                 <form className="absolute bg-textBgPrimary text-textPrimary w-[10rem] h-fit py-3 px-2 rounded-md -bottom-24 z-40 shadow-xl shadow-bgPrimary transition-all duration-75">
@@ -298,16 +309,16 @@ const TeamChat = () => {
                         type="file"
                         id={`file-${type.name}`}
                         onChange={(e) =>
-                          uploadFile(e.target.files[0], type.name)
+                          uploadFile(e.target.files[0], e.target.files[0].name)
                         }
                         accept={
                           type.name === "Image"
                             ? ".png,.jpg,.jpeg,.gif"
                             : type.name === "Audio"
-                            ? ".mp3,.wav"
-                            : type.name === "Video"
-                            ? ".mp4,.webm,.ogg"
-                            : ".pdf,.doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                              ? ".mp3,.wav"
+                              : type.name === "Video"
+                                ? ".mp4,.webm,.ogg"
+                                : ".pdf,.doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                         }
                         maxLength={1}
                       />

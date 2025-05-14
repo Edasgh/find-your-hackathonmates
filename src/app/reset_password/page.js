@@ -134,14 +134,14 @@ export default function ResetPassword({ searchParams }) {
             router.push("/profile");
             setTimeout(() => {
               window.location.reload();
-            }, 500);
+            }, 1000);
           }, 3000);
         } else {
           setTimeout(() => {
             router.push("/login");
             setTimeout(() => {
               window.location.reload();
-            }, 500);
+            }, 1000);
           }, 3000);
         }
       }

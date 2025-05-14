@@ -23,9 +23,6 @@ export default function Signup() {
   useLayoutEffect(() => {
     if (!isLoading && user) {
       router.push("/teams");
-      setTimeout(() => {
-        window.location.reload();
-      }, 80);
     }
   }, [isLoading, user, router]);
 

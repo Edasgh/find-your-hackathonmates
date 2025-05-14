@@ -129,7 +129,7 @@ const MessageEl = ({
         {public_id !== "-1" && (
           <div>
             <Link href={url} target="_blank" download className="text-black">
-              {AttachmentEl({ file: fileFormat(url), fileUrl: url,fileName:name })}
+              {AttachmentEl({ file: fileFormat(name), fileUrl: url,fileName:name })}
             </Link>
           </div>
         )}

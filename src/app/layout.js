@@ -1,12 +1,7 @@
 import "./globals.css";
-import Navbar from "@/components/Navbar";
 import { dbConn } from "@/lib/mongo";
-import { CredsProvider } from "@/hooks/useCreds";
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { GoogleOAuthProvider } from "@react-oauth/google";
-
-const client_id = process.env.NEXT_PUBLIC_GOOGLE_AUTH_CLIENT_ID;
+import { ConvexClientProvider } from "./ConvexClientProvider";
 
 export const metadata = {
   title:
@@ -18,13 +13,7 @@ export const metadata = {
 const Layout = async ({ children }) => {
   return (
     <>
-      <CredsProvider>
-        <GoogleOAuthProvider clientId={client_id}>
-          <Navbar />
-          <ToastContainer position="top-center" theme="dark" />
-          {children}
-        </GoogleOAuthProvider>
-      </CredsProvider>
+      <ConvexClientProvider>{children}</ConvexClientProvider>
     </>
   );
 };

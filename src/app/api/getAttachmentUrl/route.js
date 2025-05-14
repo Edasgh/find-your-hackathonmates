@@ -52,7 +52,7 @@ export const POST = async (request) => {
     //upload in convex cloud
     //generate a short lived upload url
     const postUrl = await convexClient.mutation(
-      api.getUploadUrl.generateuploadUrl
+      api.fileControls.generateuploadUrl
     );
     // POST the file to the URL
     const result = await fetch(postUrl, {
@@ -63,7 +63,7 @@ export const POST = async (request) => {
 
     const { storageId } = await result.json();
 
-    const fileUrl = await convexClient.query(api.getUploadUrl.getFileUrl, {
+    const fileUrl = await convexClient.query(api.fileControls.getFileUrl, {
       storageId,
     });
 
