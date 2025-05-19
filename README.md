@@ -53,4 +53,3 @@ https://find-your-hackathonmates.onrender.com/
 ## Future Feature Plans :
 1. I plan to add video calling feature here so that team mates can discuss their project better
 2. Users will be able to add their profile picture (instead of showing avatars)
-3. I plan to make all the parts fully responsive
