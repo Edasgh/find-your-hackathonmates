@@ -365,7 +365,6 @@ export default function Signup() {
                     <option value="Iceland">Iceland</option>
                     <option value="India">India</option>
                     <option value="Indonesia">Indonesia</option>
-                    <option value="Iran">Iran</option>
                     <option value="Iraq">Iraq</option>
                     <option value="Ireland">Ireland</option>
                     <option value="Isle of Man">Isle of Man</option>
@@ -496,9 +495,7 @@ export default function Signup() {
                     </option>{" "}
                     <option value="Sweden">Sweden</option>{" "}
                     <option value="Switzerland">Switzerland</option>{" "}
-                    <option value="Syrian Arab Republic">
-                      Syrian Arab Republic
-                    </option>{" "}
+                    
                     <option value="Taiwan">Taiwan</option>{" "}
                     <option value="Tajikistan">Tajikistan</option>{" "}
                     <option value="Tanzania">Tanzania</option>{" "}
