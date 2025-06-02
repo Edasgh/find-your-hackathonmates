@@ -256,7 +256,6 @@ export default function Signup() {
                     <option value="Azerbaijan">Azerbaijan</option>
                     <option value="Bahamas">Bahamas</option>
                     <option value="Bahrain">Bahrain</option>
-                    <option value="Bangladesh">Bangladesh</option>
                     <option value="Barbados">Barbados</option>
                     <option value="Belarus">Belarus</option>
                     <option value="Belgium">Belgium</option>
@@ -437,7 +436,6 @@ export default function Signup() {
                     </option>
                     <option value="Norway">Norway</option>
                     <option value="Oman">Oman</option>
-                    <option value="Pakistan">Pakistan</option>
                     <option value="Palau">Palau</option>
                     <option value="Palestinian Territory">
                       Palestinian Territory
