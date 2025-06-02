@@ -345,7 +345,6 @@ export default function EditProfile({
               </option>
               <option value="Norway">Norway</option>
               <option value="Oman">Oman</option>
-              <option value="Pakistan">Pakistan</option>
               <option value="Palau">Palau</option>
               <option value="Palestinian Territory">
                 Palestinian Territory
