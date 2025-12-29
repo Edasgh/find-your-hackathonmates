@@ -7,7 +7,26 @@ export const metadata = {
   title:
     "Find Your Hackathon Mates - Build your team for hackathons, connect with potential teammates,make project plans together",
   description:
-    "An app to find hackathon teammates,video chat with teammates,share project plans together,assign works to teammates.",
+    "An app to find hackathon teams, teammates,video chat with teammates,share project plans together,assign works to teammates.",
+  keywords: [
+    "find your hackathon mates",
+    "hackathon teams",
+    "find hackathon teams",
+    "hackathon team builder",
+    "build hackathon teams",
+    "find hackathon teammates",
+    "hackathon collaboration",
+    "team matching for hackathons",
+    "hackathon project planning",
+    "hackathon networking",
+    "hackathon team finder",
+    "hackathon partner search",
+    "hackathon team formation",
+    "hackathon teamwork app",
+    "developer matching",
+    "coding team finder",
+    "findYourHackathonMates",
+  ],
   openGraph: {
     title: "findYourHackathonMates",
     description: "Build your perfect hackathon team — faster.",
@@ -55,7 +74,7 @@ export default async function RootLayout({ children }) {
               applicationCategory: "DeveloperTool",
               operatingSystem: "Web",
               description:
-                "findYourHackathonMates helps users find hackathon teammates, join teams, and collaborate in real time.",
+                "findYourHackathonMates helps users find hackathon teams, teammates, join teams, and collaborate in real time.",
               offers: {
                 "@type": "Offer",
                 price: "0",
