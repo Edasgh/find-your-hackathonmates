@@ -184,7 +184,7 @@ export default function Signup() {
       ) : (
         <>
           <div className="main-div w-1/3 max-[900px]:w-full  p-7 m-auto mt-10 flex flex-col gap-2 justify-center items-center">
-            <h1 className="text-center section-title text-textPrimary poppins-semibold text-[28px]">
+            <h1 title="sign up" className="text-center section-title text-textPrimary poppins-semibold text-[28px]">
               Join The Community Now!
             </h1>
             <form

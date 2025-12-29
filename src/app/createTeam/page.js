@@ -145,7 +145,7 @@ export default function createTeam() {
           {userDetails !== null && (
             <>
               <div className="main-div w-1/3 max-[900px]:w-full  p-7 m-auto mt-10 flex flex-col gap-2 justify-center items-center">
-                <h1 className="text-center mb-2 section-title text-textPrimary poppins-semibold text-[28px]">
+                <h1 title="create team" className="text-center mb-2 section-title text-textPrimary poppins-semibold text-[28px]">
                   Create a new Team
                 </h1>
                 <form

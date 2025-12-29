@@ -8,7 +8,7 @@ export default function NotFound() {
       <div className="m-auto max-w-full h-[80%]  flex flex-col justify-center items-center gap-3 ">
         <Image
           src="/404-not-found.png" // Path relative to the 'public' folder
-          alt="Description of the image"
+          alt="404-not-found"
           width={550}
           height={785}
         />

@@ -28,7 +28,7 @@ const JoinRequests = () => {
   if (error || user === null) {
     return (
       <>
-        <div className="w-screen h-screen">
+        <div title="join requests" className="w-screen h-screen">
           <NotFoundUser />
         </div>
       </>
@@ -103,12 +103,13 @@ const JoinRequests = () => {
   return (
     <>
       {loading ? (
-        <div className="w-screen">
+        <div title="join requests" className="w-screen">
           <LoadingComponent />
         </div>
       ) : (
         <>
           <div
+            title="join requests"
             className="flex mt-12 w-screen h-screen py-12 flex-col gap-3 justify-start bg-bgSecondary items-center"
             suppressHydrationWarning
           >

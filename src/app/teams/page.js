@@ -77,7 +77,7 @@ export default function Teams() {
   };
   return (
     <>
-      <h1 className="text-center section-title my-12 text-textPrimary poppins-semibold text-4xl">
+      <h1 title="teams" className="text-center section-title my-12 text-textPrimary poppins-semibold text-4xl">
         Join new Teams
       </h1>
       <form

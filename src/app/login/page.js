@@ -225,7 +225,7 @@ export default function Login() {
       ) : (
         <>
           <div className="main-div w-1/3 max-[900px]:w-full p-7 m-auto mt-10 flex flex-col gap-2 justify-center items-center">
-            <h1 className="section-title poppins-semibold text-textPrimary text-[28px]">
+            <h1 title="login" className="section-title poppins-semibold text-textPrimary text-[28px]">
               Welcome Back!
             </h1>
             <form

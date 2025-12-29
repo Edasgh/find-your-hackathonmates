@@ -69,7 +69,7 @@ export default function ForgotPassword() {
   return (
     <>
       <div className="main-div w-1/3 max-[900px]:w-full p-7 m-auto mt-10 flex flex-col gap-3 justify-center items-center">
-        <h1 className="text-center section-title text-textPrimary poppins-semibold text-[28px]">
+        <h1 title="forgot password" className="text-center section-title text-textPrimary poppins-semibold text-[28px]">
           Verify Email
         </h1>
         <form className="login-signup-form" onSubmit={handleSubmit}>

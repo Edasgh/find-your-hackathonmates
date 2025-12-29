@@ -53,7 +53,7 @@ export default function Home() {
         </div>
         <Image
           src="/hero-img.png" // Path relative to the 'public' folder
-          alt="Description of the image"
+          alt="findYourHackathonMates"
           width={650}
           height={885}
           style={{
@@ -101,7 +101,7 @@ export default function Home() {
             </div>
             <Image
               src="/create-team.png" // Path relative to the 'public' folder
-              alt="Description of the image"
+              alt="Create new team"
               width={585}
               height={585}
               className="rounded-md transition-transform duration-300 hover:scale-105"
@@ -120,7 +120,7 @@ export default function Home() {
             </div>
             <Image
               src="/teammates.png" // Path relative to the 'public' folder
-              alt="Description of the image"
+              alt="Find teammates"
               width={685}
               height={1085}
               className="rounded-md transition-transform duration-300 hover:scale-105"
@@ -142,7 +142,7 @@ export default function Home() {
             </div>
             <Image
               src="/teams.png" // Path relative to the 'public' folder
-              alt="Description of the image"
+              alt="teams"
               width={685}
               height={1085}
               className="rounded-md transition-transform duration-300 hover:scale-105"
@@ -161,7 +161,7 @@ export default function Home() {
             </div>
             <Image
               src="/myTeam-2.png" // Path relative to the 'public' folder
-              alt="Description of the image"
+              alt="myTeams"
               width={685}
               height={1085}
               className="rounded-md transition-transform duration-300 hover:scale-105"
@@ -181,7 +181,7 @@ export default function Home() {
             </div>
             <Image
               src="/devbot.png" // Path relative to the 'public' folder
-              alt="Description of the image"
+              alt="Devbot-Assistant"
               width={250}
               height={250}
               className="rounded-md transition-transform duration-300 hover:scale-105"
