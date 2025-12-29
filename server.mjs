@@ -28,7 +28,8 @@ app.prepare().then(() => {
   const server = createServer(handle);
 
   const io = new Server(server);
-
+ 
+  // set up socket connection
   io.on("connection", (socket) => {
     console.log(`New connection ${socket.id}`);
     socket.on("join-room", async (roomId) => {
@@ -41,10 +42,12 @@ app.prepare().then(() => {
       }
     });
 
+    // add to onlineUsers map on visiting the app
     socket.on("visit", (userId) => {
       onlineUsers.set(userId, socket.id);
     });
 
+    // send a message to the team
     socket.on(
       "message",
       async ({
@@ -67,7 +70,7 @@ app.prepare().then(() => {
                   attachment: {
                     public_id,
                     url,
-                    name:fileName,
+                    name: fileName,
                   },
                   message: message,
                   sentOn: sentOn,
@@ -101,6 +104,8 @@ app.prepare().then(() => {
 
           //notify the online users
           for (const [userId, userSocketId] of onlineUsers.entries()) {
+            // Skip the sender
+            if (userId === senderId) continue;
             // Skip users not in the team
             if (!currentTeam.members.some((m) => m.id === userId)) continue;
 
@@ -127,6 +132,8 @@ app.prepare().then(() => {
           //notify the offline users too
           const members = await currentTeam.members;
           for (const { name, id } of members) {
+            // Skip sender
+            if (id === senderId) continue;
             if (onlineUsers.has(id)) {
               continue;
             } else {
@@ -145,6 +152,7 @@ app.prepare().then(() => {
       }
     );
 
+    // get message notification in real time
     socket.on("get_notifs", async ({ userId }) => {
       try {
         const findAlerts = await Unread.find({ reciever: userId });
@@ -157,6 +165,7 @@ app.prepare().then(() => {
       }
     });
 
+    // read team message(s)
     socket.on("read_msg", async ({ userId, roomId }) => {
       try {
         const delAlerts = await Unread.deleteMany({
@@ -179,6 +188,7 @@ app.prepare().then(() => {
       }
     });
 
+    // delete your own team message
     socket.on(
       "remove-msg",
       async ({
@@ -197,7 +207,7 @@ app.prepare().then(() => {
             {
               $pull: {
                 messages: {
-                  attachment: { public_id, url,name:fileName, },
+                  attachment: { public_id, url, name: fileName },
                   message: message,
                   sentOn: sentOn,
                   sender: {
@@ -236,6 +246,7 @@ app.prepare().then(() => {
       }
     });
 
+    // send invitation to join a team
     socket.on(
       "invite",
       async ({
@@ -298,7 +309,7 @@ app.prepare().then(() => {
 
           // sending email with nodemailer
           const info = await transporter.sendMail({
-            from: `"The Admin of ${teamName}, via Hackathonmates ${process.env.GOOGLE_ACCOUNT_USER}"`, // sender address
+            from: `"The Admin of ${teamName}, via findYourHackathonmates"`, // sender address
             to: email,
             subject: `Team joining Invitation from ${teamName}`, // Subject line
             text: "Regarding your team joining invitation!",
@@ -332,6 +343,7 @@ app.prepare().then(() => {
       }
     );
 
+    // send join request to the team admin
     socket.on(
       "apply-to-join",
       async ({ teamName, teamId, recieverId, teamEmail, myId, myName }) => {
@@ -383,7 +395,7 @@ app.prepare().then(() => {
 
           // sending email with nodemailer
           const info = await transporter.sendMail({
-            from: `"${myName} via Hackathonmates ${process.env.GOOGLE_ACCOUNT_USER}"`, // sender address
+            from: `"${myName} via findYourHackathonmates"`, // sender address
             to: teamEmail,
             subject: `Team joining request from ${myName}`, // Subject line
             text: "Regarding the request to join your team!",
@@ -418,7 +430,8 @@ app.prepare().then(() => {
     );
 
     //accept & reject invitations & applications
-    //accept
+
+    //accept a join request
     socket.on(
       "accept-alert",
       async ({
@@ -542,7 +555,7 @@ app.prepare().then(() => {
         }
       }
     );
-    //reject
+    //reject a join request
     socket.on("reject-alert", async ({ reqId, myId }) => {
       try {
         const requestEl = await Request.findByIdAndDelete(reqId);
@@ -574,6 +587,7 @@ app.prepare().then(() => {
       }
     });
 
+    // add a link into the group
     socket.on("set_link", async ({ teamId, linkName, link }) => {
       try {
         const saveLink = await Team.findByIdAndUpdate(
@@ -597,6 +611,7 @@ app.prepare().then(() => {
         console.log(error.message);
       }
     });
+    // remove a team member from team
     socket.on("set_member", async ({ teamId, memberName, memberId }) => {
       try {
         const removeMember = await Team.findByIdAndUpdate(
@@ -624,13 +639,14 @@ app.prepare().then(() => {
         if (!removeTeam) {
           throw new Error("Team not removed");
         }
-        socket.emit("set_member", { memberName, memberId });
+        socket.emit("set_member", { memberName, memberId }); // socket event
       } catch (error) {
         console.log(error);
         console.log(error.message);
       }
     });
 
+    // leave the app
     socket.on("disconnect", () => {
       const key = getKeyByValue(onlineUsers, socket.id);
       if (key !== null) {
@@ -640,6 +656,7 @@ app.prepare().then(() => {
     });
   });
 
+  // start the server
   server.listen(port, () => {
     if (dev) {
       console.log(`Server running on http://${hostname}:${port}`);

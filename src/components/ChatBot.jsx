@@ -167,7 +167,7 @@ const ChatBot = ({}) => {
   return (
     <>
       {/* <!-- component --> */}
-      <div className="fixed bottom-4 right-4 chatbot-container">
+      <div className="fixed bottom-4 right-4 chatbot-container z-[9999999999999]">
         {!botNotifHide && (
           <span className="imessage">
             <span
