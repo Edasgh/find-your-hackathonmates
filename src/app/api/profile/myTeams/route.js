@@ -61,13 +61,20 @@ export const PATCH = async (request) => {
     if (myId === adminId) {
       //find the team
       const findTeam = await Team.findById(teamId);
+      
+      if(!findTeam){
+        throw new Error("Team not found!");
+      }
 
+      //Filter out the current user to find remaining members
       const remainingMembers = findTeam.members.filter(
         (member) => member.id !== myId
       );
 
       if (remainingMembers.length > 0) {
+        // Transfer Admin to the next person in line
         const newAdmin = remainingMembers[0].id;
+
         const updateTeam = await Team.findByIdAndUpdate(teamId, {
           $pull: {
             members: {
@@ -82,12 +89,14 @@ export const PATCH = async (request) => {
           throw new Error("Can't update team!");
         }
       } else {
+        // delete the team if no members left
         const deleteTeam = await Team.findByIdAndDelete(teamId);
         if (!deleteTeam) {
           throw new Error("Can't delete team!");
         }
       }
     } else {
+      // Regular member leaving
       const updateTeam = await Team.findByIdAndUpdate(teamId, {
         $pull: {
           members: {

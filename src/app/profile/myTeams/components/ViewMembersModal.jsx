@@ -5,6 +5,64 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import { ProfileEl } from "../../joinRequests/components/ProfileEl";
 
+const DeleteMemberAlert = ({
+  memberName,
+  open,
+  setOpen,
+  memberId,
+  handleRemoveMember,
+}) => {
+  const handleRemove = async () => {
+    setOpen(null);
+    await handleRemoveMember({ memberName, memberId });
+  };
+  return (
+    <div
+      style={{
+        position: "fixed",
+        top: "0",
+        left: "0",
+        background: " #0a0b0cba",
+        display: "grid",
+        placeItems: "center",
+        visibility: open === "removeMember" ? "visible" : "hidden",
+        zIndex: open === "removeMember" ? "10000" : "-1",
+      }}
+      className="w-screen h-screen"
+      suppressHydrationWarning
+    >
+      <div className="h-fit w-fit m-auto ">
+        <div className="py-7 px-4 flex flex-col gap-4 justify-center items-center rounded-md bg-bgSecondary">
+          <p className="text-textBgPrimaryHv font-medium max-[800px]:text-xl min-[800.1px]:text-2xl">
+            Are you sure to remove member{" "}
+            <span className="font-bold">"{memberName}"</span> ?
+          </p>
+          <div
+            className="flex p-5 relative gap-3 flex-wrap"
+            suppressHydrationWarning
+          >
+            <button
+              onClick={handleRemove}
+              className="w-fit border-[1px] text-sm text-textPrimary border-textBgPrimaryHv hover:bg-textBgPrimaryHv hover:text-black  px-5 py-3 rounded-md"
+            >
+              Remove
+            </button>
+
+            <button
+              onClick={() => {
+                setOpen(null);
+              }}
+              className="w-fit border-[1px] text-sm border-textBgPrimaryHv bg-textBgPrimaryHv text-black  px-5 py-3 rounded-md"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const ViewMembersModal = ({
   members,
   userId,
@@ -17,12 +75,12 @@ const ViewMembersModal = ({
     setOpen(null);
   };
 
-  const [over1, setOver1] = useState(false);
-   const [openProfileId, setOpenProfileId] = useState(null); // For controlling which ProfileEl is open
+  const [openRemoveMemberModal, setOpenRemoveMemberModal] = useState(null);
+  const [openProfileId, setOpenProfileId] = useState(null); // For controlling which ProfileEl is open
 
-   const toggleProfile = (memberId) => {
-     setOpenProfileId((prevId) => (prevId === memberId ? null : memberId)); // Toggle the profile view
-   };
+  const toggleProfile = (memberId) => {
+    setOpenProfileId((prevId) => (prevId === memberId ? null : memberId)); // Toggle the profile view
+  };
   return (
     <div
       style={{
@@ -83,28 +141,19 @@ const ViewMembersModal = ({
                         <>
                           <FontAwesomeIcon
                             className="text-red-700 text-xl cursor-pointer"
-                            onMouseOver={() => {
-                              setOver1(true);
-                            }}
-                            onMouseOut={() => {
-                              setOver1(false);
-                            }}
                             icon={faCircleMinus}
                             onClick={() => {
-                              handleRemoveMember({
-                                memberName: m.name,
-                                memberId: m.id,
-                              });
-                              setOver1(false);
+                              setOpenRemoveMemberModal("removeMember");
                             }}
                           />
-                          <span
-                            className={`bg-slate-500 text-textPrimary px-2 py-1 text-sm rounded-md absolute bottom-10 right-0 ${
-                              over1 ? "flex" : "hidden"
-                            } `}
-                          >
-                            Remove
-                          </span>
+
+                          <DeleteMemberAlert
+                            memberName={m.name}
+                            memberId={m.id}
+                            open={openRemoveMemberModal}
+                            setOpen={setOpenRemoveMemberModal}
+                            handleRemoveMember={handleRemoveMember}
+                          />
                         </>
                       )}
                     </>

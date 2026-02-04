@@ -26,9 +26,10 @@ export const metadata = {
     "developer matching",
     "coding team finder",
     "findYourHackathonMates",
+    "find_Your_HackathonMates",
   ],
   openGraph: {
-    title: "findYourHackathonMates",
+    title: "find_Your_HackathonMates",
     description: "Build your perfect hackathon team — faster.",
     url: "https://find-your-hackathonmates.onrender.com",
     siteName: "findYourHackathonMates",
@@ -43,7 +44,7 @@ export const metadata = {
     type: "website",
     twitter: {
       card: "summary_large_image",
-      title: "findYourHackathonMates",
+      title: "find_Your_HackathonMates",
       description: "Build your perfect hackathon team — faster.",
       images: ["/home.png"],
     },
@@ -69,7 +70,7 @@ export default async function RootLayout({ children }) {
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "SoftwareApplication",
-              name: "findYourHackathonMates",
+              name: "find_Your_HackathonMates",
               url: "https://find-your-hackathonmates.onrender.com",
               applicationCategory: "DeveloperTool",
               operatingSystem: "Web",

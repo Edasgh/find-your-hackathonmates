@@ -1,5 +1,6 @@
 "use client";
 import useChat from "@/hooks/useChat";
+import { areArraysEqual } from "@/lib/areArraysEqual";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
@@ -12,26 +13,32 @@ const EditSkillsModal = ({ open, setOpen, skillsArr }) => {
   const handleEditSkills = async () => {
     const obj = {
       teamId: teamId,
-      skillsArr:
-        typeof skills === "object" ? skills : skills.split(","),
+      skillsArr: typeof skills === "object" ? skills : skills.split(","),
     };
-    try {
-      const resp = await fetch("/api/updateSkills", {
-        method: "POST",
-        body: JSON.stringify(obj),
-      });
-      if (resp.status !== 200) {
-        throw new Error("Something went wrong!");
-      } else {
-        toast.success("Skills updated successfully!");
+    const previousSkills = [...skillsArr];
+    if (areArraysEqual(previousSkills, obj.skillsArr)) {
+      setOpen(false);
+      toast.info("No changes made to skills.", { autoClose: 800 });
+      return;
+    } else {
+      try {
+        const resp = await fetch("/api/updateSkills", {
+          method: "POST",
+          body: JSON.stringify(obj),
+        });
+        if (resp.status !== 200) {
+          throw new Error("Something went wrong!");
+        } else {
+          toast.success("Skills updated successfully!");
+        }
+      } catch (error) {
+        toast.error(error.message);
+        console.log(error);
+      } finally {
+        setTimeout(() => {
+          setOpen(false);
+        }, 1800);
       }
-    } catch (error) {
-      toast.error(error.message);
-      console.log(error);
-    } finally {
-      setTimeout(() => {
-        setOpen(false);
-      }, 1800);
     }
   };
 

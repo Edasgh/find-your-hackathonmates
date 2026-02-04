@@ -65,6 +65,24 @@ export default function EditTeam({
       return;
     }
 
+    if (
+      nm === name &&
+      hackathonNm === hackathonName &&
+      desc === description &&
+      eml === email
+    ) {
+      setOpen(false);
+      toast.update(tId, {
+        render: "No changes made to team details!",
+        type: "info",
+        isLoading: false,
+        autoClose: 1000,
+        closeButton: true,
+      });
+      return;
+    }
+
+    
     try {
       const response = await fetch("/api/createTeam", {
         method: "PATCH",
@@ -91,7 +109,7 @@ export default function EditTeam({
 
         setOpen(false);
         setTimeout(() => {
-            window.location.reload();
+          window.location.reload();
         }, 1500);
       } else {
         throw new Error("Something went wrong!");

@@ -36,47 +36,87 @@ export default function EditProfile({
       const email = data.get("email");
 
       const skillsArr = [...skills.split(",")];
+      const totalSkills = skillsArr.filter((s) => s.trim() !== "").length;
 
-      if (skills.includes(",") && skillsArr.length >= 5) {
-        const response = await fetch("/api/profile", {
-          method: "POST",
-          headers: {
-            "content-type": "application/json",
-          },
-          body: JSON.stringify({
-            id: UserId,
-            name,
-            email,
-            githubID,
-            bio,
-            skills: skillsArr,
-            country,
-          }),
-        });
+      const userObj = {
+        id: UserId,
+        name,
+        email,
+        githubID,
+        bio,
+        skills: skillsArr,
+        country,
+      };
 
-        if (response.status === 200) {
-          toast.update(tId, {
-            render: "Changes Saved Successfully!",
-            type: "success",
-            isLoading: false,
-            autoClose: 2000,
-            closeButton: true,
-          });
-          setTimeout(() => {
-            window.location.reload();
-          }, 300);
-        } else {
-          throw new Error("Something went wrong!");
-        }
-      } else {
+      if (
+        name === "" ||
+        email == "" ||
+        githubID == "" ||
+        bio == "" ||
+        country === ""
+      ) {
         toast.update(tId, {
-          render:
-            "Skills should be ',' separated and Atleast 5 skills should be added!",
+          render: "User details can't be empty!",
           type: "error",
+          isLoading: false,
+          autoClose: 1000,
+          closeButton: true,
+        });
+        return;
+      }
+
+      if (
+        name === UserName &&
+        email === UserEmail &&
+        githubID === UserGithubID &&
+        bio === UserBio &&
+        country === UserCountry &&
+        skills.toString() === UserSkills.toString()
+      ) {
+        toast.update(tId, {
+          render: "No changes made to save!",
+          type: "info",
+          isLoading: false,
+          autoClose: 1000,
+          closeButton: true,
+        });
+        return;
+      }
+
+      if (!skills.includes(",") || totalSkills < 5) {
+        toast.update(tId, {
+          render: !skills.includes(",")
+            ? "Please separate skills with commas!"
+            : "At least 5 skills are required!",
+          type: "error",
+          isLoading: false,
+          autoClose: 1200, // Slightly longer so they can read the specific error
+          closeButton: true,
+        });
+        return;
+      }
+
+      const response = await fetch("/api/profile", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(userObj),
+      });
+
+      if (response.status === 200) {
+        toast.update(tId, {
+          render: "Changes Saved Successfully!",
+          type: "success",
           isLoading: false,
           autoClose: 2000,
           closeButton: true,
         });
+        setTimeout(() => {
+          window.location.reload();
+        }, 300);
+      } else {
+        throw new Error("Something went wrong!");
       }
     } catch (error) {
       toast.update(tId, {
@@ -275,7 +315,6 @@ export default function EditProfile({
               <option value="Iceland">Iceland</option>
               <option value="India">India</option>
               <option value="Indonesia">Indonesia</option>
-              
               <option value="Iraq">Iraq</option>
               <option value="Ireland">Ireland</option>
               <option value="Isle of Man">Isle of Man</option>
@@ -402,7 +441,6 @@ export default function EditProfile({
               </option>{" "}
               <option value="Sweden">Sweden</option>{" "}
               <option value="Switzerland">Switzerland</option>{" "}
-              
               <option value="Taiwan">Taiwan</option>{" "}
               <option value="Tajikistan">Tajikistan</option>{" "}
               <option value="Tanzania">Tanzania</option>{" "}

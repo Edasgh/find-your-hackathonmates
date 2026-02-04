@@ -117,8 +117,8 @@ export const DELETE = async (request) => {
     }
 
     const updateUsers = await User.updateMany(
-      { _id: { $in: findTeam.members.map((m) => m.id) } },
-      { $pull: { teams: teamId } }
+      { _id: { $in: findTeam.members } },
+      { $pull: { teams: teamId } },
     );
 
     if (!updateUsers) {

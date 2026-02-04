@@ -7,7 +7,6 @@ import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowRight,
-  faArrowRightArrowLeft,
   faMessage,
   faPeopleGroup,
   faRobot,
@@ -15,7 +14,6 @@ import {
   faUserPlus,
   faUsersBetweenLines,
 } from "@fortawesome/free-solid-svg-icons";
-
 export default function Home() {
   return (
     <>

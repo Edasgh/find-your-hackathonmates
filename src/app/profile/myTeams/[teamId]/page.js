@@ -28,7 +28,6 @@ import { api } from "../../../../../convex/_generated/api";
 const fileTypes = [
   { name: "Image", icon: faImage },
   { name: "Audio", icon: faFileAudio },
-  { name: "Video", icon: faFileVideo },
   { name: "File", icon: faFileLines },
 ];
 
