@@ -12,14 +12,14 @@ const TeamsLayout = ({ children }) => {
   if (error || user === null) {
     return (
       <>
-        <div title="my teams" className="w-screen h-screen">
+        <div className="w-screen h-screen">
           <NotFoundUser />
         </div>
       </>
     );
   }
   return (
-    <div title="my teams" className="mt-12 border-t-[2.5px] border-bgSecondary flex w-screen h-screen">
+    <div className="mt-12 border-t-[2.5px] border-bgSecondary flex w-screen h-screen">
       <Sidebar />
       <div
         className={`flex-1  ${

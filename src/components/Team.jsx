@@ -17,6 +17,9 @@ import { useCreds } from "@/hooks/useCreds";
 import { socket } from "@/lib/socket";
 import { useState } from "react";
 
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 export default function Team({
   id,
   name,
@@ -48,17 +51,20 @@ export default function Team({
     */
     try {
       socket.emit("apply-to-join", data);
-      socket.on("apply-to-join", (resp) => {
+      socket.once("apply-to-join", (resp) => {
         if (resp.status === 200) {
           setLoading(false);
           setApplySuccess(true);
         } else {
           setLoading(false);
+          toast.error(resp.message);
         }
+        return;
       });
     } catch (error) {
       console.log(error);
       console.log(error.message);
+      toast.error("Something went wrong!");
     }
   };
 

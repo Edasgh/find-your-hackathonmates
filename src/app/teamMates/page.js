@@ -53,7 +53,7 @@ export default function TeamMatesPage() {
   if (error || user === null) {
     return (
       <>
-        <div title="teammates" className="w-screen h-screen">
+        <div about="teammates" className="w-screen h-screen">
           <NotFoundUser />
         </div>
       </>
@@ -87,7 +87,7 @@ export default function TeamMatesPage() {
   return (
     <>
       <h1
-        title="teammates"
+        about="teammates"
         className="text-center section-title my-12 text-textPrimary poppins-semibold text-4xl"
       >
         Connect with Teammates

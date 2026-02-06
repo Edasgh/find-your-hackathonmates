@@ -152,7 +152,10 @@ const TeamChat = () => {
     e.preventDefault();
     if (!msg.trim()) return;
 
+    const currentTimeStamp = new Date().toLocaleString();
+
     const newMessage = {
+      _id: null,
       message: msg,
       attachment: {
         public_id: "-1",
@@ -160,9 +163,12 @@ const TeamChat = () => {
       },
       sender: { name: userDetails.name, id: userDetails._id },
       sentOn: currentTimeStamp,
+      isPending: true, // Use this flag to prevent duplicates
     };
 
+    // Update UI instantly
     setMessages((prev) => [...prev, newMessage]);
+
     socket.emit("message", {
       roomId: teamId,
       message: msg,
@@ -176,48 +182,69 @@ const TeamChat = () => {
     setMsg("");
   };
 
-  const handleDelMsg = ({
-    msg,
-    public_id,
-    fileName,
-    url,
-    sentOn,
-    senderId,
-    senderName,
-  }) => {
+  const handleDelMsg = ({ msgId, public_id }) => {
+    if (!msgId || msgId.length < 24) {
+      console.warn("Cannot delete: Message still syncing with server.");
+      return;
+    }
+    // Log to verify the ID exists (for debugging)
+    console.log("Deleting message with ID:", msgId);
+
+    // Emit the deletion event using the unique ID
     socket.emit("remove-msg", {
-      roomId: teamId,
-      message: msg,
-      public_id,
-      url,
-      fileName,
-      senderId,
-      senderName,
-      sentOn,
+      roomId: teamId, // The ID of the team/room
+      messageId: msgId, // The unique MongoDB ID of the message
     });
 
-    deleteFile({
-      storageId: public_id,
+    //  Handle File deletion if an attachment exists
+    if (public_id && public_id !== "-1") {
+      deleteFile({
+        storageId: public_id,
+      });
+    }
+
+    socket.on("remove-msg", ({ data }) => {
+      setMessages([...data]);
     });
   };
 
+
+useEffect(() => {
+  socket.on("message", (savedMessage) => {
+    setMessages((prev) => {
+      // Check if this is a response to our own 'pending' message
+      const pendingIndex = prev.findIndex(
+        (m) =>
+          m.isPending &&
+          m.message === savedMessage.message &&
+          m.sender.id === savedMessage.sender.id,
+      );
+
+      if (pendingIndex !== -1) {
+        // REPLACE the temp message with the one from DB (which has the real _id)
+        const updated = [...prev];
+        updated[pendingIndex] = savedMessage;
+        return updated;
+      }
+
+      //  For messages from others, check if it's already in the list (by real _id)
+      const alreadyExists = prev.some((m) => m._id === savedMessage._id);
+      if (alreadyExists) return prev;
+
+      //  Otherwise, add the new message
+      return [...prev, savedMessage];
+    });
+  });
+
+  return () => {
+    socket.off("message");
+  };
+}, [teamId, userDetails._id]); // Dependencies are important
+
+
+
   useEffect(() => {
     socket.emit("join-room", teamId);
-
-    socket.on(
-      "message",
-      ({ message, public_id, url, fileName, senderId, senderName, sentOn }) => {
-        setMessages((prev) => [
-          ...prev,
-          {
-            message,
-            attachment: { public_id, url, name: fileName },
-            sender: { name: senderName, id: senderId },
-            sentOn,
-          },
-        ]);
-      }
-    );
 
     socket.on("remove-msg", ({ data }) => {
       setMessages([...data]);
@@ -235,7 +262,6 @@ const TeamChat = () => {
 
     return () => {
       socket.off("join-room");
-      socket.off("message");
       socket.off("remove-msg");
       socket.off("set_link");
       socket.off("set_member");
@@ -315,9 +341,9 @@ const TeamChat = () => {
                             ? ".png,.jpg,.jpeg,.gif"
                             : type.name === "Audio"
                               ? ".mp3,.wav"
-                              : type.name === "Video"
-                                ? ".mp4,.webm,.ogg"
-                                : ".pdf,.doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                              : // : type.name === "Video"
+                                //   ? ".mp4,.webm,.ogg"
+                                ".pdf,.doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                         }
                         maxLength={1}
                       />
@@ -369,6 +395,7 @@ const TeamChat = () => {
                   idx={idx}
                   key={idx}
                   message={m.message}
+                  msgID={m._id}
                   public_id={m.attachment.public_id}
                   url={m.attachment.url}
                   name={m.attachment.name}

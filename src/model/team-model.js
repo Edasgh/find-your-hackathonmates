@@ -1,5 +1,27 @@
 import mongoose from "mongoose";
 
+
+const messageSchema = mongoose.Schema(
+  {
+    attachment: {
+      public_id: { type: String, required: true },
+      url: { type: String, required: true },
+      name: { type: String },
+    },
+    message: { type: String },
+    sentOn: { type: String, required: true },
+    sender: {
+      name: { type: String, required: true },
+      id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+      },
+    },
+  },
+  { _id: true },
+); // Ensure _id is enabled (it is by default)
+
 const teamModel = mongoose.Schema(
   {
     name: { type: String, required: true, unique: true },
@@ -28,26 +50,7 @@ const teamModel = mongoose.Schema(
       items: { type: String },
       required: true,
     },
-    messages: {
-      type: Array,
-      items: {
-        attachment: {
-          public_id: { type: String, required: true },
-          url: { type: String, required: true },
-          name:{type:String},
-        },
-        message: { type: String },
-        sentOn: { type: String, required: true },
-        sender: {
-          name: { type: String, required: true },
-          id: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
-            required: true,
-          },
-        },
-      },
-    },
+    messages:[messageSchema],
     links: {
       type: Array,
       items: {

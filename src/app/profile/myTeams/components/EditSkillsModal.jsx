@@ -93,6 +93,7 @@ const EditSkillsModal = ({ open, setOpen, skillsArr }) => {
             onChange={(e) => {
               SetSkills(e.target.value);
             }}
+            title="Skills should be ',' separated!"
           ></textarea>
           <button
             className="add-link bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-md"

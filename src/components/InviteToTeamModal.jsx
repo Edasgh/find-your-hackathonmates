@@ -65,29 +65,25 @@ const InviteToTeamModal = ({ open, setOpen, userId, userName, email }) => {
     };
     try {
       socket.emit("invite", invitationData);
-      socket.on("invite", (res) => {
+      socket.once("invite", (res) => {
+        setPending(false);
         if (res.status === 200) {
           setApplySuccess(true);
-          setPending(false);
           setTimeout(() => {
             handleClose();
           }, 500);
-        } else if (res.status === 403) {
-          setPending(false);
-          toast.error("Already a member of the team!");
-          setTimeout(() => {
-            handleClose();
-          }, 1500);
         } else {
-          setPending(false);
-          toast.error("Something went wrong!");
-          setTimeout(() => {
-            handleClose();
-          }, 1500);
+          toast.error(res.message);
+          handleClose();
         }
+        return;
       });
     } catch (error) {
-      console.log(error);
+      setPending(false);
+      toast.error("Something went wrong!");
+
+      handleClose();
+      return;
     }
   };
 
@@ -154,6 +150,7 @@ const InviteToTeamModal = ({ open, setOpen, userId, userName, email }) => {
                 </select>
                 <button
                   type="submit"
+                  disabled={applySuccess ? true : false}
                   className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-md flex justify-center items-start"
                 >
                   {pending ? (

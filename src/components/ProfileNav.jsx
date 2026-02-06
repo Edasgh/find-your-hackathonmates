@@ -56,6 +56,9 @@ const ProfileNav = () => {
                   onMouseOut={() => {
                     setOver1(false);
                   }}
+                  onClick={() => {
+                    setOpened(!opened);
+                  }}
                 >
                   <Link
                     href="/profile/myTeams"
@@ -73,6 +76,9 @@ const ProfileNav = () => {
                   onMouseOut={() => {
                     setOver2(false);
                   }}
+                  onClick={() => {
+                    setOpened(!opened);
+                  }}
                 >
                   <Link href="/profile" className="block hover:text-indigo-400">
                     <FontAwesomeIcon icon={over2 ? userIcon : faUser} />
@@ -86,6 +92,9 @@ const ProfileNav = () => {
                   }}
                   onMouseOut={() => {
                     setOver3(false);
+                  }}
+                  onClick={() => {
+                    setOpened(!opened);
                   }}
                 >
                   <Link

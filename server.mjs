@@ -28,7 +28,7 @@ app.prepare().then(() => {
   const server = createServer(handle);
 
   const io = new Server(server);
- 
+
   // set up socket connection
   io.on("connection", (socket) => {
     console.log(`New connection ${socket.id}`);
@@ -62,14 +62,14 @@ app.prepare().then(() => {
       }) => {
         try {
           // Save the message in the database
-          const saveMsg = await Team.findByIdAndUpdate(
-            { _id: roomId },
+          const updatedTeam = await Team.findByIdAndUpdate(
+            roomId,
             {
               $push: {
                 messages: {
                   attachment: {
                     public_id,
-                    url,
+                    url: url.trim().length === 0 ? "N/A" : url,
                     name: fileName,
                   },
                   message: message,
@@ -80,9 +80,10 @@ app.prepare().then(() => {
                   },
                 },
               },
-            }
+            },
+            { new: true, runValidators: true },
           );
-          if (!saveMsg) {
+          if (!updatedTeam) {
             throw new Error("Message not saved");
           }
 
@@ -91,16 +92,14 @@ app.prepare().then(() => {
             throw new Error("Team not found!");
           }
 
-          // Broadcast the message to all users in the room
-          socket.to(roomId).emit("message", {
-            message,
-            public_id,
-            url,
-            fileName,
-            senderId,
-            senderName,
-            sentOn,
-          });
+          // Get the last message (the one we just pushed) which now contains the MongoDB _id
+          const savedMessage =
+            updatedTeam.messages[updatedTeam.messages.length - 1];
+
+
+          //  Broadcast the SAVED message (including its _id) to the room
+          // This ensures handleDelMsg will have the messageId it needs
+          io.to(roomId).emit("message", savedMessage);
 
           //notify the online users
           for (const [userId, userSocketId] of onlineUsers.entries()) {
@@ -149,7 +148,7 @@ app.prepare().then(() => {
         } catch (error) {
           console.log(error.message);
         }
-      }
+      },
     );
 
     // get message notification in real time
@@ -193,31 +192,17 @@ app.prepare().then(() => {
       "remove-msg",
       async ({
         roomId,
-        public_id,
-        url,
-        fileName,
-        message,
-        senderId,
-        senderName,
-        sentOn,
+        messageId,
       }) => {
         try {
           const delMsg = await Team.findByIdAndUpdate(
             roomId,
             {
               $pull: {
-                messages: {
-                  attachment: { public_id, url, name: fileName },
-                  message: message,
-                  sentOn: sentOn,
-                  sender: {
-                    name: senderName,
-                    id: senderId,
-                  },
-                },
+                messages: { _id: messageId }, // Match ONLY by the unique ID
               },
             },
-            { new: true }
+            { new: true },
           );
           if (!delMsg) {
             throw new Error("Message not deleted!");
@@ -227,7 +212,7 @@ app.prepare().then(() => {
         } catch (error) {
           console.log(error);
         }
-      }
+      },
     );
 
     // get join requests in real time
@@ -282,12 +267,30 @@ app.prepare().then(() => {
           if (members.some((m) => m.id === recieverId)) {
             return socket.emit("invite", {
               status: 403,
-              message: "Team mate already exists in team!",
+              message: "Already a member of the team!",
             });
           }
+
+          //find same request
+          const foundRequest = await Request.findOne({
+            "sender.id": { $eq: senderId },
+            "reciever.id": { $eq: recieverId },
+            "team.id": { $eq: teamId },
+          });
+          if (foundRequest) {
+            return socket.emit("invite", {
+              status: 500,
+              message: "Invitation already sent!",
+            });
+          }
+
+          // if no request found, send invitation
           const sendInvite = await Request.create(invitationData);
           if (!sendInvite) {
-            throw new Error("Can't send invitation!");
+            return socket.emit("invite", {
+              status: 500,
+              message: "Can't send invitation!",
+            });
           }
 
           //send an email to the user with notification link
@@ -335,12 +338,15 @@ app.prepare().then(() => {
               message: "Invitation sent successfully!",
             });
           } else if (info.rejected) {
-            throw new Error("Something went wrong!");
+            return socket.emit("invite", {
+              status: 500,
+              message: "Something went wrong! Please try again later.",
+            });
           }
         } catch (error) {
           console.log(error.message);
         }
-      }
+      },
     );
 
     // send join request to the team admin
@@ -370,6 +376,19 @@ app.prepare().then(() => {
               id: myId,
             },
           };
+
+          //find same join application
+          const foundRequest = await Request.findOne({
+            "sender.id": { $eq: myId },
+            "reciever.id": { $eq: recieverId },
+            "team.id": { $eq: teamId },
+          });
+          if (foundRequest) {
+            return socket.emit("apply-to-join", {
+              status: 500,
+              message: "Join application aleady sent!",
+            });
+          }
 
           const ApplyToJoin = await Request.create(requestData);
           if (!ApplyToJoin) {
@@ -421,12 +440,15 @@ app.prepare().then(() => {
               message: "Applied successfully!",
             });
           } else if (info.rejected) {
-            throw new Error("Something went wrong!");
+            return socket.emit("apply-to-join", {
+              status: 500,
+              message: "Something went wrong! Please try again later.",
+            });
           }
         } catch (error) {
           console.log(error.message);
         }
-      }
+      },
     );
 
     //accept & reject invitations & applications
@@ -553,7 +575,7 @@ app.prepare().then(() => {
             message: error.message,
           });
         }
-      }
+      },
     );
     //reject a join request
     socket.on("reject-alert", async ({ reqId, myId }) => {
@@ -599,7 +621,7 @@ app.prepare().then(() => {
                 link: link,
               },
             },
-          }
+          },
         );
 
         if (!saveLink) {
@@ -623,7 +645,7 @@ app.prepare().then(() => {
                 id: memberId,
               },
             },
-          }
+          },
         );
         if (!removeMember) {
           throw new Error("Member not removed");
@@ -634,7 +656,7 @@ app.prepare().then(() => {
             $pull: {
               teams: teamId,
             },
-          }
+          },
         );
         if (!removeTeam) {
           throw new Error("Team not removed");

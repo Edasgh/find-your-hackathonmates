@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 
 const MessageEl = ({
   message,
+  msgID,
   public_id,
   url,
   name,
@@ -24,29 +25,28 @@ const MessageEl = ({
   const sameSender = senderId === userId;
   const msgParts = message.split(" ");
 
-  const [urlIndex,setUrlIndex] = useState(-1);
+  const [urlIndex, setUrlIndex] = useState(-1);
 
-   const isValidUrl = (urlString) => {
-     var urlPattern = new RegExp(
-       "^(https?:\\/\\/)?" + // validate protocol
-         "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // validate domain name
-         "((\\d{1,3}\\.){3}\\d{1,3}))" + // validate OR ip (v4) address
-         "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // validate port and path
-         "(\\?[;&a-z\\d%_.~+=-]*)?" + // validate query string
-         "(\\#[-a-z\\d_]*)?$",
-       "i"
-     ); // validate fragment locator
-     return !!urlPattern.test(urlString);
-   };
+  const isValidUrl = (urlString) => {
+    var urlPattern = new RegExp(
+      "^(https?:\\/\\/)?" + // validate protocol
+        "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // validate domain name
+        "((\\d{1,3}\\.){3}\\d{1,3}))" + // validate OR ip (v4) address
+        "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // validate port and path
+        "(\\?[;&a-z\\d%_.~+=-]*)?" + // validate query string
+        "(\\#[-a-z\\d_]*)?$",
+      "i",
+    ); // validate fragment locator
+    return !!urlPattern.test(urlString);
+  };
 
-  useEffect(()=>{
+  useEffect(() => {
     msgParts.map((e) => {
       if (isValidUrl(e)) {
         setUrlIndex(msgParts.indexOf(e));
       }
     });
-  },[])
-
+  }, []);
 
   return (
     <div
@@ -83,14 +83,8 @@ const MessageEl = ({
               }}
               onClick={() => {
                 handleDelMsg({
-                  msg: message,
-                  public_id,
-                  url,
-                  fileName:name,
+                  msgId: msgID,
                   teamId: teamId,
-                  sentOn: sentOn,
-                  senderId: senderId,
-                  senderName: senderName,
                 });
                 setOver(false);
               }}
@@ -120,7 +114,7 @@ const MessageEl = ({
             </Link>
             <span className="font-light block whitespace-pre-wrap">
               {message.slice(
-                message.indexOf(msgParts[urlIndex]) + msgParts[urlIndex].length
+                message.indexOf(msgParts[urlIndex]) + msgParts[urlIndex].length,
               )}
             </span>
           </>
@@ -129,7 +123,11 @@ const MessageEl = ({
         {public_id !== "-1" && (
           <div>
             <Link href={url} target="_blank" download className="text-black">
-              {AttachmentEl({ file: fileFormat(name), fileUrl: url,fileName:name })}
+              {AttachmentEl({
+                file: fileFormat(name),
+                fileUrl: url,
+                fileName: name,
+              })}
             </Link>
           </div>
         )}
