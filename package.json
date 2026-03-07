@@ -25,6 +25,7 @@
     "@react-oauth/google": "^0.12.1",
     "axios": "^1.12.0",
     "bcryptjs": "^2.4.3",
+    "chart.js": "^4.5.1",
     "cloudinary": "^2.7.0",
     "convex": "^1.24.1",
     "js-cookie": "^3.0.5",
@@ -36,6 +37,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-toastify": "^10.0.6",
+    "recharts": "^3.8.0",
     "socket.io": "^4.8.1",
     "socket.io-client": "^4.8.1",
     "zod": "^3.24.4"

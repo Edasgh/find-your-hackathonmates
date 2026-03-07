@@ -8,6 +8,8 @@ import {
   faUser as userIcon,
   faBell as bellIcon,
   faBars,
+  faChartBar,
+  faChartArea,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
@@ -19,9 +21,7 @@ const ProfileNav = () => {
   const [opened, setOpened] = useState(true);
   const [reqs, setReqs] = useState([]);
 
-  const [over1, setOver1] = useState(false);
-  const [over2, setOver2] = useState(false);
-  const [over3, setOver3] = useState(false);
+  const [over, setOver] = useState("");
 
   useEffect(() => {
     if (!isLoading && user) {
@@ -51,10 +51,10 @@ const ProfileNav = () => {
                 <li
                   className="mb-3"
                   onMouseOver={() => {
-                    setOver1(true);
+                    setOver("teams");
                   }}
                   onMouseOut={() => {
-                    setOver1(false);
+                    setOver("");
                   }}
                   onClick={() => {
                     setOpened(!opened);
@@ -64,34 +64,38 @@ const ProfileNav = () => {
                     href="/profile/myTeams"
                     className="block hover:text-indigo-400"
                   >
-                    <FontAwesomeIcon icon={over1 ? msg : faMessage} />
+                    <FontAwesomeIcon
+                      icon={over === "teams" ? msg : faMessage}
+                    />
                     &nbsp;&nbsp; Teams
                   </Link>
                 </li>
                 <li
                   className="mb-3"
                   onMouseOver={() => {
-                    setOver2(true);
+                    setOver("profile");
                   }}
                   onMouseOut={() => {
-                    setOver2(false);
+                    setOver("");
                   }}
                   onClick={() => {
                     setOpened(!opened);
                   }}
                 >
                   <Link href="/profile" className="block hover:text-indigo-400">
-                    <FontAwesomeIcon icon={over2 ? userIcon : faUser} />
+                    <FontAwesomeIcon
+                      icon={over === "profile" ? userIcon : faUser}
+                    />
                     &nbsp;&nbsp; Profile
                   </Link>
                 </li>
                 <li
                   className="mb-3"
                   onMouseOver={() => {
-                    setOver3(true);
+                    setOver("notifications");
                   }}
                   onMouseOut={() => {
-                    setOver3(false);
+                    setOver("");
                   }}
                   onClick={() => {
                     setOpened(!opened);
@@ -101,13 +105,39 @@ const ProfileNav = () => {
                     href="/profile/joinRequests"
                     className="block hover:text-indigo-400"
                   >
-                    <FontAwesomeIcon icon={over3 ? bellIcon : faBell} />
+                    <FontAwesomeIcon
+                      icon={over === "notifications" ? bellIcon : faBell}
+                    />
                     &nbsp;&nbsp; Notifications
                     <span className="mx-2 bg-blue-100 text-blue-800 text-xs font-medium me-2 px-1.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
                       {reqs.length}
                     </span>
                   </Link>
                 </li>
+                {user.isAdmin===true && (
+                  <li
+                    className="mb-3"
+                    onMouseOver={() => {
+                      setOver("dashboard");
+                    }}
+                    onMouseOut={() => {
+                      setOver("");
+                    }}
+                    onClick={() => {
+                      setOpened(!opened);
+                    }}
+                  >
+                    <Link
+                      href="/profile/dashboard"
+                      className="block hover:text-indigo-400"
+                    >
+                      <FontAwesomeIcon
+                        icon={over === "dashboard" ? faChartBar : faChartArea}
+                      />
+                      &nbsp;&nbsp; Dashboard
+                    </Link>
+                  </li>
+                )}
               </ul>
             </div>
           </div>

@@ -6,7 +6,6 @@ import TeamMate from "@/components/TeamMate";
 import Footer from "@/components/Footer";
 import { useCreds } from "@/hooks/useCreds";
 import NotFoundUser from "@/components/not-found-user";
-import ChatBot from "@/components/ChatBot";
 
 export default function TeamMatesPage() {
   const { user, isLoading, error } = useCreds();
@@ -133,7 +132,7 @@ export default function TeamMatesPage() {
         </button>
       </form>
 
-      <div className="w-full flex flex-wrap gap-3 justify-center items-center">
+      <div className="w-full flex flex-wrap gap-7 justify-center items-center">
         {teamMates.length > 0 ? (
           teamMates.map((t, index) => (
             <TeamMate
@@ -146,6 +145,7 @@ export default function TeamMatesPage() {
               githubID={t.githubID}
               skills={t.skills}
               country={t.country}
+              joinedOn={t.createdAt}
             />
           ))
         ) : (
@@ -154,7 +154,6 @@ export default function TeamMatesPage() {
           </h1>
         )}
       </div>
-      <ChatBot />
       <div className="mt-[30vh]">
         <Footer />
       </div>

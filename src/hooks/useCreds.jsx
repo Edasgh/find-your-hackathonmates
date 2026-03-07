@@ -31,6 +31,7 @@ export const CredsProvider = ({ children }) => {
             country: userData.country,
             skills: [...userData.skills],
             teams: [...userData.teams],
+            isAdmin:userData.isAdmin
           });
         } catch (err) {
           setError(err.message);

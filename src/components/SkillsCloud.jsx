@@ -5,7 +5,7 @@ function SkillsCloud({ skilsArr = [] }) {
         skilsArr?.map((skill, index) => (
           <span
             key={index}
-            className="inline-block text-bgPrimary font-semibold py-1 px-5 text-xs rounded-3xl bg-textPrimary"
+            className="inline-block text-bgPrimary font-semibold py-0.5 px-3 text-xs rounded-3xl bg-textPrimary"
           >
             {skill}
           </span>

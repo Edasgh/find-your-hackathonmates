@@ -18,7 +18,7 @@ import Link from "next/link";
 import ChatNavigation from "../components/ChatNavigation";
 import { socket } from "@/lib/socket";
 import { useMutation, useQuery } from "convex/react";
-import { getDate } from "@/lib/getDate";
+import { getDate } from "@/lib/dateOperations";
 import { useCreds } from "@/hooks/useCreds";
 import MessageEl from "../components/MessageEl";
 import { toast, ToastContainer } from "react-toastify";

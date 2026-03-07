@@ -4,6 +4,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { ConvexClientProvider } from "./ConvexClientProvider";
 
 export const metadata = {
+  metadataBase: new URL("https://find-your-hackathonmates.onrender.com"),
   title:
     "Find Your Hackathon Mates - Build your team for hackathons, connect with potential teammates,make project plans together",
   description:
@@ -62,7 +63,7 @@ const Layout = async ({ children }) => {
 export default async function RootLayout({ children }) {
   await dbConn();
   return (
-    <html lang="en">
+    <html lang="en" data-scroll-behavior="smooth">
       <head>
         <script
           type="application/ld+json"
