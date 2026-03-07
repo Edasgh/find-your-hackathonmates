@@ -70,7 +70,7 @@ https://find-your-hackathonmates.onrender.com/
 
 5. My Teams Page :
 <img width="100%" src="https://github.com/Edasgh/find-your-hackathonmates/blob/master/public/myTeam.jpg"/>
-<img width="100%" src="https://github.com/Edasgh/find-your-hackathonmates/blob/master/public/myTeam-2.jpg"/>
+<img width="100%" src="https://github.com/Edasgh/find-your-hackathonmates/blob/master/public/myTeam-2.png"/>
 
 6. Join Requests Page:
 <img width="100%" src="https://github.com/Edasgh/find-your-hackathonmates/blob/master/public/join_Requests.png"/>
