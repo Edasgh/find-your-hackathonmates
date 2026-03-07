@@ -3,6 +3,7 @@ import { parseCustomDate } from "@/lib/dateOperations";
 
 // Import React hooks
 import React, { useEffect, useState } from "react";
+import { ProfileEl } from "../../joinRequests/components/ProfileEl";
 
 /**
  * Recents Component
@@ -22,6 +23,10 @@ const Recents = ({ applications, allUsers, allTeams }) => {
   // State to store final list of recent activities
   const [activities, setActivities] = useState([]);
 
+  // State to store status of profile details modal and team details modal : show/hide
+  const [openProfile, setOpenProfile] = useState(false);
+  const [openTeam, setOpenTeam] = useState(false);
+
   /**
    * useEffect
    * Runs whenever allUsers or allTeams changes.
@@ -37,10 +42,8 @@ const Recents = ({ applications, allUsers, allTeams }) => {
       (team.messages || []).map((msg) => ({
         // Activity type used for icon display
         type: "message",
-
         // Message displayed in activity list
         message: `${msg.sender.name} sent a message in "${team.name}"`,
-
         // Convert custom message date to JS Date
         date: parseCustomDate(msg.sentOn.toUpperCase().trim()),
       })),
@@ -52,9 +55,7 @@ const Recents = ({ applications, allUsers, allTeams }) => {
     // Track when users join the platform
     const userActivities = allUsers.map((user) => ({
       type: "user",
-
       message: `${user.name} joined the platform`,
-
       // createdAt already in standard date format
       date: new Date(user.createdAt),
     }));
@@ -65,9 +66,7 @@ const Recents = ({ applications, allUsers, allTeams }) => {
     // Track team creation
     const teamActivities = allTeams.map((team) => ({
       type: "team",
-
       message: `Team "${team.name}" was created`,
-
       date: new Date(team.createdAt),
     }));
 
@@ -104,7 +103,7 @@ const Recents = ({ applications, allUsers, allTeams }) => {
     allActivities.sort((a, b) => b.date - a.date);
 
     // Debug log
-    console.log(allActivities);
+    // console.log(allActivities);
 
     // ------------------------------------------------------
     // KEEP ONLY THE 10 MOST RECENT ACTIVITIES
@@ -134,7 +133,8 @@ const Recents = ({ applications, allUsers, allTeams }) => {
                 : activity.type === "request"
                   ? "✉" // Invitation / request
                   : "👤"}{" "}
-            // User joined {activity.message}
+            {/*  User joined  */}
+            {activity.message}
           </p>
 
           {/* Activity date/time */}
