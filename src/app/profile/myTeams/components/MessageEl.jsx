@@ -131,7 +131,7 @@ const MessageEl = ({
             </Link>
           </div>
         )}
-        <span className="text-[.6rem] text-blue-100 mt-1 block">{sentOn}</span>
+        <span className="text-[.6rem] text-blue-100 mt-1 block">{sentOn?.toUpperCase()}</span>
       </div>
     </div>
   );

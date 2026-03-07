@@ -28,14 +28,14 @@ export default function Home() {
           <div className="flex flex-wrap items-start gap-5">
             <Link
               href="/teams"
-              className="w-fit border-[1px] border-none bg-textBgPrimaryHv  text-black px-5 py-3 rounded-md"
+              className="w-fit border-[1px] border-none bg-textBgPrimaryHv  text-black px-5 py-3 rounded-md hover:shadow-xl hover:-translate-y-1 transition"
             >
               <FontAwesomeIcon icon={faRocket} />
               &nbsp; Get Started Free
             </Link>
             <Link
               href="#features"
-              className="w-fit border-[1px]  border-textBgPrimaryHv hover:bg-textBgPrimaryHv text-textSecondary hover:text-black  px-5 py-3 rounded-md"
+              className="w-fit border-[1px]  border-textBgPrimaryHv hover:bg-textBgPrimaryHv text-textSecondary hover:text-black  px-5 py-3 rounded-md hover:shadow-xl hover:-translate-y-1 transition"
             >
               Explore Features &nbsp;
               <FontAwesomeIcon icon={faArrowRight} />
@@ -198,7 +198,7 @@ export default function Home() {
 
         <Link
           href="/teams"
-          className="w-fit border-[1px] border-none bg-textBgPrimaryHv  text-black px-5 py-3 rounded-md"
+          className="w-fit border-[1px] border-none bg-textBgPrimaryHv  text-black px-5 py-3 rounded-md hover:shadow-xl hover:-translate-y-1 transition"
         >
           <FontAwesomeIcon icon={faRocket} />
           &nbsp; Join Free Today

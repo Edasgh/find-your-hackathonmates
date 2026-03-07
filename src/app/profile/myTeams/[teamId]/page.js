@@ -39,7 +39,6 @@ const TeamChat = () => {
   const { user, isLoading, error } = useCreds();
   const userDetails = user;
 
-  const currentTimeStamp = getDate();
   const [loading, setLoading] = useState(isLoading);
   const [teamData, setTeamData] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -152,7 +151,7 @@ const TeamChat = () => {
     e.preventDefault();
     if (!msg.trim()) return;
 
-    const currentTimeStamp = new Date().toLocaleString();
+    const currentTimeStamp = getDate();
 
     const newMessage = {
       _id: null,
@@ -208,40 +207,37 @@ const TeamChat = () => {
     });
   };
 
+  useEffect(() => {
+    socket.on("message", (savedMessage) => {
+      setMessages((prev) => {
+        // Check if this is a response to our own 'pending' message
+        const pendingIndex = prev.findIndex(
+          (m) =>
+            m.isPending &&
+            m.message === savedMessage.message &&
+            m.sender.id === savedMessage.sender.id,
+        );
 
-useEffect(() => {
-  socket.on("message", (savedMessage) => {
-    setMessages((prev) => {
-      // Check if this is a response to our own 'pending' message
-      const pendingIndex = prev.findIndex(
-        (m) =>
-          m.isPending &&
-          m.message === savedMessage.message &&
-          m.sender.id === savedMessage.sender.id,
-      );
+        if (pendingIndex !== -1) {
+          // REPLACE the temp message with the one from DB (which has the real _id)
+          const updated = [...prev];
+          updated[pendingIndex] = savedMessage;
+          return updated;
+        }
 
-      if (pendingIndex !== -1) {
-        // REPLACE the temp message with the one from DB (which has the real _id)
-        const updated = [...prev];
-        updated[pendingIndex] = savedMessage;
-        return updated;
-      }
+        //  For messages from others, check if it's already in the list (by real _id)
+        const alreadyExists = prev.some((m) => m._id === savedMessage._id);
+        if (alreadyExists) return prev;
 
-      //  For messages from others, check if it's already in the list (by real _id)
-      const alreadyExists = prev.some((m) => m._id === savedMessage._id);
-      if (alreadyExists) return prev;
-
-      //  Otherwise, add the new message
-      return [...prev, savedMessage];
+        //  Otherwise, add the new message
+        return [...prev, savedMessage];
+      });
     });
-  });
 
-  return () => {
-    socket.off("message");
-  };
-}, [teamId, userDetails._id]); // Dependencies are important
-
-
+    return () => {
+      socket.off("message");
+    };
+  }, [teamId, userDetails._id]); // Dependencies are important
 
   useEffect(() => {
     socket.emit("join-room", teamId);
