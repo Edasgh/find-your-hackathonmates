@@ -53,3 +53,36 @@ https://find-your-hackathonmates.onrender.com/
 ## Future Feature Plans :
 1. I plan to add video calling feature here so that team mates can discuss their project better
 2. Users will be able to add their profile picture (instead of showing avatars)
+
+
+## Screens :
+1. Home Page:
+<img width="100%" src="https://github.com/Edasgh/find-your-hackathonmates/blob/master/public/home.png"/>
+
+2. Teams Page :
+<img width="100%" src="https://github.com/Edasgh/find-your-hackathonmates/blob/master/public/teams.png"/>
+
+3. Teammates Page :
+<img width="100%" src="https://github.com/Edasgh/find-your-hackathonmates/blob/master/public/teammates.png"/>
+
+4. Profile Page :
+<img width="100%" src="https://github.com/Edasgh/find-your-hackathonmates/blob/master/public/profile.jpg"/>
+
+5. My Teams Page :
+<img width="100%" src="https://github.com/Edasgh/find-your-hackathonmates/blob/master/public/myTeam.jpg"/>
+<img width="100%" src="https://github.com/Edasgh/find-your-hackathonmates/blob/master/public/myTeam-2.jpg"/>
+
+6. Join Requests Page:
+<img width="100%" src="https://github.com/Edasgh/find-your-hackathonmates/blob/master/public/join_Requests.png"/>
+
+7. Create Team Page:
+<img width="100%" src="https://github.com/Edasgh/find-your-hackathonmates/blob/master/public/create-team.png"/>
+
+8. Devbot : 
+<img width="100%" src="https://github.com/Edasgh/find-your-hackathonmates/blob/master/public/devbot.png"/>
+
+9. Admin Panel :
+<img width="100%" src="https://github.com/Edasgh/find-your-hackathonmates/blob/master/public/admin_dashboard_02.png"/>
+<img width="100%" src="https://github.com/Edasgh/find-your-hackathonmates/blob/master/public/admin_dashboard_03.png"/>
+
+
