@@ -2,9 +2,13 @@
 import LoadingComponent from "@/app/loading";
 import NotFoundUser from "@/components/not-found-user";
 import { useCreds } from "@/hooks/useCreds";
-import { faEye, faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faArrowRight, faEye, faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
+import { ProfileCell } from "./components/ProfileCell";
+import { DeleteUserAlert } from "./components/DeleteUserAlert";
+import Link from "next/link";
+
 
 const AllUsers = () => {
   // Getting logged-in user info from custom hook
@@ -14,6 +18,32 @@ const AllUsers = () => {
 
   // Total number of users
   const [noOfUsers, setNoOfUsers] = useState(0);
+
+  //selected profile to view
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectDelUser, setSelectDelUser] = useState(null);
+
+  // Delete an user
+  const deleteUser = async (userId) => {
+    try {
+      const reqBody = { admin: user._id, userId };
+      const resp = await fetch("/api/admin/users_growth", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(reqBody),
+      });
+      if (resp.status !== 200) {
+        throw new Error("Something went wrong!");
+      }
+      setTimeout(() => {
+        window.location.reload();
+      }, 800);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+
   // --------------------------------------------------
   // Fetch All Users (POST request with admin id)
   // --------------------------------------------------
@@ -82,7 +112,10 @@ const AllUsers = () => {
   // --------------------------------------------------
 
   return (
-    <div className="w-full max-w-7xl shadow-xl">
+    <div className="w-full max-w-7xl shadow-xl relative">
+      <Link href={"/profile/dashboard"}>
+        <FontAwesomeIcon icon={faArrowLeft} className="absolute text-white text-3xl font-semibold left-0 top-0 cursor-pointer" />
+      </Link>
       <h2 className="text-white text-2xl font-semibold text-center mb-6">
         All Users ({noOfUsers})
       </h2>
@@ -155,32 +188,52 @@ const AllUsers = () => {
                     {new Date(u.createdAt).toLocaleDateString()}
                   </td>
                   <td className="px-3 py-4 flex flex-wrap gap-3">
-                    <button>
+                    <button onClick={() => setSelectedUser(u)} suppressHydrationWarning suppressContentEditableWarning >
                       <FontAwesomeIcon
-                        className="text-sm text-red-800"
+                        className="text-sm"
                         icon={faEye}
+                      />
+                      <ProfileCell
+                        user={selectedUser}
+                        open={selectedUser !== null}
+                        setOpen={() => setSelectedUser(null)}
                       />
                     </button>
 
-                    <button>
+                    {/* <button>
                       <FontAwesomeIcon
                         className="text-sm text-purple-500"
                         icon={faPenToSquare}
                       />
-                    </button>
+                    </button> */}
 
-                    <button>
+                    <button onClick={() => {
+                      setSelectDelUser(u)
+                    }}
+                      suppressHydrationWarning
+                      suppressContentEditableWarning
+                    >
                       <FontAwesomeIcon
                         className="text-sm text-red-500"
                         icon={faTrashCan}
                       />
+
+                      <DeleteUserAlert
+                        userId={selectDelUser?._id || null}
+                        userName={selectDelUser?.name || null}
+                        open={selectDelUser !== null}
+                        setOpen={() => setSelectDelUser(null)}
+                        deleteUser={deleteUser}
+                      />
+
+
                     </button>
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="8" className="text-center py-6 text-gray-400">
+                <td colSpan="9" className="text-center py-6 text-gray-400">
                   No Users Found
                 </td>
               </tr>

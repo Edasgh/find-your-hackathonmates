@@ -1,11 +1,23 @@
 "use client";
+
 import React from "react";
 
-const DelAlert = ({ teamId, teamName, open, setOpen, deleteTeam }) => {
-  const handleDelTeam = async () => {
-    setOpen(null);
-    await deleteTeam();
+export const DeleteUserAlert = ({
+  userId,
+  userName,
+  open,
+  setOpen,
+  deleteUser,
+}) => {
+  const handleDelUser = async () => {
+    setOpen();
+    await deleteUser(userId);
   };
+
+  if (!userId || !userName || userId === null || userName === null) {
+    return <></>;
+  }
+
   return (
     <div
       style={{
@@ -15,42 +27,43 @@ const DelAlert = ({ teamId, teamName, open, setOpen, deleteTeam }) => {
         background: " #0a0b0cba",
         display: "grid",
         placeItems: "center",
-        visibility: open === "delTeam" ? "visible" : "hidden",
-        zIndex: open === "delTeam" ? "10000" : "-1",
+        visibility: open ? "visible" : "hidden",
+        zIndex: open ? "10000" : "-1",
       }}
       className="w-screen h-screen"
       suppressHydrationWarning
-      onClick={(e)=>{e.stopPropagation()}}
+      onClick={(e) => e.stopPropagation()}
     >
       <div className="h-fit w-fit m-auto ">
         <div className="py-7 px-4 flex flex-col gap-4 justify-center items-center rounded-md bg-bgSecondary">
           <p className="text-textBgPrimaryHv font-medium max-[800px]:text-xl min-[800.1px]:text-2xl">
-            Delete <span className="font-bold">"{teamName}"</span> ?
+            Are you sure to delete user :{" "}
+            <span className="font-bold">"{userName}"</span> ?
           </p>
           <div
             className="flex p-5 relative gap-3 flex-wrap"
             suppressHydrationWarning
           >
-            <button
-              onClick={handleDelTeam}
+            <span
+              onClick={handleDelUser}
               className="w-fit border-[1px] text-sm text-textPrimary border-textBgPrimaryHv hover:bg-textBgPrimaryHv hover:text-black  px-5 py-3 rounded-md"
+              suppressHydrationWarning
+              suppressContentEditableWarning
             >
               Delete
-            </button>
+            </span>
 
-            <button
-              onClick={() => {
-                setOpen(null);
-              }}
+            <span
+              onClick={setOpen}
               className="w-fit border-[1px] text-sm border-textBgPrimaryHv bg-textBgPrimaryHv text-black  px-5 py-3 rounded-md"
+              suppressHydrationWarning
+              suppressContentEditableWarning
             >
               Cancel
-            </button>
+            </span>
           </div>
         </div>
       </div>
     </div>
   );
 };
-
-export default DelAlert;

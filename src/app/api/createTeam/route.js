@@ -109,16 +109,20 @@ export const PATCH = async (request) => {
 export const DELETE = async (request) => {
   const { teamId } = await request.json();
   await dbConn();
-  //find the team
+
   try {
     const findTeam = await Team.findById(teamId);
+
     if (!findTeam) {
       throw new Error("Team not found!");
     }
 
+    // extract member ids
+    const memberIds = findTeam.members.map((m) => m.id);
+
     const updateUsers = await User.updateMany(
-      { _id: { $in: findTeam.members } },
-      { $pull: { teams: teamId } },
+      { _id: { $in: memberIds } },
+      { $pull: { teams: teamId } }
     );
 
     if (!updateUsers) {
@@ -126,14 +130,14 @@ export const DELETE = async (request) => {
     }
 
     const deleteTeam = await Team.findByIdAndDelete(teamId);
+
     if (!deleteTeam) {
       throw new Error("Team not deleted!");
     }
 
     return new NextResponse("Team deleted successfully!", { status: 200 });
+
   } catch (error) {
-    return new NextResponse(error.message, {
-      status: 500,
-    });
+    return new NextResponse(error.message, { status: 500 });
   }
 };

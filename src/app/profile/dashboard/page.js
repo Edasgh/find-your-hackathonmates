@@ -7,6 +7,8 @@ import { useCreds } from "@/hooks/useCreds"; // Custom hook to get logged-in use
 import { parseCustomDate } from "@/lib/dateOperations"; // Utility to parse custom date formats
 import { useEffect, useState } from "react";
 
+import { useRouter } from "next/navigation";
+
 // Importing chart components from Recharts
 import {
   BarChart,
@@ -29,6 +31,9 @@ import MessagesChart from "./components/MessagesChart";
 const Dashboard = () => {
   // Getting logged-in user info from custom hook
   const { user, isLoading, error } = useCreds();
+
+  //router
+  const router = useRouter();
 
   // ---------------- STATE VARIABLES ----------------
 
@@ -327,12 +332,20 @@ const Dashboard = () => {
       <div className="flex flex-wrap gap-4 justify-center items-center">
         <StatCard
           onClick={() => {
-            console.log("hiii");
+            router.push("/profile/dashboard/allUsers");
           }}
           name={"Users"}
           count={noOfUsers}
+          label={"View Users"}
         />
-        <StatCard name={"Teams"} count={noOfTeams} />
+        <StatCard
+          onClick={() => {
+            router.push("/profile/dashboard/allTeams");
+          }}
+          label={"View Teams"}
+          name={"Teams"}
+          count={noOfTeams}
+        />
         <StatCard name={"Applications"} count={noOfReqs} />
         <StatCard name={"Messages"} count={noOfMessages} />
       </div>
