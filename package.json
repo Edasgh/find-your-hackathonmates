@@ -23,7 +23,7 @@
     "@nextui-org/avatar": "^2.2.4",
     "@nextui-org/react": "^2.6.8",
     "@react-oauth/google": "^0.12.1",
-    "axios": "^1.12.0",
+    "axios": "^1.13.5",
     "bcryptjs": "^2.4.3",
     "chart.js": "^4.5.1",
     "cloudinary": "^2.7.0",
