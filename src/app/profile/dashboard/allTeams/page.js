@@ -9,6 +9,7 @@ import DelAlert from "../../myTeams/components/delAlert";
 import Link from "next/link";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import { useAdminData } from "@/hooks/useAdminData";
+import { ProfileCell } from "../allUsers/components/ProfileCell";
 
 const AllTeams = () => {
   // Getting logged-in user info from custom hook
@@ -23,6 +24,7 @@ const AllTeams = () => {
 
 
   const [selectDelTeam, setSelectDelTeam] = useState(null);
+  const [selectedUser, setSelectedUser] = useState(null);
 
   const [openIdx, setOpenIdx] = useState(null);
 
@@ -137,7 +139,23 @@ const AllTeams = () => {
                     </div>
                   </td>
 
-                  <td className="px-6 py-4">{team.members?.length || 0}</td>
+                  <td className="py-4 px-2 text-xs flex flex-wrap gap-2">{team.members?.length === 0 ? (<span style={{ fontStyle: "italic" }} className="text-xs text-gray-400">
+                    {`Nobody joined team ${team.name} yet`}
+                  </span>) : (
+                    <>
+                      {team.members.map((t) => (
+                        <span key={t.id._id} onClick={() => {
+                          if (selectedUser !== null) {
+                            setSelectedUser(null)
+                          } else {
+                            setSelectedUser(t.id)
+                          }
+                        }} className="underline hover:text-blue-500 font-semibold text-xs cursor-pointer">
+                          {t.id.name}
+                        </span>
+                      ))}
+                    </>
+                  )}</td>
 
                   <td className="px-6 py-4 max-w-xs truncate">
                     {team.description}
@@ -150,12 +168,6 @@ const AllTeams = () => {
                     {new Date(team.updatedAt).toLocaleDateString()}
                   </td>
                   <td className="px-6 py-4 flex flex-wrap gap-2 justify-center items-center">
-                    {/* <span>
-                      <FontAwesomeIcon
-                        className="text-sm text-purple-500"
-                        icon={faPenToSquare}
-                      />
-                    </span> */}
                     <span className="flex gap-1 justify-center items-center  cursor-pointer" onClick={() => {
                       setOpenIdx("delTeam");
                       setSelectDelTeam(team);
@@ -166,13 +178,6 @@ const AllTeams = () => {
                       <FontAwesomeIcon
                         className="text-sm text-red-500"
                         icon={faTrashCan}
-                      />
-                      <DelAlert
-                        open={openIdx}
-                        setOpen={setOpenIdx}
-                        teamId={selectDelTeam?._id}
-                        teamName={selectDelTeam?.name}
-                        deleteTeam={() => DeleteTeam(selectDelTeam?._id)}
                       />
 
                     </span>
@@ -189,6 +194,18 @@ const AllTeams = () => {
           </tbody>
         </table>
       </div>
+      <DelAlert
+        open={openIdx}
+        setOpen={setOpenIdx}
+        teamId={selectDelTeam?._id}
+        teamName={selectDelTeam?.name}
+        deleteTeam={() => DeleteTeam(selectDelTeam?._id)}
+      />
+      <ProfileCell
+        user={selectedUser}
+        open={selectedUser !== null}
+        setOpen={() => setSelectedUser(null)}
+      />
     </div>
   );
 };

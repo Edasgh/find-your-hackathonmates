@@ -46,7 +46,7 @@ export const DeleteUserAlert = ({
           >
             <span
               onClick={handleDelUser}
-              className="w-fit border-[1px] text-sm text-textPrimary border-textBgPrimaryHv hover:bg-textBgPrimaryHv hover:text-black  px-5 py-3 rounded-md"
+              className="w-fit cursor-pointer border-[1px] text-sm text-textPrimary border-textBgPrimaryHv hover:bg-textBgPrimaryHv hover:text-black  px-5 py-3 rounded-md"
               suppressHydrationWarning
               suppressContentEditableWarning
             >
@@ -55,7 +55,7 @@ export const DeleteUserAlert = ({
 
             <span
               onClick={setOpen}
-              className="w-fit border-[1px] text-sm border-textBgPrimaryHv bg-textBgPrimaryHv text-black  px-5 py-3 rounded-md"
+              className="w-fit cursor-pointer border-[1px] text-sm border-textBgPrimaryHv bg-textBgPrimaryHv text-black  px-5 py-3 rounded-md"
               suppressHydrationWarning
               suppressContentEditableWarning
             >

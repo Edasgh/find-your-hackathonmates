@@ -216,11 +216,14 @@ app.prepare().then(() => {
     );
 
     // get join requests in real time
-    socket.on("get_alerts", async ({ userId }) => {
+    socket.on("get_join_alerts", async ({ userId }) => {
       try {
         const requests = await Request.find({
           "reciever.id": { $eq: userId },
-        }).populate("team.id").populate("sender.id");
+        }).populate("sender.id")
+          .populate("team.id")
+          .lean();
+
         if (!requests) {
           throw new Error("Requests not found!");
         }
@@ -324,7 +327,7 @@ app.prepare().then(() => {
             if (recieverSocketId) {
               const notifs = await Request.find({
                 "reciever.id": { $eq: recieverId },
-              }).populate("team.id").populate("sender.id");
+              }).populate("team.id").populate("sender.id").lean();
               if (!notifs) {
                 throw new Error("Notifications not found!");
               }
@@ -426,7 +429,7 @@ app.prepare().then(() => {
             if (recieverSocketId) {
               const notifs = await Request.find({
                 "reciever.id": { $eq: recieverId },
-              }).populate("team.id").populate("sender.id");
+              }).populate("team.id").populate("sender.id").lean()
               if (!notifs) {
                 throw new Error("Notifications not found!");
               }
@@ -506,7 +509,7 @@ app.prepare().then(() => {
             if (recieverSocketId) {
               const notifs = await Request.find({
                 "reciever.id": { $eq: recieverId },
-              }).populate("team.id").populate("sender.id")
+              }).populate("team.id").populate("sender.id").lean()
 
               io.to(recieverSocketId).emit("get_alerts", {
                 data: notifs,
@@ -557,7 +560,7 @@ app.prepare().then(() => {
             if (recieverSocketId) {
               const notifs = await Request.find({
                 "reciever.id": { $eq: recieverId },
-              }).populate("team.id").populate("sender.id")
+              }).populate("team.id").populate("sender.id").lean()
 
               io.to(recieverSocketId).emit("get_alerts", {
                 data: notifs,
@@ -593,7 +596,7 @@ app.prepare().then(() => {
         if (recieverSocketId) {
           const notifs = await Request.find({
             "reciever.id": { $eq: myId },
-          }).populate("team.id").populate("sender.id")
+          }).populate("team.id").populate("sender.id").lean()
 
           io.to(recieverSocketId).emit("get_alerts", {
             data: notifs,

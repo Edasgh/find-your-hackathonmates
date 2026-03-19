@@ -130,14 +130,14 @@ const ViewMembersModal = ({
                 >
                   <div
                     className="text-lg hover:underline"
-                    onClick={() => toggleProfile(m.id)}
+                    onClick={() => toggleProfile(m.id._id)}
                   >
                     <p>{m.name}</p>
-                    <ProfileEl open={openProfileId === m.id} userId={m.id} />
+                    <ProfileEl open={openProfileId === m.id._id} user={m.id} />
                   </div>
                   {isAdmin && (
                     <>
-                      {userId !== m.id && (
+                      {userId !== m.id._id && (
                         <>
                           <FontAwesomeIcon
                             className="text-red-700 text-xl cursor-pointer"
@@ -149,7 +149,7 @@ const ViewMembersModal = ({
 
                           <DeleteMemberAlert
                             memberName={m.name}
-                            memberId={m.id}
+                            memberId={m.id._id}
                             open={openRemoveMemberModal}
                             setOpen={setOpenRemoveMemberModal}
                             handleRemoveMember={handleRemoveMember}

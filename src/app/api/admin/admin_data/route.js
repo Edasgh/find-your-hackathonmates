@@ -1,16 +1,3 @@
-// top_skills -> get
-// users_growth -> GET, POST
-// teams_growth -> post, get
-// no_of_reqs -> post
-// total_messages -> get
-
-/*
-/api/admin_data?type=team_growth
-/api/admin_data?type=top_skills
-/api/admin_data?type=total_messages
-/api/admin_data?type=user_growth
-*/
-
 // Import Next.js response helper
 import { NextResponse } from "next/server";
 
@@ -428,15 +415,15 @@ export const POST = async (request) => {
         /**
         * Fetch all users from database
         */
-        const users = await User.find();
+        const users = await User.find().populate("teams");
         // ------------------------------
         // Fetch all teams
         // ------------------------------
-        const teams = await Team.find();
+        const teams = await Team.find().populate("members.id").populate("messages.sender.id");
         // ------------------------------
         // Fetch All Requests
         // ------------------------------
-        const applications = await Request.find();
+        const applications = await Request.find().populate("team.id").populate("sender.id");
 
 
         if (users && teams && applications) {

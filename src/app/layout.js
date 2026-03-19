@@ -2,6 +2,7 @@ import "./globals.css";
 import { dbConn } from "@/lib/mongo";
 import "react-toastify/dist/ReactToastify.css";
 import { ConvexClientProvider } from "./ConvexClientProvider";
+import Script from "next/script";
 
 export const metadata = {
   metadataBase: new URL("https://find-your-hackathonmates.onrender.com"),
@@ -65,7 +66,7 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="en" data-scroll-behavior="smooth">
       <head>
-        <script
+        <Script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({

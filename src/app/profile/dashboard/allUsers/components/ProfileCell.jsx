@@ -41,7 +41,7 @@ export function ProfileCell({ user, open, setOpen }) {
                 className="flex gap-3 justify-center items-center"
                 suppressHydrationWarning
               >
-                <CustomAvatar name={user.name} />
+                <CustomAvatar name={user?.name} />
                 <p className="text-textPrimary text-xl">{user.name}</p>
                 <p className="text-textPrimary font-light text-xs bg-black p-2 rounded-md">
                   {user.country}
@@ -83,7 +83,7 @@ export function ProfileCell({ user, open, setOpen }) {
                     icon={faPeopleGroup}
                     className={"text-textPrimary text-lg"}
                   />
-                  &nbsp; Teams : &nbsp;{user.teams.length}
+                  &nbsp; Teams : &nbsp;{user.teams?.length||0}
                 </p>
               </div>
 

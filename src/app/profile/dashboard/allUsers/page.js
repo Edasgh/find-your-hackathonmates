@@ -8,6 +8,8 @@ import React, { useState } from "react";
 import { ProfileCell } from "./components/ProfileCell";
 import { DeleteUserAlert } from "./components/DeleteUserAlert";
 import Link from "next/link";
+import { useAdminData } from "@/hooks/useAdminData";
+import TeamEl from "../../joinRequests/components/TeamEl";
 
 
 const AllUsers = () => {
@@ -24,6 +26,8 @@ const AllUsers = () => {
   //selected profile to view
   const [selectedUser, setSelectedUser] = useState(null);
   const [selectDelUser, setSelectDelUser] = useState(null);
+
+  const [selectedTeam, setSelectedTeam] = useState(null);
 
   // Delete an user
   const deleteUser = async (userId) => {
@@ -49,7 +53,7 @@ const AllUsers = () => {
   // --------------------------------------------------
   // Loading State
   // --------------------------------------------------
-  if (isLoading||adminDataLoading) {
+  if (isLoading || adminDataLoading) {
     return (
       <div className="mt-12 border-t-[2.5px] border-bgSecondary flex w-screen h-screen">
         <LoadingComponent />
@@ -78,7 +82,7 @@ const AllUsers = () => {
         <FontAwesomeIcon icon={faArrowLeft} className="absolute text-white text-3xl font-semibold left-0 top-0 cursor-pointer" />
       </Link>
       <h2 className="text-white text-2xl font-semibold text-center mb-6">
-        All Users ({allUsers?.length||0})
+        All Users ({allUsers?.length || 0})
       </h2>
 
       <div className="bg-bgPrimary rounded-lg shadow-md overflow-x-auto">
@@ -133,7 +137,24 @@ const AllUsers = () => {
                     </div>
                   </td>
 
-                  <td className="px-6 py-4">{u.teams?.length || 0}</td>
+                  <td className="py-4 text-xs">{u.teams?.length === 0 ? (<span style={{ fontStyle: "italic" }} className="text-xs text-gray-400">
+                    {`${u.name} hasn't join any team yet`}
+                  </span>) : (
+                    <>
+                      {u.teams.map((t) => (
+                        <span key={t._id} onClick={() => {
+                          if (selectedTeam !== null) {
+                            setSelectedTeam(null)
+                          } else {
+                            setSelectedTeam(t)
+                          }
+                        }} className="bg-gray-700 px-2 py-1 rounded text-xs cursor-pointer">
+                          {t.name}
+                          <TeamEl open={selectedTeam !== null} team={selectedTeam} />
+                        </span>
+                      ))}
+                    </>
+                  )}</td>
 
                   <td className="px-6 py-4">
                     {u.isAdmin ? (
@@ -154,11 +175,7 @@ const AllUsers = () => {
                         className="text-sm"
                         icon={faEye}
                       />
-                      <ProfileCell
-                        user={selectedUser}
-                        open={selectedUser !== null}
-                        setOpen={() => setSelectedUser(null)}
-                      />
+
                     </button>
                     <button onClick={() => {
                       setSelectDelUser(u)
@@ -170,16 +187,6 @@ const AllUsers = () => {
                         className="text-sm text-red-500"
                         icon={faTrashCan}
                       />
-
-                      <DeleteUserAlert
-                        userId={selectDelUser?._id || null}
-                        userName={selectDelUser?.name || null}
-                        open={selectDelUser !== null}
-                        setOpen={() => setSelectDelUser(null)}
-                        deleteUser={deleteUser}
-                      />
-
-
                     </button>
                   </td>
                 </tr>
@@ -194,6 +201,18 @@ const AllUsers = () => {
           </tbody>
         </table>
       </div>
+      <DeleteUserAlert
+        userId={selectDelUser?._id || null}
+        userName={selectDelUser?.name || null}
+        open={selectDelUser !== null}
+        setOpen={() => setSelectDelUser(null)}
+        deleteUser={deleteUser}
+      />
+      <ProfileCell
+        user={selectedUser}
+        open={selectedUser !== null}
+        setOpen={() => setSelectedUser(null)}
+      />
     </div>
   );
 };

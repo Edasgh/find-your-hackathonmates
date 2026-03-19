@@ -28,9 +28,8 @@ const teamModel = mongoose.Schema(
     hackathonName: { type: String, required: true },
     description: { type: String, maxlength: 100, required: true },
     email: { type: String, required: true },
-    members: {
-      type: Array,
-      items: {
+    members: [
+      {
         name: { type: String, required: true },
         id: {
           type: mongoose.Schema.Types.ObjectId,
@@ -38,8 +37,7 @@ const teamModel = mongoose.Schema(
           required: true,
         },
       },
-      required: true,
-    },
+    ],
     admin: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -50,7 +48,7 @@ const teamModel = mongoose.Schema(
       items: { type: String },
       required: true,
     },
-    messages:[messageSchema],
+    messages: [messageSchema],
     links: {
       type: Array,
       items: {

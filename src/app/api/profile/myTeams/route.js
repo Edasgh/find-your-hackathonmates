@@ -28,7 +28,7 @@ export const POST = async (request) => {
   await dbConn();
 
   try {
-    const teamData = await Team.findById(id);
+    const teamData = await Team.findById(id).populate("members.id");
     if (!teamData) {
       throw new Error("Something went wrong!");
     }

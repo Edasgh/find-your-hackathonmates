@@ -1,7 +1,7 @@
 "use client";
 import LoadingComponent from "@/app/loading";
 
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -17,11 +17,15 @@ const JoinRequests = () => {
 
   useEffect(() => {
     if (user) {
-      socket.emit("get_alerts", { userId: user._id });
+      socket.emit("get_join_alerts", { userId: user._id });
       socket.on("get_alerts", ({ data }) => {
         setReqs([...data]);
         setLoading(false);
       });
+    }
+
+    return () =>{
+     socket.off("get_alerts");
     }
   }, [user]);
 
