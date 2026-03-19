@@ -2,53 +2,30 @@
 import LoadingComponent from "@/app/loading";
 import NotFoundUser from "@/components/not-found-user";
 import { useCreds } from "@/hooks/useCreds";
-import { faArrowLeft, faEnvelope, faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faEnvelope, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import DelAlert from "../../myTeams/components/delAlert";
 import Link from "next/link";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
+import { useAdminData } from "@/hooks/useAdminData";
 
 const AllTeams = () => {
   // Getting logged-in user info from custom hook
   const { user, isLoading, error } = useCreds();
-  // Stores all teams
-  const [allTeams, setAllTeams] = useState([]);
 
-  // Total number of teams
-  const [noOfTeams, setNoOfTeams] = useState(0);
+
+  const {
+    allTeams,
+    adminError,
+    adminDataLoading
+  } = useAdminData();
+
 
   const [selectDelTeam, setSelectDelTeam] = useState(null);
 
   const [openIdx, setOpenIdx] = useState(null);
 
-  // --------------------------------------------------
-  // Fetch All Teams
-  // --------------------------------------------------
-  const fetchTeams = async () => {
-    try {
-      const res = await fetch("/api/admin/teams_growth", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-
-        // Send admin id
-        body: JSON.stringify({ admin: user?._id }),
-      });
-
-      if (!res.ok) {
-        throw new Error(`Failed to fetch teams: ${res.statusText}`);
-      }
-
-      const data = await res.json();
-      // console.log(data);
-
-      setAllTeams(data.teams || []);
-      setNoOfTeams(data.teams?.length || 0);
-    } catch (error) {
-      setAllTeams([]);
-      setNoOfTeams(0);
-    }
-  };
 
   // --------------------------------------------------
   // Delete a Team by id
@@ -72,21 +49,11 @@ const AllTeams = () => {
     }
   };
 
-  // --------------------------------------------------
-  // Run API call once user is loaded
-  // --------------------------------------------------
-  useEffect(() => {
-    // Ensure user exists and is admin
-    if (user && user.isAdmin === true && !isLoading) {
-      fetchTeams();
-    }
-  }, [user, isLoading]);
-
 
   // --------------------------------------------------
   // Loading State
   // --------------------------------------------------
-  if (isLoading) {
+  if (isLoading || adminDataLoading) {
     return (
       <div className="mt-12 border-t-[2.5px] border-bgSecondary flex w-screen h-screen">
         <LoadingComponent />
@@ -97,7 +64,7 @@ const AllTeams = () => {
   // --------------------------------------------------
   // Unauthorized or Not Found
   // --------------------------------------------------
-  if (error || user === null || user.isAdmin === false) {
+  if (error || adminError || user === null || user.isAdmin === false) {
     return (
       <div about="admin_dashboard_teams" className="w-screen h-screen">
         <NotFoundUser />
@@ -115,7 +82,7 @@ const AllTeams = () => {
         <FontAwesomeIcon icon={faArrowLeft} className="absolute text-white text-3xl font-semibold left-0 top-0 cursor-pointer" />
       </Link>
       <h2 className="text-white text-2xl font-semibold text-center mb-6">
-        All Teams ({noOfTeams})
+        All Teams ({allTeams?.length || 0})
       </h2>
 
       <div className="bg-bgPrimary rounded-lg shadow-md overflow-x-auto">

@@ -2,9 +2,9 @@
 import LoadingComponent from "@/app/loading";
 import NotFoundUser from "@/components/not-found-user";
 import { useCreds } from "@/hooks/useCreds";
-import { faArrowLeft, faArrowRight, faEye, faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faEye, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { ProfileCell } from "./components/ProfileCell";
 import { DeleteUserAlert } from "./components/DeleteUserAlert";
 import Link from "next/link";
@@ -13,11 +13,13 @@ import Link from "next/link";
 const AllUsers = () => {
   // Getting logged-in user info from custom hook
   const { user, isLoading, error } = useCreds();
-  // Stores all users
-  const [allUsers, setAllUsers] = useState([]);
 
-  // Total number of users
-  const [noOfUsers, setNoOfUsers] = useState(0);
+  // fetching users, error-status from the custom hook
+  const {
+    allUsers,
+    adminError,
+    adminDataLoading
+  } = useAdminData();
 
   //selected profile to view
   const [selectedUser, setSelectedUser] = useState(null);
@@ -45,50 +47,9 @@ const AllUsers = () => {
 
 
   // --------------------------------------------------
-  // Fetch All Users (POST request with admin id)
-  // --------------------------------------------------
-  const fetchUsers = async () => {
-    try {
-      const resp = await fetch(`/api/admin/users_growth`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-
-        // Send admin id
-        body: JSON.stringify({ admin: user?._id }),
-      });
-
-      if (!resp.ok) {
-        throw new Error(`Failed to fetch all users: ${resp.statusText}`);
-      }
-
-      const data = await resp.json();
-
-      // Store users
-      setAllUsers(data.users || []);
-
-      // Save count
-      setNoOfUsers(data.users?.length || 0);
-    } catch (error) {
-      // Reset if failed
-      setAllUsers([]);
-      setNoOfUsers(0);
-    }
-  };
-
-  // --------------------------------------------------
-  // Run API call once user is loaded
-  // --------------------------------------------------
-  useEffect(() => {
-    // Ensure user exists and is admin
-    if (user && user.isAdmin === true && !isLoading) {
-      fetchUsers();
-    }
-  }, [user, isLoading]);
-
-  // --------------------------------------------------
   // Loading State
   // --------------------------------------------------
-  if (isLoading) {
+  if (isLoading||adminDataLoading) {
     return (
       <div className="mt-12 border-t-[2.5px] border-bgSecondary flex w-screen h-screen">
         <LoadingComponent />
@@ -99,7 +60,7 @@ const AllUsers = () => {
   // --------------------------------------------------
   // Unauthorized or Not Found
   // --------------------------------------------------
-  if (error || user === null || user.isAdmin === false) {
+  if (error || adminError || user === null || user.isAdmin === false) {
     return (
       <div about="admin_dashboard_users" className="w-screen h-screen">
         <NotFoundUser />
@@ -117,7 +78,7 @@ const AllUsers = () => {
         <FontAwesomeIcon icon={faArrowLeft} className="absolute text-white text-3xl font-semibold left-0 top-0 cursor-pointer" />
       </Link>
       <h2 className="text-white text-2xl font-semibold text-center mb-6">
-        All Users ({noOfUsers})
+        All Users ({allUsers?.length||0})
       </h2>
 
       <div className="bg-bgPrimary rounded-lg shadow-md overflow-x-auto">
@@ -199,14 +160,6 @@ const AllUsers = () => {
                         setOpen={() => setSelectedUser(null)}
                       />
                     </button>
-
-                    {/* <button>
-                      <FontAwesomeIcon
-                        className="text-sm text-purple-500"
-                        icon={faPenToSquare}
-                      />
-                    </button> */}
-
                     <button onClick={() => {
                       setSelectDelUser(u)
                     }}

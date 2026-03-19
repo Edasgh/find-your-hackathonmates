@@ -220,7 +220,7 @@ app.prepare().then(() => {
       try {
         const requests = await Request.find({
           "reciever.id": { $eq: userId },
-        });
+        }).populate("team.id").populate("sender.id");
         if (!requests) {
           throw new Error("Requests not found!");
         }
@@ -324,7 +324,7 @@ app.prepare().then(() => {
             if (recieverSocketId) {
               const notifs = await Request.find({
                 "reciever.id": { $eq: recieverId },
-              });
+              }).populate("team.id").populate("sender.id");
               if (!notifs) {
                 throw new Error("Notifications not found!");
               }
@@ -426,7 +426,7 @@ app.prepare().then(() => {
             if (recieverSocketId) {
               const notifs = await Request.find({
                 "reciever.id": { $eq: recieverId },
-              });
+              }).populate("team.id").populate("sender.id");
               if (!notifs) {
                 throw new Error("Notifications not found!");
               }
@@ -506,7 +506,7 @@ app.prepare().then(() => {
             if (recieverSocketId) {
               const notifs = await Request.find({
                 "reciever.id": { $eq: recieverId },
-              });
+              }).populate("team.id").populate("sender.id")
 
               io.to(recieverSocketId).emit("get_alerts", {
                 data: notifs,
@@ -557,7 +557,7 @@ app.prepare().then(() => {
             if (recieverSocketId) {
               const notifs = await Request.find({
                 "reciever.id": { $eq: recieverId },
-              });
+              }).populate("team.id").populate("sender.id")
 
               io.to(recieverSocketId).emit("get_alerts", {
                 data: notifs,
@@ -593,7 +593,7 @@ app.prepare().then(() => {
         if (recieverSocketId) {
           const notifs = await Request.find({
             "reciever.id": { $eq: myId },
-          });
+          }).populate("team.id").populate("sender.id")
 
           io.to(recieverSocketId).emit("get_alerts", {
             data: notifs,

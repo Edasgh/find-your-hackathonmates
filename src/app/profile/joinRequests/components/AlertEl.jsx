@@ -32,11 +32,7 @@ const AlertEl = ({ index, r, handleAccept, handleReject }) => {
             }}
           >
             {r.sender.name}
-            <ProfileEl
-              userId={r.sender.id}
-              open={openProfile}
-              setOpen={setOpenProfile}
-            />
+            <ProfileEl user={r.sender.id} open={openProfile} />
           </span>{" "}
           invited you to join the team{" "}
           <span
@@ -50,7 +46,7 @@ const AlertEl = ({ index, r, handleAccept, handleReject }) => {
             }}
           >
             {r.team.name}
-            <TeamEl teamId={r.team.id} open={openTeam} />
+            <TeamEl team={r.team.id} open={openTeam} />
           </span>
         </div>
       ) : (
@@ -69,11 +65,7 @@ const AlertEl = ({ index, r, handleAccept, handleReject }) => {
             }}
           >
             {r.sender.name}
-            <ProfileEl
-              userId={r.sender.id}
-              open={openProfile}
-              setOpen={setOpenProfile}
-            />
+            <ProfileEl user={r.sender.id} open={openProfile} />
           </span>{" "}
           sent a request to join your team{" "}
           <span
@@ -87,7 +79,7 @@ const AlertEl = ({ index, r, handleAccept, handleReject }) => {
             }}
           >
             {r.team.name}
-            <TeamEl teamId={r.team.id} open={openTeam} />
+            <TeamEl team={r.team.id} open={openTeam} />
           </span>
         </div>
       )}
@@ -108,7 +100,7 @@ const AlertEl = ({ index, r, handleAccept, handleReject }) => {
               r.team.id,
               r.reciever.name,
               r.reciever.id,
-              r._id
+              r._id,
             )
           }
         >

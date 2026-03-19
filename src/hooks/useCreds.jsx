@@ -50,7 +50,7 @@ export const CredsProvider = ({ children }) => {
 
   return (
     <CredsContext.Provider
-      value={{ user, isLoading, error }}
+      value={{ user, isLoading, error, setUser }}
     >
       {children}
     </CredsContext.Provider>

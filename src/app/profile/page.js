@@ -20,18 +20,16 @@ import EditProfile from "@/components/EditProfile";
 import { useCreds } from "@/hooks/useCreds";
 
 export default function Profile() {
-  const {user,isLoading,error} = useCreds();
+  const { user, isLoading, error, setUser } = useCreds();
   const router = useRouter();
- 
- 
+
+
   const handleLogOut = async () => {
     const response = await fetch("/api/logout");
 
     if (response.status === 200) {
+      setUser(null);
       router.push("/");
-      setTimeout(() => {
-        window.location.reload();
-      }, 500);
     }
   }
 

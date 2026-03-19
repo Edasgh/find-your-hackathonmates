@@ -50,7 +50,7 @@ const UserNav = ({ menuItems, opened }) => {
 };
 
 export default function Navbar() {
-  const { user, isLoading, error } = useCreds();
+  const { user, isLoading, error, setUser } = useCreds();
   const router = useRouter();
   const { teamId } = useChat();
   const [opened, setOpened] = useState(false);
@@ -62,10 +62,8 @@ export default function Navbar() {
   const handleLogOut = async () => {
     const response = await fetch("/api/logout");
     if (response.status === 200) {
+      setUser(null)
       router.push("/");
-      setTimeout(() => {
-        window.location.reload();
-      }, 500);
     }
   };
   useEffect(() => {
