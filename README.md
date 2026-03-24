@@ -87,7 +87,8 @@ https://find-your-hackathonmates.onrender.com/
 9. Admin Panel :
 <img width="100%" src="https://github.com/Edasgh/find-your-hackathonmates/blob/master/public/admin_dashboard_02.png"/>
 <img width="100%" src="https://github.com/Edasgh/find-your-hackathonmates/blob/master/public/admin_dashboard_03.png"/>
-<img width="100%" src="https://github.com/Edasgh/find-your-hackathonmates/blob/master/public/admin_dashboard_04.png"/>
-<img width="100%" src="https://github.com/Edasgh/find-your-hackathonmates/blob/master/public/admin_dashboard_05.png"/>
+<img width="988" height="751" alt="image" src="https://github.com/user-attachments/assets/1b88fbe8-9d1e-41d9-9f2d-edf100a89fc7" />
+<img width="950" height="382" alt="image" src="https://github.com/user-attachments/assets/61187add-843d-4467-af1d-6ab2a92640d7" />
+
 
 
