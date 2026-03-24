@@ -17,8 +17,9 @@ https://find-your-hackathonmates.onrender.com/
 
 
 <a href="https://youtu.be/y1rbUe-5gpk" target="_blank" title="Click the image to watch" >
-<img src="https://github.com/user-attachments/assets/77eb03bd-a2b0-4780-ac41-664fe2a31a8f"/ >
+<img width="1918" height="870" alt="image" src="https://github.com/user-attachments/assets/c5e6c46b-edf5-47de-92fe-511fceb193a7" />
  </a>
+
 
 
 ## Features :
@@ -57,13 +58,15 @@ https://find-your-hackathonmates.onrender.com/
 
 ## Screens :
 1. Home Page:
-<img width="100%" src="https://github.com/Edasgh/find-your-hackathonmates/blob/master/public/home.png"/>
+<img width="1918" height="867" alt="image" src="https://github.com/user-attachments/assets/c5e6c46b-edf5-47de-92fe-511fceb193a7" />
 
 2. Teams Page :
-<img width="100%" src="https://github.com/Edasgh/find-your-hackathonmates/blob/master/public/teams.png"/>
+<img width="1918" height="867" alt="image" src="https://github.com/user-attachments/assets/36a56e34-6236-4e53-b272-8b7bdd15a81b" />
+
 
 3. Teammates Page :
-<img width="100%" src="https://github.com/Edasgh/find-your-hackathonmates/blob/master/public/teammates.png"/>
+<img width="1918" height="860" alt="image" src="https://github.com/user-attachments/assets/6a1b11db-26a4-4847-a783-33f875949eb1" />
+
 
 4. Profile Page :
 <img width="100%" src="https://github.com/Edasgh/find-your-hackathonmates/blob/master/public/profile.jpg"/>
