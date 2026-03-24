@@ -12,7 +12,7 @@ const unreadModel = mongoose.Schema(
       ref: "User",
       required: true,
     },
-  }
+  }, { timestamps: true }
 );
 
 const Unread = mongoose.models.Unread ?? mongoose.model("Unread", unreadModel);

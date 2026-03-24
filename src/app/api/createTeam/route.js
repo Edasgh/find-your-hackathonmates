@@ -3,6 +3,8 @@ import { dbConn } from "@/lib/mongo";
 
 import Team from "@/model/team-model";
 import User from "@/model/user-model";
+import Request from "@/model/request-model";
+import Unread from "@/model/unread-model";
 
 export const POST = async (request) => {
   const {
@@ -19,6 +21,12 @@ export const POST = async (request) => {
   //db connection
   await dbConn();
 
+  const cleanedSkills = [...new Set(
+    skills
+      .map(skill => skill.trim().toLowerCase())
+      .filter(skill => skill !== "")
+  )];
+
   //create a team
   const tm = {
     name,
@@ -27,7 +35,7 @@ export const POST = async (request) => {
     description,
     members,
     admin,
-    skills,
+    skills:cleanedSkills,
     links,
   };
 
@@ -128,6 +136,17 @@ export const DELETE = async (request) => {
     if (!updateUsers) {
       throw new Error("Can't update profile!");
     }
+
+    // Delete requests
+    await Request.deleteMany({
+      "team.id": teamId,
+    });
+
+    // Delete unread notifications
+    await Unread.deleteMany({
+      team: teamId,
+    });
+
 
     const deleteTeam = await Team.findByIdAndDelete(teamId);
 

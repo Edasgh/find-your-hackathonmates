@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -9,8 +9,8 @@ import Footer from "@/components/Footer";
 import NotFoundUser from "@/components/not-found-user";
 import { useCreds } from "@/hooks/useCreds";
 import { useRouter } from "next/navigation";
+import { checkGithubUrlExists } from "@/lib/checkValidGithubId";
 
-const urlRegex = /^(https?:\/\/[^\s< >\{\}\[\]]+)$/;
 
 export default function createTeam() {
   const router = useRouter();
@@ -48,14 +48,17 @@ export default function createTeam() {
     const skills = data.get("TeamSkills");
     const email = data.get("TeamEmail");
 
-    const skillsArr = [...skills.split(",")];
+    const skillsArr = skills
+      .split(",")
+      .map((skill) => skill.trim())
+      .filter((skill) => skill !== "");
 
     let tId = toast.loading("Please wait....");
 
     try {
       let members = [{ name: userDetails.name, id: userDetails._id }];
       try {
-        if (!urlRegex.test(github)) {
+        if (!(await checkGithubUrlExists(github))) {
           throw new Error("Invalid github link");
         }
 

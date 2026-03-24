@@ -1,62 +1,98 @@
-// Import Next.js response helper for sending API responses
 import { NextResponse } from "next/server";
-
-// Import MongoDB connection function
 import { dbConn } from "@/lib/mongo";
-
-// Import User mongoose model
 import User from "@/model/user-model";
-
-
-/**
- * DELETE API
- *
- * Purpose:
- * Deletes a selected user
- *
- * This route is protected by verifying
- * that the requesting admin exists.
- *
- * Request Body Example:
- * {
- *   "admin": "adminUserId",
- *   "userId":"user._id"
- * }
- */
+import Team from "@/model/team-model";
+import Request from "@/model/request-model";
+import Unread from "@/model/unread-model";
 
 export const DELETE = async (request) => {
-  // Extract admin ID from request body
   const { admin, userId } = await request.json();
 
-  // Connect to database
   await dbConn();
 
   try {
-    /**
-     * Check if admin exists in database
-     */
-    const userExists = await User.findById(admin);
-
-    if (!userExists) {
-      // If admin not found, return error
-      return new NextResponse("Unauthorized!", {
-        status: 403,
-      });
+    //  Verify admin
+    const adminUser = await User.findById(admin);
+    if (!adminUser || !adminUser.isAdmin) {
+      return new NextResponse("Unauthorized!", { status: 403 });
     }
 
-    /**
-     * Fetch the user from database and delete user
-     */
-    const deleteUser = await User.findByIdAndDelete(userId)
-
-    if (deleteUser) {
-      // Send users list to frontend
-      return NextResponse.json("User deleted successfully!", { status: 200 });
+    // Check user exists
+    const userToDelete = await User.findById(userId);
+    if (!userToDelete) {
+      return new NextResponse("User not found", { status: 404 });
     }
-  } catch (error) {
-    // Return error if query fails
-    return new NextResponse(error.message, {
-      status: 500,
+
+    // --------------------------------------------------
+    // Handle teams where user is ADMIN
+    // --------------------------------------------------
+    const teamsOwned = await Team.find({ admin: userId });
+
+    for (const team of teamsOwned) {
+      // Find a new admin (exclude the user being deleted)
+      const newAdmin = team.members.find(
+        (m) => m.id.toString() !== userId
+      );
+
+      if (newAdmin) {
+        // Transfer ownership
+        team.admin = newAdmin.id;
+
+        // Also remove deleted user from members
+        team.members = team.members.filter(
+          (m) => m.id.toString() !== userId
+        );
+
+        await team.save();
+      } else {
+        //  No members left → delete team
+        await Team.findByIdAndDelete(team._id);
+
+        // Remove team from all users
+        await User.updateMany(
+          { teams: team._id },
+          { $pull: { teams: team._id } }
+        );
+      }
+    }
+
+    // --------------------------------------------------
+    //  Remove user from all team members
+    // --------------------------------------------------
+    await Team.updateMany(
+      { "members.id": userId },
+      { $pull: { members: { id: userId } } }
+    );
+
+    // --------------------------------------------------
+    // Remove team references from user (cleanup)
+    // --------------------------------------------------
+    await User.updateMany(
+      { teams: { $in: userToDelete.teams } },
+      { $pull: { teams: { $in: userToDelete.teams } } }
+    );
+
+    // ----------------------------------------------
+    // Delete all Requests & Unreads created by user
+    // ----------------------------------------------
+    // Delete requests
+    await Request.deleteMany({
+      "sender.id":userId
     });
+
+    // Delete unread notifications
+    await Unread.deleteMany({
+      reciever:userId,
+    });
+
+    // --------------------------------------------------
+    // Delete user
+    // --------------------------------------------------
+    await User.findByIdAndDelete(userId);
+
+    return NextResponse.json("User deleted successfully!", { status: 200 });
+
+  } catch (error) {
+    return new NextResponse(error.message, { status: 500 });
   }
 };

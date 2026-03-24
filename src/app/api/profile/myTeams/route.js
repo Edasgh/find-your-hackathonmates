@@ -1,5 +1,6 @@
 import { dbConn } from "@/lib/mongo";
 import Team from "@/model/team-model";
+import Unread from "@/model/unread-model";
 import User from "@/model/user-model";
 import { NextResponse } from "next/server";
 
@@ -44,76 +45,82 @@ export const POST = async (request) => {
 
 //leave group functionality
 export const PATCH = async (request) => {
-  const { myId, myName, teamId, adminId } = await request.json();
+  const { myId, teamId, adminId } = await request.json();
   await dbConn();
 
   try {
-    const upDateMyDetails = await User.findByIdAndUpdate(myId, {
-      $pull: {
-        teams: teamId,
-      },
+    // --------------------------------------------------
+    //  Remove team from user
+    // --------------------------------------------------
+    const userUpdate = await User.findByIdAndUpdate(myId, {
+      $pull: { teams: teamId },
     });
 
-    if (!upDateMyDetails) {
-      throw new Error("Can't update profile!");
+    if (!userUpdate) {
+      throw new Error("Can't update user!");
     }
 
-    if (myId === adminId) {
-      //find the team
-      const findTeam = await Team.findById(teamId);
-      
-      if(!findTeam){
-        throw new Error("Team not found!");
-      }
+    // --------------------------------------------------
+    // Find team
+    // --------------------------------------------------
+    const team = await Team.findById(teamId);
 
-      //Filter out the current user to find remaining members
-      const remainingMembers = findTeam.members.filter(
-        (member) => member.id !== myId
+    if (!team) {
+      throw new Error("Team not found!");
+    }
+
+    // --------------------------------------------------
+    //  If ADMIN is leaving
+    // --------------------------------------------------
+    if (myId === adminId) {
+      const remainingMembers = team.members.filter(
+        (m) => m.id.toString() !== myId
       );
 
       if (remainingMembers.length > 0) {
-        // Transfer Admin to the next person in line
         const newAdmin = remainingMembers[0].id;
 
-        const updateTeam = await Team.findByIdAndUpdate(teamId, {
-          $pull: {
-            members: {
-              name: myName,
-              id: myId,
-            },
-          },
-          $set: { admin: newAdmin },
-        });
+        //  Update team (remove user + set new admin)
+        team.members = remainingMembers;
+        team.admin = newAdmin;
 
-        if (!updateTeam) {
-          throw new Error("Can't update team!");
-        }
+        await team.save();
       } else {
-        // delete the team if no members left
-        const deleteTeam = await Team.findByIdAndDelete(teamId);
-        if (!deleteTeam) {
-          throw new Error("Can't delete team!");
-        }
-      }
-    } else {
-      // Regular member leaving
-      const updateTeam = await Team.findByIdAndUpdate(teamId, {
-        $pull: {
-          members: {
-            name: myName,
-            id: myId,
-          },
-        },
-      });
+        //  No members → delete team
+        await Team.findByIdAndDelete(teamId);
 
-      if (!updateTeam) {
-        throw new Error("Can't update team!");
+        //  IMPORTANT: remove team from all users
+        await User.updateMany(
+          { teams: teamId },
+          { $pull: { teams: teamId } }
+        );
       }
     }
+
+    // --------------------------------------------------
+    //  If NORMAL MEMBER leaving
+    // --------------------------------------------------
+    else {
+      await Team.findByIdAndUpdate(teamId, {
+        $pull: {
+          members: { id: myId },
+        },
+      });
+    }
+
+    //  Unreads created by user
+    // ----------------------------------------------
+   
+    // Delete unread notifications
+    await Unread.deleteMany({
+      reciever: myId,
+      team:teamId
+    });
 
     return new NextResponse("Left Team successfully!", {
       status: 200,
     });
+
   } catch (error) {
     console.log(error);
     return new NextResponse(error.message, {

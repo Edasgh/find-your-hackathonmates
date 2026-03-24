@@ -31,7 +31,8 @@ const fileTypes = [
   { name: "File", icon: faFileLines },
 ];
 
-const urlRegex = /^(https?:\/\/[^\s< >\{\}\[\]]+)$/;
+const urlRegex = /^(https?:\/\/[^\s<>[\]{}]+)$/;
+
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
 const TeamChat = () => {

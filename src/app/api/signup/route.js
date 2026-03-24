@@ -10,12 +10,20 @@ export const POST = async (request) => {
   await dbConn();
   //sign up the user & update the db
 
+
+  const cleanedSkills = [...new Set(
+    skills
+      .map(skill => skill.trim().toLowerCase())
+      .filter(skill => skill !== "")
+  )];
+
+
   const user = {
     name,
     email,
     githubID,
     bio,
-    skills,
+    skills:cleanedSkills,
     country,
     password,
   };

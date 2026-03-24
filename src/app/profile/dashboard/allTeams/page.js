@@ -28,6 +28,10 @@ const AllTeams = () => {
 
   const [openIdx, setOpenIdx] = useState(null);
 
+  const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const teamsPerPage = 6;
+
 
   // --------------------------------------------------
   // Delete a Team by id
@@ -49,6 +53,38 @@ const AllTeams = () => {
     } catch (error) {
       console.log(error.message);
     }
+  };
+
+  const filteredTeams = allTeams.filter((team) => {
+    const query = search.toLowerCase();
+
+    return (
+      team.name?.toLowerCase().includes(query) ||
+      team.hackathonName?.toLowerCase().includes(query) ||
+      team.email?.toLowerCase().includes(query) ||
+      team.skills?.some((skill) =>
+        skill.toLowerCase().includes(query)
+      ) ||
+      team.members?.some((m) =>
+        m.name.toLowerCase().includes(query)
+      )
+    );
+  });
+
+  const totalPages = Math.ceil(filteredTeams.length / teamsPerPage);
+
+  const indexOfLast = currentPage * teamsPerPage;
+  const indexOfFirst = indexOfLast - teamsPerPage;
+
+  const currentTeams = filteredTeams.slice(indexOfFirst, indexOfLast);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   };
 
 
@@ -87,6 +123,32 @@ const AllTeams = () => {
         All Teams ({allTeams?.length || 0})
       </h2>
 
+      <div className="mb-4 flex justify-between items-center">
+        <input
+          type="text"
+          placeholder="Search teams..."
+          value={search}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            setCurrentPage(1);
+          }}
+          className="px-4 py-2 rounded-md bg-bgSecondary text-white outline-none w-full max-w-sm"
+        />
+      </div>
+
+      <p className="text-sm text-gray-400 mb-2">
+        {search ? (
+          <>
+            Showing {currentTeams.length} of {filteredTeams.length} results for{" "}
+            <span className="text-white">"{search}"</span>
+          </>
+        ) : (
+          <>
+            Showing {currentTeams.length} of {allTeams.length} teams
+          </>
+        )}
+      </p>
+
       <div className="bg-bgPrimary rounded-lg shadow-md overflow-x-auto">
         <table className="w-full text-sm text-left text-gray-300">
           <thead className="bg-bgSecondary/80 text-gray-200 border-b border-gray-700">
@@ -104,8 +166,8 @@ const AllTeams = () => {
           </thead>
 
           <tbody>
-            {allTeams.length > 0 ? (
-              allTeams.map((team) => (
+            {currentTeams.length > 0 ? (
+              currentTeams.map((team) => (
                 <tr
                   key={team._id}
                   className="border-b border-gray-700 hover:bg-gray-800 transition"
@@ -128,14 +190,19 @@ const AllTeams = () => {
 
                   <td className="px-6 py-4">
                     <div className="flex flex-wrap gap-2">
-                      {team.skills?.map((skill, i) => (
-                        <span
-                          key={i}
-                          className="bg-gray-700 px-2 py-1 rounded text-xs"
-                        >
-                          {skill.trim()}
-                        </span>
-                      ))}
+                      {[...new Set(
+                        team.skills
+                          ?.map(skill => skill.trim())
+                          .filter(skill => skill !== "")
+                      )]
+                        .map((skill, i) => (
+                          <span
+                            key={i}
+                            className="bg-gray-700/80 text-gray-200 px-2 py-1 rounded-md text-xs border border-white/10"
+                          >
+                            {skill}
+                          </span>
+                        ))}
                     </div>
                   </td>
 
@@ -186,13 +253,46 @@ const AllTeams = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="7" className="text-center py-6 text-gray-400">
+                <td colSpan="9" className="text-center py-6 text-gray-400">
                   No Teams Found
                 </td>
               </tr>
             )}
           </tbody>
         </table>
+      </div>
+      <div className="flex justify-center items-center gap-3 mt-6 flex-wrap">
+
+        <button
+          onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
+          disabled={currentPage === 1}
+          className="px-3 py-1 bg-gray-700 rounded disabled:opacity-50"
+        >
+          Prev
+        </button>
+
+        {[...Array(totalPages)].map((_, i) => (
+          <button
+            key={i}
+            onClick={() => handlePageChange(i + 1)}
+            className={`px-3 py-1 rounded ${currentPage === i + 1
+                ? "bg-textBgPrimaryHv text-black"
+                : "bg-gray-700"
+              }`}
+          >
+            {i + 1}
+          </button>
+        ))}
+
+        <button
+          onClick={() =>
+            handlePageChange(Math.min(currentPage + 1, totalPages))
+          }
+          disabled={currentPage === totalPages}
+          className="px-3 py-1 bg-gray-700 rounded disabled:opacity-50"
+        >
+          Next
+        </button>
       </div>
       <DelAlert
         open={openIdx}

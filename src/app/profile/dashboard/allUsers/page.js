@@ -29,6 +29,10 @@ const AllUsers = () => {
 
   const [selectedTeam, setSelectedTeam] = useState(null);
 
+  const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const usersPerPage = 8;
+
   // Delete an user
   const deleteUser = async (userId) => {
     try {
@@ -48,6 +52,34 @@ const AllUsers = () => {
       console.log(error.message);
     }
   };
+
+  const filteredUsers = allUsers.filter((u) => {
+    const query = search.toLowerCase();
+
+    return (
+      u.name?.toLowerCase().includes(query) ||
+      u.email?.toLowerCase().includes(query) ||
+      u.country?.toLowerCase().includes(query) ||
+      u.githubID?.toLowerCase().includes(query) ||
+      u.skills?.some((skill) =>
+        skill.toLowerCase().includes(query)
+      )
+      ||
+      u.teams?.some((team) =>
+        team.name.toLowerCase().includes(query)
+      )
+    );
+  });
+
+  const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
+
+  const indexOfLastUser = currentPage * usersPerPage;
+  const indexOfFirstUser = indexOfLastUser - usersPerPage;
+
+  const currentUsers = filteredUsers.slice(
+    indexOfFirstUser,
+    indexOfLastUser
+  );
 
 
   // --------------------------------------------------
@@ -85,6 +117,28 @@ const AllUsers = () => {
         All Users ({allUsers?.length || 0})
       </h2>
 
+      <div className="mb-4 flex justify-between items-center">
+        <input
+          type="text"
+          placeholder="Search users..."
+          value={search}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            setCurrentPage(1); // reset page on search
+          }}
+          className="px-4 py-2 rounded-md bg-bgSecondary text-white outline-none w-full max-w-sm"
+        />
+      </div>
+      {search.trim().length > 0 ? (
+        <p className="mb-4 flex justify-between items-center text-center text-xs font-semibold text-slate-300">
+          Showing {currentUsers.length} matching results for "{search.toLowerCase()}"
+        </p>
+      ) : (
+        <p className="mb-4 flex justify-between items-center text-center text-xs font-semibold text-slate-300">
+          Showing {currentUsers.length} users of  {allUsers.length} users
+        </p>
+      )}
+
       <div className="bg-bgPrimary rounded-lg shadow-md overflow-x-auto">
         <table className="w-full text-sm text-left text-gray-300">
           <thead className="bg-bgSecondary/80 text-gray-200 border-b border-gray-700">
@@ -102,8 +156,8 @@ const AllUsers = () => {
           </thead>
 
           <tbody>
-            {allUsers.length > 0 ? (
-              allUsers.map((u) => (
+            {currentUsers.length > 0 ? (
+              currentUsers.map((u) => (
                 <tr
                   key={u._id}
                   className="border-b border-gray-700 hover:bg-gray-800 transition"
@@ -126,14 +180,19 @@ const AllUsers = () => {
 
                   <td className="px-6 py-4">
                     <div className="flex flex-wrap gap-2">
-                      {u.skills?.map((skill, i) => (
-                        <span
-                          key={i}
-                          className="bg-gray-700 px-2 py-1 rounded text-xs"
-                        >
-                          {skill.trim()}
-                        </span>
-                      ))}
+                      {[...new Set(
+                        u.skills
+                          ?.map(skill => skill.trim())
+                          .filter(skill => skill !== "")
+                      )]
+                        .map((skill, i) => (
+                          <span
+                            key={i}
+                            className="bg-gray-700/80 text-gray-200 px-2 py-1 rounded-md text-xs border border-white/10"
+                          >
+                            {skill}
+                          </span>
+                        ))}
                     </div>
                   </td>
 
@@ -200,6 +259,57 @@ const AllUsers = () => {
             )}
           </tbody>
         </table>
+      </div>
+      <div className="flex justify-center items-center gap-3 mt-6 flex-wrap">
+
+        <button
+          onClick={() => {
+            setCurrentPage((p) => Math.max(p - 1, 1));
+            window.scrollTo({
+              top: 0,
+              behavior: "smooth",
+            });
+          }}
+          disabled={currentPage === 1}
+          className="px-3 py-1 bg-gray-700 rounded disabled:opacity-50"
+        >
+          Prev
+        </button>
+
+        {[...Array(totalPages)].map((_, i) => (
+          <button
+            key={i}
+            onClick={() => {
+              setCurrentPage(i + 1)
+              window.scrollTo({
+                top: 0,
+                behavior: "smooth",
+              });
+            }}
+            className={`px-3 py-1 rounded ${currentPage === i + 1
+              ? "bg-textBgPrimaryHv text-black"
+              : "bg-gray-700"
+              }`}
+          >
+            {i + 1}
+          </button>
+        ))}
+
+        <button
+          onClick={() => {
+            setCurrentPage((p) => Math.min(p + 1, totalPages))
+            window.scrollTo({
+              top: 0,
+              behavior: "smooth",
+            });
+          }
+
+          }
+          disabled={currentPage === totalPages}
+          className="px-3 py-1 bg-gray-700 rounded disabled:opacity-50"
+        >
+          Next
+        </button>
       </div>
       <DeleteUserAlert
         userId={selectDelUser?._id || null}

@@ -298,11 +298,100 @@ app.prepare().then(() => {
 
           //send an email to the user with notification link
           const html = `
-        <p>Hi, ${recieverName},</p>
-        <p>${senderName} has invited you to join ${teamName} team</p>
-        <a href="${process.env.NEXT_PUBLIC_BASE_URL}/profile/joinRequests">View Here</a>
-        <p>Best regards, happy Hacking!</p>
-      `;
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <meta charset="UTF-8" />
+              <title>Team Invitation</title>
+            </head>
+            <body style="margin:0; padding:0; background-color:#0f172a; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+            <table table width = "100%" cellpadding = "0" cellspacing = "0" style = "padding:40px 0;" >
+              <tr>
+                <td align="center">
+
+                  <!-- Main Card -->
+                  <table width="100%" max-width="520" cellpadding="0" cellspacing="0"
+                    style="background:#111827; border-radius:16px; padding:32px; box-shadow:0 10px 30px rgba(0,0,0,0.4);">
+
+                    <!-- Logo / App Name -->
+                    <tr>
+                      <td style="text-align:center; padding-bottom:24px;">
+                        <p style="margin:0; font-size:18px; font-weight:600;">
+                          <span style="font-weight:300; font-size:14px; color:#E3E3E3;">find your</span>
+                          <span style="color:#B98EFD;"> HackathonMates</span>
+                        </p>
+                      </td>
+                    </tr>
+
+                    <!-- Heading -->
+                    <tr>
+                      <td style="padding-bottom:16px;">
+                        <h1 style="color:#ffffff; margin:0; font-size:22px; font-weight:600;">
+                          You're invited to join a team
+                        </h1>
+                      </td>
+                    </tr>
+
+                    <!-- Body Text -->
+                    <tr>
+                      <td style="color:#cbd5e1; font-size:15px; line-height:1.6; padding-bottom:24px;">
+                        <p style="margin:0 0 10px 0;">Hi <strong>${recieverName}</strong>,</p>
+                        <p style="margin:0 0 10px 0;">
+                          <strong>${senderName}</strong> has invited you to join the team
+                          <strong style="color:#ffffff;">${teamName}</strong>.
+                        </p>
+                        <p style="margin:0;">
+                          Click the button below to view your invitation and get started.
+                        </p>
+                      </td>
+                    </tr>
+
+                    <!-- CTA Button -->
+                    <tr>
+                      <td align="center" style="padding-bottom:28px;">
+                        <a href="${process.env.NEXT_PUBLIC_BASE_URL}/profile/joinRequests"
+                          style="
+                        display:inline-block;
+                        padding:12px 24px;
+                        background:linear-gradient(135deg,#6366f1,#8b5cf6);
+                        color:#ffffff;
+                        text-decoration:none;
+                        font-size:14px;
+                        font-weight:600;
+                        border-radius:8px;
+                        box-shadow:0 6px 20px rgba(99,102,241,0.4);
+                      ">
+                          View Invitation
+                        </a>
+                      </td>
+                    </tr>
+
+                    <!-- Divider -->
+                    <tr>
+                      <td style="border-top:1px solid #1f2937; padding-top:20px;">
+                        <p style="color:#6b7280; font-size:12px; margin:0; text-align:center;">
+                          If you didn’t expect this invitation, you can safely ignore this email.
+                        </p>
+                      </td>
+                    </tr>
+
+                  </table>
+
+                  <!-- Footer -->
+                  <table width="100%" max-width="520" style="margin-top:16px;">
+                    <tr>
+                      <td style="text-align:center; color:#6b7280; font-size:12px;">
+                        © ${new Date().getFullYear()} Your App. All rights reserved.
+                      </td>
+                    </tr>
+                  </table>
+
+                </td>
+              </tr>
+            </table >
+      </body>
+ </html>
+`;
           const transporter = createTransport({
             service: "gmail",
             host: "smtp.gmail.com",
@@ -387,7 +476,7 @@ app.prepare().then(() => {
             "team.id": { $eq: teamId },
           });
           if (foundRequest) {
-            return socket.emit("apply-to-join", {
+            return socket.emit("applied-to-join", {
               status: 500,
               message: "Join application aleady sent!",
             });
@@ -400,11 +489,108 @@ app.prepare().then(() => {
 
           //send an email to the user with notification link
           const html = `
-          <p>Hi ${recieverName}, I would like to join your team ${teamName}</p>
-          <p>${myName} has applied to you to join the ${teamName} team</p>
-          <a href="${process.env.NEXT_PUBLIC_BASE_URL}/profile/joinRequests">View Here</a>
-          <p>Best regards, happy Hacking!</p>
-        `;
+          <!DOCTYPE html>
+
+            <html>
+              <head>
+                <meta charset="UTF-8" />
+                <title>New Join Request</title>
+              </head>
+
+              <body style="margin:0; padding:0; background-color:#0f172a; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+
+
+                 <table width = "100%" cellpadding = "0" cellspacing = "0" style = "padding:40px 0;" >
+                  <tr>
+                    <td align="center">
+
+                      <!-- Card Container -->
+                      <table width="100%" max-width="520" cellpadding="0" cellspacing="0"
+                        style="background:#111827; border-radius:16px; padding:32px; box-shadow:0 10px 30px rgba(0,0,0,0.4);">
+
+                        <!-- Header -->
+                        <tr>
+                          <td style="text-align:center; padding-bottom:24px;">
+                            <p style="margin:0; font-size:18px; font-weight:600;">
+                              <span style="font-weight:300; font-size:14px; color:#E3E3E3;">find your</span>
+                              <span style="color:#B98EFD;"> HackathonMates</span>
+                            </p>
+                          </td>
+                        </tr>
+
+                        <!-- Title -->
+                        <tr>
+                          <td style="padding-bottom:16px;">
+                            <h1 style="color:#ffffff; margin:0; font-size:22px; font-weight:600;">
+                              New Team Join Request
+                            </h1>
+                          </td>
+                        </tr>
+
+                        <!-- Content -->
+                        <tr>
+                          <td style="color:#cbd5e1; font-size:15px; line-height:1.6; padding-bottom:24px;">
+                            <p style="margin:0 0 10px 0;">
+                              Hi <strong>${recieverName}</strong>,
+                            </p>
+
+                            <p style="margin:0 0 10px 0;">
+                              <strong style="color:#ffffff;">${myName}</strong> has requested to join your team
+                              <strong style="color:#ffffff;">${teamName}</strong>.
+                            </p>
+
+                            <p style="margin:0;">
+                              Review their request and decide whether to accept or decline.
+                            </p>
+                          </td>
+                        </tr>
+
+                        <!-- CTA Button -->
+                        <tr>
+                          <td align="center" style="padding-bottom:28px;">
+                            <a href="${process.env.NEXT_PUBLIC_BASE_URL}/profile/joinRequests"
+                              style="
+                              display:inline-block;
+                              padding:12px 24px;
+                              background:linear-gradient(135deg,#22c55e,#16a34a);
+                              color:#ffffff;
+                              text-decoration:none;
+                              font-size:14px;
+                              font-weight:600;
+                              border-radius:8px;
+                              box-shadow:0 6px 20px rgba(34,197,94,0.4);
+                            ">
+                              Review Request
+                            </a>
+                          </td>
+                        </tr>
+
+                        <!-- Divider -->
+                        <tr>
+                          <td style="border-top:1px solid #1f2937; padding-top:20px;">
+                            <p style="color:#6b7280; font-size:12px; margin:0; text-align:center;">
+                              You can manage all join requests from your dashboard anytime.
+                            </p>
+                          </td>
+                        </tr>
+
+                  </table>
+
+                  <!-- Footer -->
+                  <table width="100%" max-width="520" style="margin-top:16px;">
+                    <tr>
+                      <td style="text-align:center; color:#6b7280; font-size:12px;">
+                        © ${new Date().getFullYear()} Your App. All rights reserved.
+                      </td>
+                    </tr>
+                  </table>
+
+                </td>
+              </tr>
+          </table>
+      </body>
+    </html>
+`;
           const transporter = createTransport({
             service: "gmail",
             host: "smtp.gmail.com",
@@ -438,12 +624,12 @@ app.prepare().then(() => {
               });
             }
 
-            socket.emit("apply-to-join", {
+            socket.emit("applied-to-join", {
               status: 200,
               message: "Applied successfully!",
             });
           } else if (info.rejected) {
-            return socket.emit("apply-to-join", {
+            return socket.emit("applied-to-join", {
               status: 500,
               message: "Something went wrong! Please try again later.",
             });

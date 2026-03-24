@@ -144,7 +144,7 @@ a {
 
 /* Style the back side */
 .team-card-back {
-  background-color: transparent;
+  background-color:inherit ;
   color: var(--text-bg-primary);
   transform: rotateY(180deg);
 }

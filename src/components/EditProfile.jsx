@@ -1,4 +1,5 @@
 "use client";
+import { checkValidGithubId } from "@/lib/checkValidGithubId";
 import { useState } from "react";
 
 import { toast } from "react-toastify";
@@ -339,6 +340,17 @@ export default function EditProfile({
           closeButton: true,
         });
         return;
+      }
+
+      if (!(await checkValidGithubId(githubID))) {
+          toast.update(tId, {
+            render: "Invalid Github ID!",
+            type: "error",
+            isLoading: false,
+            autoClose: 1200, 
+            closeButton: true,
+          });
+          return;
       }
 
       const response = await fetch("/api/profile", {

@@ -12,8 +12,8 @@ import "react-toastify/dist/ReactToastify.css";
 import LoadingComponent from "../loading";
 import Footer from "@/components/Footer";
 import { useCreds } from "@/hooks/useCreds";
+import { checkValidGithubId } from "@/lib/checkValidGithubId";
 
-const urlRegex = /^(https?:\/\/[^\s< >\{\}\[\]]+)$/;
 
 const countries = [
   "Afghanistan",
@@ -358,8 +358,14 @@ export default function Signup() {
         .map((skill) => skill.trim())
         .filter((skill) => skill !== "");
 
-      if (urlRegex.test(githubID)) {
-        throw new Error("Not a valid github ID");
+      if (!(await checkValidGithubId(githubID))) {
+        toast.update(tId, {
+          render: "Invalid Github ID!",
+          type: "error",
+          isLoading: false,
+          autoClose: 2000,
+        });
+        return;
       }
 
       if (skills.includes(",") && skillsArr.length >= 5) {

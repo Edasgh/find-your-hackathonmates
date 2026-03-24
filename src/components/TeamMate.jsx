@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import React, { useState } from "react";
-
 import CustomAvatar from "./CustomAvatar";
 import SkillsCloud from "./SkillsCloud";
 
@@ -25,6 +24,7 @@ const TeamMate = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [openModal, setOpenModal] = useState(false);
+
   return (
     <>
       <InviteToTeamModal
@@ -34,83 +34,108 @@ const TeamMate = ({
         userId={userId}
         email={email}
       />
+
       <div
         key={index}
-        className=" max-[800px]:max-h-[25rem] min-[800.1px]:max-h-[28rem] min-h-[20rem] max-[800px]:w-[19rem] min-[800.1px]:w-[20rem] p-7 flex flex-col gap-4 justify-start items-start border-[1px] border-textSecondary rounded-2xl"
+        className="
+        group
+        w-[20rem] min-h-[22rem] p-6
+        rounded-2xl
+        bg-gradient-to-br from-[#111827]/80 to-[#020617]/80
+        backdrop-blur-lg
+        border border-purple-500/20
+        hover:border-purple-400/40
+        transition-all duration-300 ease-out
+        hover:-translate-y-1 hover:scale-[1.02]
+        hover:shadow-[0_20px_40px_rgba(0,0,0,0.6)]
+        flex flex-col gap-4
+      "
       >
-        <div className="flex gap-3 justify-center items-center">
-          <CustomAvatar name={name} />
-          <div className="flex flex-col gap-1 justify-start items-start">
-            <p
-              className="text-textPrimary font-semibold text-xl"
-              suppressHydrationWarning
-            >
+        {/* HEADER */}
+        <div className="flex gap-3 items-center">
+          <div className="ring-2 ring-purple-500/20 rounded-full p-[2px]">
+            <CustomAvatar name={name} />
+          </div>
+
+          <div className="flex flex-col">
+            <p className="text-white font-semibold text-lg leading-tight">
               {name}
             </p>
+
             <Link
               href={`mailTo:${email}`}
-              className="text-gray-400 text-xs"
-              suppressHydrationWarning
+              className="text-gray-400 text-xs hover:text-purple-400 transition"
             >
               {email}
             </Link>
           </div>
         </div>
-        <p
-          className="text-textPrimary font-medium text-xs"
-          style={isOpen ? { display: "none" } : { display: "initial" }}
-          suppressHydrationWarning
-        >
-          {country}&nbsp;&nbsp;• &nbsp;&nbsp;
-          <span
-            style={{ fontStyle: "italic" }}
-            className="font-mono text-gray-400"
-          >
-            {`Joined ` + timeDiff(new Date(joinedOn), new Date())}
-          </span>
-        </p>
-        <div
-          style={isOpen ? { display: "none" } : { display: "flex" }}
-          className="flex flex-wrap gap-4"
-        >
-          <Link href={`https://github.com/${githubID}`} target="_blank">
-            <button className="text-textPrimary flex gap-0 justify-center items-center text-xs px-2 py-1 rounded-md dashing-muted">
-              <FontAwesomeIcon className="text-2xl" icon={faGithub} />
-              &nbsp;&nbsp; Github
-            </button>
-          </Link>
 
-          <button
-            onClick={() => {
-              setOpenModal(true);
-            }}
-            title="Invite to your team"
-            className="text-textPrimary flex gap-0 justify-center items-center text-xs px-2 py-1 rounded-md dashing-muted"
-          >
-            <FontAwesomeIcon
-              className="text-2xl text-textPrimary"
-              icon={faEnvelope}
-            />
-            &nbsp;&nbsp; Invite
-          </button>
-        </div>
-        <p
-          className="text-textSecondary font-light text-[.9rem] cursor-pointer text-center"
-          onClick={() => {
-            setIsOpen(!isOpen);
-          }}
+        {/* META */}
+        {!isOpen && (
+          <p className="text-gray-500 text-xs">
+            {country} •{" "}
+            <span className="italic font-mono">
+              Joined {timeDiff(new Date(joinedOn), new Date())}
+            </span>
+          </p>
+        )}
+
+        {/* ACTION BUTTONS */}
+        {!isOpen && (
+          <div className="flex gap-3 mt-1">
+            <Link href={`https://github.com/${githubID}`} target="_blank">
+              <button
+                className="
+                flex items-center gap-2 text-xs px-3 py-1.5
+                border border-gray-700 rounded-md
+                text-gray-300 hover:text-white
+                hover:border-purple-400
+                transition
+              "
+              >
+                <FontAwesomeIcon icon={faGithub} />
+                Github
+              </button>
+            </Link>
+
+            <button
+              onClick={() => setOpenModal(true)}
+              className="
+                flex items-center gap-2 text-xs px-3 py-1.5
+                bg-gradient-to-r from-purple-500 to-indigo-500
+                text-white rounded-md
+                hover:opacity-90
+                transition
+              "
+            >
+              <FontAwesomeIcon icon={faEnvelope} />
+              Invite
+            </button>
+          </div>
+        )}
+
+        {/* BIO TOGGLE */}
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="text-purple-400 text-sm hover:underline mt-1 text-left"
         >
-          {isOpen ? "Hide" : "View"} Bio
-        </p>
-        <p
-          style={isOpen ? { display: "initial" } : { display: "none" }}
-          className="text-textBgPrimaryHv font-light text-xs"
-        >
-          {bio}
-        </p>
-        <div style={isOpen ? { display: "none" } : { display: "initial" }}>
-          <SkillsCloud skilsArr={skills} />
-        </div>
+          {isOpen ? "Hide Bio" : "View Bio"}
+        </button>
+
+        {/* BIO */}
+        {isOpen && (
+          <p className="text-gray-300 text-sm leading-relaxed">
+            {bio || "No bio provided."}
+          </p>
+        )}
+
+        {/* SKILLS */}
+        {!isOpen && (
+          <div className="mt-auto">
+            <SkillsCloud skilsArr={skills} />
+          </div>
+        )}
       </div>
     </>
   );
