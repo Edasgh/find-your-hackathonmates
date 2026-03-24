@@ -79,10 +79,12 @@ https://find-your-hackathonmates.onrender.com/
 <img width="100%" src="https://github.com/Edasgh/find-your-hackathonmates/blob/master/public/join_Requests.png"/>
 
 7. Create Team Page:
-<img width="100%" src="https://github.com/Edasgh/find-your-hackathonmates/blob/master/public/create-team.png"/>
+<img width="1917" height="837" alt="image" src="https://github.com/user-attachments/assets/c8e1414f-1b60-4fee-9ae5-e382e0ff807c" />
+
 
 8. Devbot : 
-<img width="100%" src="https://github.com/Edasgh/find-your-hackathonmates/blob/master/public/devbot.png"/>
+<img width="417" height="852" alt="image" src="https://github.com/user-attachments/assets/b9b418f3-fadb-4dd8-82ae-acdd271d9f9a" />
+
 
 9. Admin Panel :
 <img width="100%" src="https://github.com/Edasgh/find-your-hackathonmates/blob/master/public/admin_dashboard_02.png"/>
