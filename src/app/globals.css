@@ -45,6 +45,20 @@ a {
   background-color: var(--bg-secondary);
 }
 
+
+@media screen and (min-width:320px) {
+  #features{
+    padding: 0.5rem 2rem;
+  }
+}
+
+@media screen and (min-width:1000px) {
+  #features{
+    padding: initial 0rem;
+  }
+}
+
+
 .login-signup-form {
   position: relative;
 
@@ -163,6 +177,11 @@ a {
   box-shadow: 0 0 18px var(--text-secondary);
 }
 
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 @media screen and (max-width: 500px) {
   .login-signup-form {
     gap: 0rem;
@@ -227,7 +246,6 @@ a {
 *::-webkit-scrollbar-thumb {
   background: var(--text-bg-primary); /* scrollbar thumb */
   border-radius: 80rem; /* Rounded edges for the scrollbar thumb */
-  box-shadow: 0 0 10px 2px #d27df6; /* Glow effect */
 }
 *::-webkit-scrollbar-track {
   background: #111111; /* Background color for the track */

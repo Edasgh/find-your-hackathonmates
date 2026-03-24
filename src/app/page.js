@@ -25,12 +25,12 @@ export default function Home() {
       <HeroDiv/>
         <section
           id="features"
-          className="relative py-2 overflow-hidden bg-[#141414] flex flex-col items-center gap-20"
+          className="relative py-2 overflow-hidden bg-[#141414] flex flex-col items-center gap-20 "
         >
-          <div className="pointer-events-none absolute inset-0">
+          <div className="pointer-events-none absolute inset-0 overflow-hidden">
             <div
               className="absolute left-1/2 top-0 h-full w-[70%] -translate-x-1/2 
-                  bg-purple-500/10 blur-[120px] rounded-full"
+                  bg-purple-500/10 blur-[120px] rounded-full overflow-hidden"
             />
           </div>
           {/* Heading */}
@@ -173,8 +173,8 @@ export default function Home() {
         </section>
     
 
-      <Reveal className="flex-1 flex flex-col gap-5 max-w-screen h-fit p-10 items-center">
-        <div className="flex-1 flex flex-col gap-5 max-w-screen h-fit p-10 items-center">
+      <Reveal className="flex-1 flex flex-col gap-5 max-w-screen h-fit p-10 items-center overflow-hidden">
+        <div className="flex-1 flex flex-col gap-5 max-w-screen h-fit p-10 items-center overflow-hidden">
           <p className="text-textPrimary text-5xl leading-normal ">
             ⭐ Start Building Your Hackathon Team Today
           </p>
@@ -184,7 +184,11 @@ export default function Home() {
 
           <Link
             href="/teams"
-            className="w-fit border-[1px] border-none bg-textBgPrimaryHv  text-black px-5 py-3 rounded-md hover:shadow-xl hover:-translate-y-1 transition"
+            className="px-8 py-3 rounded-lg font-medium
+                      bg-gradient-to-r from-purple-500 to-indigo-500 
+                     text-white
+                      hover:scale-105 active:scale-95 
+                      shadow-lg shadow-purple-800/20  text-center gap-2 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
           >
             <FontAwesomeIcon icon={faRocket} />
             &nbsp; Join Free Today

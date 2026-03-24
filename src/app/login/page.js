@@ -312,7 +312,11 @@ export default function Login() {
                 </Link>
               </div>
               <button
-                className="login-submit hover:bg-textBgPrimaryHv text-textPrimary hover:text-black hover:text-center px-1 py-2 w-[10rem] border-[1px] rounded-md border-textBgPrimaryHv"
+                  className="login-submit w-[90%] px-4 py-2 rounded-lg text-sm 
+                      bg-gradient-to-r from-purple-500 to-indigo-500 
+                      text-white font-medium 
+                      hover:scale-105 active:scale-95 
+                      shadow-lg shadow-purple-800/20 transition-all text-center"
                 type="submit"
                 id="login-btn"
                 suppressHydrationWarning

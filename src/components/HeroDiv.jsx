@@ -31,7 +31,7 @@ const HeroDiv = () => {
       variants={container}
       initial="hidden"
       animate="show"
-      className="m-auto max-w-[1200px] px-6 py-16 flex flex-col md:flex-row items-center justify-between gap-12"
+      className="m-auto max-w-[1200px] px-6 py-16 flex flex-col md:flex-row items-center justify-between gap-12 overflow-hidden"
     >
       {/* LEFT CONTENT */}
       <div className="flex-1 flex flex-col gap-6 max-w-[520px]">
@@ -53,7 +53,11 @@ const HeroDiv = () => {
         <motion.div variants={item} className="flex flex-wrap gap-4">
           <Link
             href="/teams"
-            className="bg-textBgPrimaryHv text-black px-6 py-3 rounded-lg font-medium hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+            className="px-8 py-3 rounded-lg font-medium
+                      bg-gradient-to-r from-purple-500 to-indigo-500 
+                     text-white
+                      hover:scale-105 active:scale-95 
+                      shadow-lg shadow-purple-800/20  text-center gap-2 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
           >
             <FontAwesomeIcon icon={faRocket} />
             &nbsp; Get Started Free
@@ -61,7 +65,7 @@ const HeroDiv = () => {
 
           <Link
             href="#features"
-            className="border border-textBgPrimaryHv text-textSecondary hover:bg-textBgPrimaryHv hover:text-black px-6 py-3 rounded-lg transition-all duration-300"
+            className="border border-textBgPrimaryHv text-textSecondary px-6 py-3 rounded-lg shadow-lg shadow-purple-800/20  text-center gap-2 hover:shadow-xl transition-all duration-300"
           >
             Explore Features &nbsp;
             <FontAwesomeIcon icon={faArrowRight} />
@@ -88,7 +92,7 @@ const HeroDiv = () => {
       >
         <div className="relative">
           {/* Glow effect */}
-          <div className="absolute inset-0 bg-purple-500/20 blur-[120px] rounded-full" />
+          <div className="absolute inset-0 bg-purple-500/20 blur-[120px] rounded-full overflow-hidden" />
 
           <Image
             src="/hero-img.png"

@@ -61,7 +61,8 @@ app.prepare().then(() => {
         sentOn,
       }) => {
         try {
-          // Save the message in the database
+          // 1. Save and get the updated team in one go
+          // Use .select('members') to keep the returned object small if you only need members
           const updatedTeam = await Team.findByIdAndUpdate(
             roomId,
             {
@@ -69,84 +70,59 @@ app.prepare().then(() => {
                 messages: {
                   attachment: {
                     public_id,
-                    url: url.trim().length === 0 ? "N/A" : url,
+                    url: url?.trim().length > 0 ? url : "N/A",
                     name: fileName,
                   },
-                  message: message,
-                  sentOn: sentOn,
-                  sender: {
-                    name: senderName,
-                    id: senderId,
-                  },
+                  message,
+                  sentOn,
+                  sender: { name: senderName, id: senderId },
                 },
               },
             },
-            { new: true, runValidators: true },
+            { new: true, runValidators: true }
           );
-          if (!updatedTeam) {
-            throw new Error("Message not saved");
-          }
 
-          const currentTeam = await Team.findById(roomId);
-          if (!currentTeam) {
-            throw new Error("Team not found!");
-          }
+          if (!updatedTeam) throw new Error("Team not found or message not saved");
 
-          // Get the last message (the one we just pushed) which now contains the MongoDB _id
-          const savedMessage =
-            updatedTeam.messages[updatedTeam.messages.length - 1];
-
-
-          //  Broadcast the SAVED message (including its _id) to the room
-          // This ensures handleDelMsg will have the messageId it needs
+          // 2. Broadcast the last message (with its new MongoDB _id) to everyone in the room
+          const savedMessage = updatedTeam.messages[updatedTeam.messages.length - 1];
           io.to(roomId).emit("message", savedMessage);
 
-          //notify the online users
-          for (const [userId, userSocketId] of onlineUsers.entries()) {
-            // Skip the sender
-            if (userId === senderId) continue;
-            // Skip users not in the team
-            if (!currentTeam.members.some((m) => m.id === userId)) continue;
+          // 3. Handle Notifications for users NOT in the room
+          // Get all member IDs except the sender
+          const recipientIds = updatedTeam.members
+            .map(m => m.id.toString())
+            .filter(id => id !== senderId);
 
-            const userSocket = io.sockets.sockets.get(userSocketId); // Get the socket instance
-            if (!userSocket) continue;
+          for (const userId of recipientIds) {
+            const userSocketId = onlineUsers.get(userId);
+            let shouldNotify = true;
 
-            const isInRoom = userSocket.rooms.has(roomId); // Check room membership
-            if (!isInRoom) {
-              const addNotif = await Unread.create({
+            if (userSocketId) {
+              const userSocket = io.sockets.sockets.get(userSocketId);
+              // If they are online AND in the room, don't create an "Unread" record
+              if (userSocket?.rooms.has(roomId)) {
+                shouldNotify = false;
+              }
+            }
+
+            if (shouldNotify) {
+              // Create the notification
+               await Unread.create({
                 team: roomId,
                 reciever: userId,
               });
-              if (!addNotif) {
-                throw new Error("notification not sent!");
-              }
-              const findAlerts = await Unread.find({ reciever: userId });
-              if (!findAlerts) {
-                throw new Error("notifications not found!");
-              }
-              io.to(userSocketId).emit("get_notifs", { data: findAlerts });
-            }
-          }
 
-          //notify the offline users too
-          const members = await currentTeam.members;
-          for (const { name, id } of members) {
-            // Skip sender
-            if (id === senderId) continue;
-            if (onlineUsers.has(id)) {
-              continue;
-            } else {
-              const addNotif = await Unread.create({
-                team: roomId,
-                reciever: id,
-              });
-              if (!addNotif) {
-                throw new Error("notification not sent!");
+              // If they are online (but not in the room), push the live alert
+              if (userSocketId) {
+                const allAlerts = await Unread.find({ reciever: userId });
+                io.to(userSocketId).emit("get_notifs", { data: allAlerts });
               }
             }
           }
         } catch (error) {
-          console.log(error.message);
+          console.error("Socket Message Error:", error.message);
+          socket.emit("error_message", { message: "Failed to send message" });
         }
       },
     );

@@ -121,7 +121,9 @@ export default function Navbar() {
         {!user ? (
           <Link
             href="/login"
-            className="w-fit border-[1px] border-textBgPrimaryHv hover:bg-textBgPrimaryHv text-textPrimary hover:text-black px-8 py-3 rounded-md cursor-pointer"
+            className="px-8 py-3 rounded-lg font-medium border border-textBgPrimaryHv text-textBgPrimaryHv hover:border-transparent
+                      hover:bg-gradient-to-r from-purple-500 to-indigo-500 
+                     hover:text-white active:scale-95 shadow-lg shadow-purple-800/20  text-center gap-2 hover:shadow-xl transition-all duration-300"
           >
             Login
           </Link>

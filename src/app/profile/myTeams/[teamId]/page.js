@@ -386,31 +386,36 @@ const TeamChat = () => {
             </div>
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-4 bg-bgSecondary">
-              {messages.map((m, idx) => (
-                <MessageEl
-                  idx={idx}
-                  key={idx}
-                  message={m.message}
-                  msgID={m._id}
-                  public_id={m.attachment.public_id}
-                  url={m.attachment.url}
-                  name={m.attachment.name}
-                  over={over}
-                  setOver={setOver}
-                  senderId={m.sender.id}
-                  senderName={m.sender.name}
-                  sentOn={m.sentOn}
-                  teamId={teamId}
-                  userId={userDetails._id}
-                  handleDelMsg={handleDelMsg}
+              <div className="relative flex-1 overflow-y-auto p-4 bg-gradient-to-br from-[#0f0f11] via-[#15161a] to-[#1c1d22]">
+
+                <div className="absolute inset-0 pointer-events-none
+                bg-[radial-gradient(circle_at_20%_20%,rgba(168,85,247,0.15),transparent_40%),radial-gradient(circle_at_80%_70%,rgba(236,72,153,0.12),transparent_40%)]"
                 />
-              ))}
 
-              {/* Scroll to the bottom */}
-              <div ref={msgEndRef} />
-            </div>
+                {/* content */}
+                {messages.map((m, idx) => (
+                  <MessageEl
+                    idx={idx}
+                    key={idx}
+                    message={m.message}
+                    msgID={m._id}
+                    public_id={m.attachment.public_id}
+                    url={m.attachment.url}
+                    name={m.attachment.name}
+                    over={over}
+                    setOver={setOver}
+                    senderId={m.sender.id}
+                    senderName={m.sender.name}
+                    sentOn={m.sentOn}
+                    teamId={teamId}
+                    userId={userDetails._id}
+                    handleDelMsg={handleDelMsg}
+                  />
+                ))}
 
+                {/* Scroll to the bottom */}
+                <div ref={msgEndRef} />
+              </div>
             {/* Message Input */}
             <div className="w-full py-4 px-0 md:px-1.5 lg:px-3 bg-bgSecondary relative">
               <form className="flex gap-1.5" onSubmit={handleSubmit}>

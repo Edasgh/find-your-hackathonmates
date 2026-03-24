@@ -608,7 +608,11 @@ export default function EditProfile({
         </div>
 
         <button
-          className="signup-submit text-textPrimary hover:bg-textBgPrimaryHv hover:text-black hover:text-center px-1 py-2 border-[1px] rounded-md border-textBgPrimaryHv"
+          className="signup-submit px-4 py-2 rounded-lg text-sm 
+                      bg-gradient-to-r from-purple-500 to-indigo-500 
+                      text-white font-medium 
+                      hover:scale-105 active:scale-95 
+                      shadow-lg shadow-purple-800/20 transition-all text-center"
           type="submit"
           id="signup-btn"
           suppressHydrationWarning

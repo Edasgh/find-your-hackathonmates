@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { fileFormat } from "@/lib/features";
 import AttachmentEl from "../components/AttachmentEl";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const MessageEl = ({
   message,
@@ -23,49 +23,41 @@ const MessageEl = ({
   handleDelMsg,
 }) => {
   const sameSender = senderId === userId;
-  const msgParts = message.split(" ");
 
-  const [urlIndex, setUrlIndex] = useState(-1);
+  const parts = useMemo(() => {
+    const urlRegex = /(https:\/\/[^\s]+)/g;
 
-  const isValidUrl = (urlString) => {
-    var urlPattern = new RegExp(
-      "^(https?:\\/\\/)?" + // validate protocol
-        "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // validate domain name
-        "((\\d{1,3}\\.){3}\\d{1,3}))" + // validate OR ip (v4) address
-        "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // validate port and path
-        "(\\?[;&a-z\\d%_.~+=-]*)?" + // validate query string
-        "(\\#[-a-z\\d_]*)?$",
-      "i",
-    ); // validate fragment locator
-    return !!urlPattern.test(urlString);
-  };
+    const split = message.split(urlRegex).filter(Boolean);
 
-  useEffect(() => {
-    msgParts.map((e) => {
-      if (isValidUrl(e)) {
-        setUrlIndex(msgParts.indexOf(e));
-      }
-    });
-  }, []);
+    return split.map((part) => ({
+      text: part,
+      isLink: /^https:\/\/[^\s]+$/.test(part),
+    }));
+  }, [message]);
+
+ 
+
 
   return (
     <div
       key={idx}
-      className={`flex ${sameSender ? "justify-end" : "justify-start"} mb-4`}
+      className={`flex ${sameSender ? "justify-end" : "justify-start"} px-2 py-1 animate-[fadeIn_0.25s_ease] mb-4`}
     >
       <div
-        className={`max-w-[250px] rounded-lg p-3 box-decoration-slice ${
-          sameSender
-            ? "bg-[#a600f0] text-white"
-            : "bg-textBgPrimary text-textPrimary"
-        }`}
+        className={`
+          group relative max-w-[75%] px-4 py-2 rounded-2xl text-sm
+          backdrop-blur-md transition-all duration-300
+          ${
+            sameSender
+              ? "bg-gradient-to-r from-purple-500 to-indigo-500 text-white rounded-br-md shadow-lg shadow-purple-500/20"
+              : "bg-white/5 text-textPrimary border border-white/10 rounded-bl-md"
+          }
+        `}
       >
-        <div className="flex gap-5 justify-between items-center relative">
-          {sameSender ? (
-            <h2 className="text-sm font-semibold">You</h2>
-          ) : (
-            <h2 className="text-sm font-semibold">{senderName}</h2>
-          )}
+        <div className="flex justify-between items-center mb-1">
+          <h2 className="text-xs font-semibold opacity-80">
+            {sameSender ? "You" : senderName}
+          </h2>
           <span
             className={`bg-slate-600 text-textPrimary px-2 py-1 text-xs rounded-md absolute top-[-1.5rem] right-[-.9rem] ${
               over === idx ? "visible" : "hidden"
@@ -75,6 +67,9 @@ const MessageEl = ({
           </span>
           {sameSender && (
             <button
+              className="lg:opacity-0 lg:group-hover:opacity-100
+                transition-all duration-200
+                hover:scale-110 active:scale-95"
               onMouseOver={() => {
                 setOver(idx);
               }}
@@ -91,34 +86,33 @@ const MessageEl = ({
             >
               <FontAwesomeIcon
                 icon={faTrashCan}
-                className="text-white text-sm hover:text-red-800"
+                className="text-white/70 text-sm hover:text-red-800"
               />
             </button>
           )}
         </div>
-        {urlIndex === -1 ? (
-          <span className="font-light block whitespace-pre-wrap">
-            {message}
-          </span>
-        ) : (
-          <>
-            <span className="font-light block whitespace-pre-wrap">
-              {message.slice(0, message.indexOf(msgParts[urlIndex]))}
-            </span>
-            <Link
-              className="text-cyan-300 underline block break-words"
-              href={msgParts[urlIndex]}
-              target="_blank"
-            >
-              {msgParts[urlIndex]}
-            </Link>
-            <span className="font-light block whitespace-pre-wrap">
-              {message.slice(
-                message.indexOf(msgParts[urlIndex]) + msgParts[urlIndex].length,
-              )}
-            </span>
-          </>
-        )}
+
+        {/* Message Content */}
+        <div className="leading-relaxed break-words space-y-1">
+          {parts.map((part, i) =>
+            part.isLink ? (
+              <Link
+                key={i}
+                href={
+                  part.text.startsWith("http")
+                    ? part.text
+                    : `https://${part.text}`
+                }
+                target="_blank"
+                className="text-cyan-300 underline hover:text-cyan-200 break-all"
+              >
+                {part.text}
+              </Link>
+            ) : (
+              <span key={i}>{part.text}</span>
+            ),
+          )}
+        </div>
 
         {public_id !== "-1" && (
           <div>
@@ -131,7 +125,9 @@ const MessageEl = ({
             </Link>
           </div>
         )}
-        <span className="text-[.6rem] text-blue-100 mt-1 block">{sentOn?.toUpperCase()}</span>
+        <span className={`block text-[.6rem] mt-2 opacity-60 text-right`}>
+          {sentOn?.toUpperCase()}
+        </span>
       </div>
     </div>
   );

@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 
 import LoadingComponent from "../loading";
 import CustomAvatar from "@/components/CustomAvatar";
-import SkillsCloud from "@/components/SkillsCloud";
 import {
   faEnvelope,
   faPenToSquare,
@@ -50,97 +49,125 @@ export default function Profile() {
             </div>
           ) : (
             <div
-              className="w-screen mt-12 bg-bgPrimary flex gap-2 flex-wrap"
-              suppressHydrationWarning
-            >
+              className="w-screen mt-12 bg-bgPrimary flex justify-between gap-4 flex-wrap px-10"
+              suppressHydrationWarning>
               {/* Profile Card */}
-              <div className="bg-bgSecondary mx-4 p-6  h-fit flex flex-1 flex-col items-start gap-3">
-                <div className="flex gap-3 justify-center items-center">
-                  <CustomAvatar name={user.name} />
-                  <p className="text-textPrimary text-xl">{user.name}</p>
-                  <p className="text-textPrimary font-light text-xs bg-black p-2 rounded-md">
-                    {user.country}
-                  </p>
+              <div className="flex-1 h-fit 
+            bg-white/5 backdrop-blur-xl border border-white/10 
+            rounded-2xl shadow-xl shadow-black/30 
+            p-6 flex flex-col gap-5 hover:-translate-y-1 transition-all duration-300"
+              >
+                {/* Header */}
+                <div className="flex gap-4 items-center">
+                  <div className="scale-110">
+                    <CustomAvatar name={user.name} />
+                  </div>
+
+                  <div className="flex flex-col">
+                    <p className="text-white text-xl font-semibold">{user.name}</p>
+                    <span className="text-xs px-2 py-1 mt-1 w-fit rounded-full 
+                  bg-purple-500/20 text-purple-300 border border-purple-400/20">
+                      {user.country}
+                    </span>
+                  </div>
                 </div>
 
-                <div className="flex flex-wrap gap-2">
+                {/* Links Section */}
+                <div className="flex flex-wrap gap-3 text-sm text-white/70">
                   <Link
                     href={`https://github.com/${user.githubID}`}
                     target="_blank"
+                    className="flex items-center gap-2 px-3 py-1 rounded-md 
+                  bg-white/5 border border-white/10 hover:bg-white/10 transition"
                   >
-                    <p className="text-textPrimary underline flex gap-2 justify-center items-center text-xs px-2 py-1">
-                      <FontAwesomeIcon className="text-2xl" icon={faGithub} />
-                      {`https://github.com/${user.githubID}`}
-                    </p>
+                    <FontAwesomeIcon icon={faGithub} />
+                    {user.githubID}
                   </Link>
+
                   <Link
                     href={`mailTo:${user.email}`}
-                    target="_blank"
-                    className="flex gap-2 justify-center items-center"
+                    className="flex items-center gap-2 px-3 py-1 rounded-md 
+                  bg-white/5 border border-white/10 hover:bg-white/10 transition"
                   >
-                    <p className="text-textPrimary flex gap-2 justify-center items-center text-xs px-2 py-1">
-                      <FontAwesomeIcon
-                        className="text-2xl text-textPrimary"
-                        icon={faEnvelope}
-                      />
-                      {user.email}
-                    </p>
+                    <FontAwesomeIcon icon={faEnvelope} />
+                    {user.email}
                   </Link>
+
                   <Link
                     href="/profile/myTeams"
-                    className="text-textPrimary flex gap-2 justify-center items-center text-center text-xs"
+                    className="flex items-center gap-2 px-3 py-1 rounded-md 
+                  bg-white/5 border border-white/10 hover:bg-white/10 transition"
                   >
-                    &nbsp;
-                    <FontAwesomeIcon
-                      icon={faPeopleGroup}
-                      className={"text-textPrimary text-lg"}
-                    />
-                    &nbsp; Teams : &nbsp;{user.teams.length}
+                    <FontAwesomeIcon icon={faPeopleGroup} />
+                    {user.teams.length} Teams
                   </Link>
                 </div>
 
-                <p
-                  className="flex gap-3 flex-col text-textBgPrimaryHv font-light text-sm"
-                  suppressHydrationWarning
-                >
-                  <span className="text-textPrimary font-normal text-[1rem]">
-                    Bio{" "}
-                  </span>
-                  {user.bio}
-                </p>
-                <div className="flex gap-3 flex-col" suppressHydrationWarning>
-                  <p className="text-textPrimary">Skills </p>
-                  <SkillsCloud skilsArr={user.skills} />
+                {/* Bio */}
+                <div className="flex flex-col gap-2">
+                  <p className="text-white/80 font-medium">Bio</p>
+                  <p className="text-white/60 text-sm leading-relaxed">
+                    {user.bio || "No bio added yet."}
+                  </p>
                 </div>
-                <div
-                  className="flex mt-2 gap-3 flex-wrap"
-                  suppressHydrationWarning
-                >
+
+                {/* Skills */}
+                <div className="flex flex-col gap-2">
+                  <p className="text-white/80 font-medium">Skills</p>
+                  <div className="flex flex-wrap gap-2">
+                    {[...new Set(
+                      user.skills
+                        ?.map(skill => skill.trim())
+                        .filter(skill => skill !== "")
+                    )]?.map((skill, i) => (
+                      <span
+                        key={i}
+                        className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 
+                        text-white text-xs px-3 py-1 rounded-full 
+                        border border-white/10 hover:scale-105 transition"
+                      >
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Actions */}
+                <div className="flex mt-3 gap-3 flex-wrap">
                   <button
                     onClick={handleLogOut}
-                    title="LogOut"
-                    className="w-fit border-[1px] text-sm text-textPrimary border-textBgPrimaryHv hover:bg-textBgPrimaryHv hover:text-black  px-5 py-3 rounded-md"
+                    className="px-4 py-2 rounded-lg text-slate-400 text-sm 
+                    bg-white/5 border border-white/10 
+                    hover:bg-red-500/20 hover:text-red-300 
+                    transition-all duration-300 flex items-center gap-2"
                   >
                     <FontAwesomeIcon icon={faRightFromBracket} />
-                    &nbsp; LogOut
+                    Log Out
                   </button>
 
-                  <Link
-                    href={`/reset_password?id=${user._id}`}
-                    className="flex gap-2 justify-center items-center"
-                  >
-                    <button className="w-fit border-[1px] text-sm text-textPrimary border-textBgPrimaryHv hover:bg-textBgPrimaryHv hover:text-black  px-5 py-3 rounded-md">
-                      <FontAwesomeIcon icon={faPenToSquare} /> &nbsp; Change
-                      Password
+                  <Link href={`/reset_password?id=${user._id}`}>
+                    <button className="px-4 py-2 rounded-lg text-sm 
+                      bg-gradient-to-r from-purple-500 to-indigo-500 
+                      text-white font-medium 
+                      hover:scale-105 active:scale-95 
+                      shadow-lg shadow-purple-800/20 transition-all flex items-center gap-2">
+                      <FontAwesomeIcon icon={faPenToSquare} />
+                      Change Password
                     </button>
                   </Link>
                 </div>
               </div>
-              {/* Edit Profile Form */}
-              <div className="bg-bgSecondary mx-4 p-6 w-fit h-fit mb-3 flex flex-col items-start gap-3">
-                <h1 className="text-center section-title mt-12 text-textPrimary poppins-semibold text-2xl">
+
+              {/* Edit Profile */}
+              <div className="flex-1 min-w-[320px] max-w-[500px] 
+              bg-white/5 backdrop-blur-xl border border-white/10 
+              rounded-2xl shadow-xl shadow-black/30 
+              p-6 flex flex-col gap-4 hover:-translate-y-1 transition-all duration-300"
+              >
+                <h1 className="text-white text-xl font-semibold mb-2">
                   Edit Profile
                 </h1>
+
                 <EditProfile
                   UserId={user._id}
                   UserName={user.name}
