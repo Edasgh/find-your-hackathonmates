@@ -69,7 +69,8 @@ https://find-your-hackathonmates.onrender.com/
 
 
 4. Profile Page :
-<img width="100%" src="https://github.com/Edasgh/find-your-hackathonmates/blob/master/public/profile.jpg"/>
+<img width="1918" height="830" alt="image" src="https://github.com/user-attachments/assets/6c6eb595-ba11-4956-82d0-bab942e01d41" />
+
 
 5. My Teams Page :
 <img width="100%" src="https://github.com/Edasgh/find-your-hackathonmates/blob/master/public/myTeam.jpg"/>
