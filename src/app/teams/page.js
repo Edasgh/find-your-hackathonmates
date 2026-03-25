@@ -86,10 +86,10 @@ export default function Teams() {
       >
         <input
           type="text"
-          className={
-            teamsData.length === 0
-              ? "w-fit text-textPrimary bg-bgPrimary py-2 px-5 border-[1px] border-textPrimary rounded-md outline-none"
-              : "w-fit text-textPrimary bg-black py-2 px-5 border-[1px] border-textPrimary rounded-md outline-none"
+          className={`w-fit text-textPrimary py-2 px-5 border-[1px] border-textPrimary/40 rounded-md outline-none ${teamsData.length === 0
+            ? "bg-bgPrimary"
+            : " bg-black"}`
+            
           }
           name="search_teams"
           id="search_teams"
@@ -102,10 +102,14 @@ export default function Teams() {
         <button
           type="submit"
           disabled={teamsData.length === 0}
-          className={
-            teamsData.length === 0
-              ? "w-fit border-[1px] border-textBgPrimaryHv bg-textBgPrimaryHv text-black px-6 py-2 rounded-md cursor-not-allowed"
-              : "w-fit border-[1px] border-textBgPrimaryHv bg-textBgPrimaryHv text-black px-6 py-2 rounded-md cursor-pointer"
+          className={`px-6 py-2 w-fit rounded-lg font-medium
+                      bg-gradient-to-r from-purple-500 to-indigo-500
+                     text-white
+                      hover:scale-105 active:scale-95
+                      shadow-lg shadow-purple-800/20  text-center gap-2 hover:shadow-xl transition-all duration-300 ${teamsData.length === 0
+            ? "cursor-not-allowed"
+            : "cursor-pointer"}`
+          
           }
         >
           Search
@@ -113,7 +117,7 @@ export default function Teams() {
         <button
           onClick={() => fetchTeams()}
           type="button"
-          className="w-fit border-[1px] border-textBgPrimaryHv bg-textBgPrimaryHv text-black px-6 py-2 rounded-md cursor-pointer"
+          className="border border-textBgPrimaryHv text-textSecondary px-6 py-2 w-fit rounded-lg hover:shadow-lg hover:shadow-purple-600/20  text-center gap-2 transition-all duration-300"
         >
           Reset
         </button>

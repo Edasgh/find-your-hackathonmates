@@ -31,7 +31,7 @@ const HeroDiv = () => {
       variants={container}
       initial="hidden"
       animate="show"
-      className="m-auto max-w-[1200px] px-6 py-16 flex flex-col md:flex-row items-center justify-between gap-12 overflow-hidden"
+      className="m-auto max-w-[1200px] px-6 py-16 flex flex-col md:flex-row items-center justify-between gap-12"
     >
       {/* LEFT CONTENT */}
       <div className="flex-1 flex flex-col gap-6 max-w-[520px]">
@@ -92,7 +92,7 @@ const HeroDiv = () => {
       >
         <div className="relative">
           {/* Glow effect */}
-          <div className="absolute inset-0 bg-purple-500/20 blur-[120px] rounded-full overflow-hidden" />
+          <div className="absolute inset-0 bg-purple-500/20 blur-[120px] rounded-full" />
 
           <Image
             src="/hero-img.png"

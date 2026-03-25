@@ -51,6 +51,7 @@ app.prepare().then(() => {
     socket.on(
       "message",
       async ({
+        clientId,
         roomId,
         public_id,
         fileName,
@@ -122,7 +123,7 @@ app.prepare().then(() => {
           }
         } catch (error) {
           console.error("Socket Message Error:", error.message);
-          socket.emit("error_message", { message: "Failed to send message" });
+          socket.emit("error_message", { message: "Failed to send message", clientId });
         }
       },
     );
@@ -357,7 +358,7 @@ app.prepare().then(() => {
                   <table width="100%" max-width="520" style="margin-top:16px;">
                     <tr>
                       <td style="text-align:center; color:#6b7280; font-size:12px;">
-                        © ${new Date().getFullYear()} Your App. All rights reserved.
+                        © ${new Date().getFullYear()} find your HackathonMates. All rights reserved.
                       </td>
                     </tr>
                   </table>
@@ -556,7 +557,7 @@ app.prepare().then(() => {
                   <table width="100%" max-width="520" style="margin-top:16px;">
                     <tr>
                       <td style="text-align:center; color:#6b7280; font-size:12px;">
-                        © ${new Date().getFullYear()} Your App. All rights reserved.
+                          © ${new Date().getFullYear()} find your HackathonMates. All rights reserved.
                       </td>
                     </tr>
                   </table>

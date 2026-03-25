@@ -153,8 +153,10 @@ const TeamChat = () => {
     if (!msg.trim()) return;
 
     const currentTimeStamp = getDate();
+    const clientId = Date.now() + Math.random(); // 🔥 unique id
 
     const newMessage = {
+      clientId,
       _id: null,
       message: msg,
       attachment: {
@@ -170,6 +172,7 @@ const TeamChat = () => {
     setMessages((prev) => [...prev, newMessage]);
 
     socket.emit("message", {
+      clientId,
       roomId: teamId,
       message: msg,
       public_id: "-1",
@@ -235,8 +238,27 @@ const TeamChat = () => {
       });
     });
 
+    // Handle error (rollback failed message)
+    const handleError = ({ message, clientId }) => {
+      console.error("Socket Error:", message);
+
+      setMessages((prev) =>
+        prev.map((m) =>
+          m.clientId === clientId
+            ? { ...m, isPending: false, failed: true }
+            : m
+        )
+      );
+
+      // 👉 Optional: toast
+      // toast.error(message);
+    };
+
+    socket.on("error_message", handleError);
+
     return () => {
       socket.off("message");
+      socket.off("error_message", handleError);
     };
   }, [teamId, userDetails._id]); // Dependencies are important
 
@@ -285,6 +307,38 @@ const TeamChat = () => {
   // Remove a member
   const handleRemoveMember = (member) => {
     socket.emit("set_member", { teamId, ...member });
+  };
+
+  const retryMessage = (msg) => {
+    if (!msg.failed) return;
+
+    const newClientId = Date.now() + Math.random();
+
+    // 1. Update UI → mark as sending again
+    setMessages((prev) =>
+      prev.map((m) =>
+        m.clientId === msg.clientId
+          ? {
+            ...m,
+            clientId: newClientId, // 🔥 new tracking id
+            isPending: true,
+            failed: false,
+          }
+          : m
+      )
+    );
+
+    //  Re-send to server
+    socket.emit("message", {
+      roomId: teamId,
+      message: msg.message,
+      public_id: msg.attachment?.public_id || "-1",
+      url: msg.attachment?.url || "",
+      senderId: userDetails._id,
+      senderName: userDetails.name,
+      sentOn: msg.sentOn,
+      clientId: newClientId, // 🔥 important
+    });
   };
 
   // Scroll to the bottom whenever the messages change
@@ -339,8 +393,8 @@ const TeamChat = () => {
                             : type.name === "Audio"
                               ? ".mp3,.wav"
                               : // : type.name === "Video"
-                                //   ? ".mp4,.webm,.ogg"
-                                ".pdf,.doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                              //   ? ".mp4,.webm,.ogg"
+                              ".pdf,.doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                         }
                         maxLength={1}
                       />
@@ -362,9 +416,8 @@ const TeamChat = () => {
                   {teamData.name}
                 </h2>
                 <span className="text-sm text-gray-600 ml-2">
-                  {`${newMembers.length} ${
-                    newMembers.length === 1 ? "Member" : "Members"
-                  }`}
+                  {`${newMembers.length} ${newMembers.length === 1 ? "Member" : "Members"
+                    }`}
                 </span>
               </div>
               <span className="absolute right-0">
@@ -386,36 +439,38 @@ const TeamChat = () => {
             </div>
 
             {/* Messages */}
-              <div className="relative flex-1 overflow-y-auto p-4 bg-gradient-to-br from-[#0f0f11] via-[#15161a] to-[#1c1d22]">
+            <div className="relative flex-1 overflow-y-auto p-4 bg-gradient-to-br from-[#0f0f11] via-[#15161a] to-[#1c1d22]">
 
-                <div className="absolute inset-0 pointer-events-none
+              <div className="absolute inset-0 pointer-events-none
                 bg-[radial-gradient(circle_at_20%_20%,rgba(168,85,247,0.15),transparent_40%),radial-gradient(circle_at_80%_70%,rgba(236,72,153,0.12),transparent_40%)]"
+              />
+
+              {/* content */}
+              {messages.map((m, idx) => (
+                <MessageEl
+                  idx={idx}
+                  key={idx}
+                  message={m.message}
+                  msgID={m._id}
+                  public_id={m.attachment.public_id}
+                  url={m.attachment.url}
+                  name={m.attachment.name}
+                  over={over}
+                  setOver={setOver}
+                  senderId={m.sender.id}
+                  senderName={m.sender.name}
+                  sentOn={m.sentOn}
+                  teamId={teamId}
+                  userId={userDetails._id}
+                  handleDelMsg={handleDelMsg}
+                  failed={m.failed ? true : false}
+                  retryMessage = {()=>{retryMessage(m)}}
                 />
+              ))}
 
-                {/* content */}
-                {messages.map((m, idx) => (
-                  <MessageEl
-                    idx={idx}
-                    key={idx}
-                    message={m.message}
-                    msgID={m._id}
-                    public_id={m.attachment.public_id}
-                    url={m.attachment.url}
-                    name={m.attachment.name}
-                    over={over}
-                    setOver={setOver}
-                    senderId={m.sender.id}
-                    senderName={m.sender.name}
-                    sentOn={m.sentOn}
-                    teamId={teamId}
-                    userId={userDetails._id}
-                    handleDelMsg={handleDelMsg}
-                  />
-                ))}
-
-                {/* Scroll to the bottom */}
-                <div ref={msgEndRef} />
-              </div>
+              {/* Scroll to the bottom */}
+              <div ref={msgEndRef} />
+            </div>
             {/* Message Input */}
             <div className="w-full py-4 px-0 md:px-1.5 lg:px-3 bg-bgSecondary relative">
               <form className="flex gap-1.5" onSubmit={handleSubmit}>

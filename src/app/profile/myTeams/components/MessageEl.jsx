@@ -21,8 +21,12 @@ const MessageEl = ({
   over,
   setOver,
   handleDelMsg,
+  failed,
+  retryMessage
 }) => {
   const sameSender = senderId === userId;
+
+  const [hover,setHover]=useState(false);
 
   const parts = useMemo(() => {
     const urlRegex = /(https:\/\/[^\s]+)/g;
@@ -128,6 +132,16 @@ const MessageEl = ({
         <span className={`block text-[.6rem] mt-2 opacity-60 text-right`}>
           {sentOn?.toUpperCase()}
         </span>
+        {failed && (
+          <span
+            onMouseOver={() => setHover(true)}
+            onMouseOut={() => setHover(false)}
+            onClick={retryMessage}
+            className="text-red-400 text-xs mt-1 block cursor-pointer"
+          >
+            {hover ? "Retry ?" : "Failed to send"}
+          </span>
+        )}
       </div>
     </div>
   );

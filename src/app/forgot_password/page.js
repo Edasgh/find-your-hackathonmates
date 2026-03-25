@@ -1,7 +1,7 @@
 "use client";
 
 import Footer from "@/components/Footer";
-import { getToken } from "@/lib/verifyToken";
+import { useCreds } from "@/hooks/useCreds";
 import { redirect } from "next/navigation";
 import { useLayoutEffect, useState } from "react";
 
@@ -9,12 +9,12 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function ForgotPassword() {
+  const {user} = useCreds();
   useLayoutEffect(() => {
-    const savedToken = getToken();
-    if (savedToken) {
+    if (user) {
       redirect("/");
     }
-  }, []);
+  }, [user]);
 
   const [isEmailFocus, setIsEmailFocus] = useState(false);
 
@@ -68,7 +68,7 @@ export default function ForgotPassword() {
 
   return (
     <>
-      <div className="main-div w-1/3 max-[900px]:w-full p-7 m-auto mt-10 flex flex-col gap-3 justify-center items-center">
+      <div className="main-div w-1/3 max-[900px]:w-full p-7 m-auto mt-10 mb-20 flex flex-col gap-3 justify-center items-center">
         <h1 title="forgot password" className="text-center section-title text-textPrimary poppins-semibold text-[28px]">
           Verify Email
         </h1>
@@ -97,11 +97,15 @@ export default function ForgotPassword() {
               className="labelLine"
               style={getStyle(isEmailFocus)}
             >
-              Email Address *
+              Email Address
             </label>
           </div>
           <button
-            className="verify-email-submit text-textPrimary hover:bg-textBgPrimaryHv hover:text-black hover:text-center px-3 py-2 w-auto border-[1px] rounded-md border-textBgPrimaryHv"
+            className="verify-email-submit w-auto px-4 py-2 rounded-lg text-sm 
+                      bg-gradient-to-r from-purple-500 to-indigo-500 
+                      text-white font-medium 
+                      hover:scale-105 active:scale-95 
+                      shadow-lg shadow-purple-800/20 transition-all text-center"
             type="submit"
             id="verify-email-btn"
           >
