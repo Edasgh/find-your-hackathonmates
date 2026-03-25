@@ -58,39 +58,48 @@ https://find-your-hackathonmates.onrender.com/
 
 ## Screens :
 1. Home Page:
+<img width="1918" height="787" alt="image" src="https://github.com/user-attachments/assets/b27fe1fe-abc0-46fa-bb44-ba465a1dc112" />
 <img width="1918" height="847" alt="image" src="https://github.com/user-attachments/assets/f87cc9b2-80cb-4819-b78f-dde8b77462ca" />
 
+2. Login Page :
+<img width="1918" height="772" alt="image" src="https://github.com/user-attachments/assets/4a01e257-041e-4db3-87d9-cc8c04b18b06" />
 
-2. Teams Page :
-<img width="1918" height="867" alt="image" src="https://github.com/user-attachments/assets/36a56e34-6236-4e53-b272-8b7bdd15a81b" />
-
-
-3. Teammates Page :
-<img width="1918" height="860" alt="image" src="https://github.com/user-attachments/assets/6a1b11db-26a4-4847-a783-33f875949eb1" />
+3. Signup Page :
+<img width="1918" height="826" alt="image" src="https://github.com/user-attachments/assets/da7eeb58-31d7-439e-b67c-a460984696d6" />
 
 
-4. Profile Page :
+
+4. Teams Page :
+<img width="1917" height="855" alt="image" src="https://github.com/user-attachments/assets/be92173b-946d-4e2e-bce5-655f4cc82439" />
+
+
+
+5. Teammates Page :
+<img width="1918" height="872" alt="image" src="https://github.com/user-attachments/assets/8ec195c1-5769-4523-bc83-3494a4563113" />
+
+
+6. Profile Page :
 <img width="1918" height="830" alt="image" src="https://github.com/user-attachments/assets/6c6eb595-ba11-4956-82d0-bab942e01d41" />
 
 
-5. My Teams Page :
+7. My Teams Page :
 <img width="1918" height="867" alt="image" src="https://github.com/user-attachments/assets/5c8d3372-75d7-49fb-bb02-be04df2a4f10" />
 <img width="1918" height="863" alt="image" src="https://github.com/user-attachments/assets/d80bbc2b-fe4d-4e25-969d-9830b1a80043" />
 
 
-6. Join Requests Page:
+8. Join Requests Page:
 <img width="100%" src="https://github.com/Edasgh/find-your-hackathonmates/blob/master/public/join_Requests.png"/>
 
-7. Create Team Page:
+9. Create Team Page:
 <img width="1918" height="856" alt="image" src="https://github.com/user-attachments/assets/98c01e8b-ca24-4e14-815a-47a118f0df03" />
 
 
 
-8. Devbot : 
+10. Devbot : 
 <img width="417" height="852" alt="image" src="https://github.com/user-attachments/assets/b9b418f3-fadb-4dd8-82ae-acdd271d9f9a" />
 
 
-9. Admin Panel :
+11. Admin Panel :
 <img width="100%" src="https://github.com/Edasgh/find-your-hackathonmates/blob/master/public/admin_dashboard_02.png"/>
 <img width="100%" src="https://github.com/Edasgh/find-your-hackathonmates/blob/master/public/admin_dashboard_03.png"/>
 <img width="988" height="751" alt="image" src="https://github.com/user-attachments/assets/1b88fbe8-9d1e-41d9-9f2d-edf100a89fc7" />
