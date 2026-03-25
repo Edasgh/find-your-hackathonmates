@@ -58,7 +58,8 @@ https://find-your-hackathonmates.onrender.com/
 
 ## Screens :
 1. Home Page:
-<img width="1918" height="867" alt="image" src="https://github.com/user-attachments/assets/c5e6c46b-edf5-47de-92fe-511fceb193a7" />
+<img width="1918" height="847" alt="image" src="https://github.com/user-attachments/assets/f87cc9b2-80cb-4819-b78f-dde8b77462ca" />
+
 
 2. Teams Page :
 <img width="1918" height="867" alt="image" src="https://github.com/user-attachments/assets/36a56e34-6236-4e53-b272-8b7bdd15a81b" />
@@ -73,14 +74,16 @@ https://find-your-hackathonmates.onrender.com/
 
 
 5. My Teams Page :
-<img width="100%" src="https://github.com/Edasgh/find-your-hackathonmates/blob/master/public/myTeam.jpg"/>
-<img width="100%" src="https://github.com/Edasgh/find-your-hackathonmates/blob/master/public/myTeam-2.png"/>
+<img width="1918" height="867" alt="image" src="https://github.com/user-attachments/assets/5c8d3372-75d7-49fb-bb02-be04df2a4f10" />
+<img width="1918" height="863" alt="image" src="https://github.com/user-attachments/assets/d80bbc2b-fe4d-4e25-969d-9830b1a80043" />
+
 
 6. Join Requests Page:
 <img width="100%" src="https://github.com/Edasgh/find-your-hackathonmates/blob/master/public/join_Requests.png"/>
 
 7. Create Team Page:
-<img width="1917" height="837" alt="image" src="https://github.com/user-attachments/assets/c8e1414f-1b60-4fee-9ae5-e382e0ff807c" />
+<img width="1918" height="856" alt="image" src="https://github.com/user-attachments/assets/98c01e8b-ca24-4e14-815a-47a118f0df03" />
+
 
 
 8. Devbot : 
