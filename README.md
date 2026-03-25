@@ -17,7 +17,7 @@ https://find-your-hackathonmates.onrender.com/
 
 
 <a href="https://youtu.be/y1rbUe-5gpk" target="_blank" title="Click the image to watch" >
-<img width="1918" height="870" alt="image" src="https://github.com/user-attachments/assets/c5e6c46b-edf5-47de-92fe-511fceb193a7" />
+<img width="1918" height="847" alt="image" src="https://github.com/user-attachments/assets/a6c36f1a-e297-4eff-9fa0-5eb28fcf4251" />
  </a>
 
 
