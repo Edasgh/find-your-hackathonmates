@@ -105,9 +105,6 @@ https://find-your-hackathonmates.onrender.com/
 <img width="988" height="751" alt="image" src="https://github.com/user-attachments/assets/1b88fbe8-9d1e-41d9-9f2d-edf100a89fc7" />
 <img width="950" height="382" alt="image" src="https://github.com/user-attachments/assets/61187add-843d-4467-af1d-6ab2a92640d7" />
 
-------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-<iframe src="https://github.com/sponsors/Edasgh/button" title="Sponsor Edasgh" height="32" width="114" style="border: 0; border-radius: 6px;"></iframe>
 
 
 
