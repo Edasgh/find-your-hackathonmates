@@ -40,7 +40,7 @@ const TeamChat = () => {
   const { user, isLoading, error } = useCreds();
   const userDetails = user;
 
-  const [loading, setLoading] = useState(isLoading);
+  const [loading, setLoading] = useState(isLoading||true);
   const [teamData, setTeamData] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newLinks, setNewLinks] = useState([]);

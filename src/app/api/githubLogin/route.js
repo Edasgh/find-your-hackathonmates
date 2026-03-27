@@ -43,8 +43,9 @@ export const POST = async (request) => {
     const userExists = await User.findOne({ email: userEmail });
     if (userExists) {
       const token = generateToken(userExists._id);
+      const user = await User.findById(userExists._id).select("-password");
       const response = NextResponse.json(
-        { message: "Logged in successfully!" },
+        { message: "Logged in successfully!", user },
         { status: 200 }
       );
       response.cookies.set("token", JSON.stringify(token), {

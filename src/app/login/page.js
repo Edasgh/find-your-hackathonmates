@@ -19,7 +19,7 @@ import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import FacebookLoginObj from "@/components/FacebookLogin";
 
 export default function Login() {
-  const { user, isLoading, error } = useCreds();
+  const { user, isLoading, error, setUser } = useCreds();
   const [loading, setLoading] = useState(false);
   //router
   const router = useRouter();
@@ -58,6 +58,19 @@ export default function Login() {
               autoClose: 2000,
               closeButton: true,
             });
+            if (resp.user) {
+              setUser({
+                _id: resp.user._id,
+                name: resp.user.name,
+                email: resp.user.email,
+                bio: resp.user.bio,
+                githubID: resp.user.githubID,
+                country: resp.user.country,
+                skills: resp.user.skills || [],
+                teams: resp.user.teams || [],
+                isAdmin: resp.user.isAdmin,
+              });
+            }
             router.push(`/teams`);
             // setTimeout(() => {
             //   window.location.reload();
@@ -130,7 +143,7 @@ export default function Login() {
           password: password,
         }),
       });
-
+      const resp = await response.json();
       if (response.status === 200) {
         toast.update(tId, {
           render: "Logged in Successfully!",
@@ -139,6 +152,19 @@ export default function Login() {
           autoClose: 2000,
           closeButton: true,
         });
+        if (resp.user) {
+          setUser({
+            _id: resp.user._id,
+            name: resp.user.name,
+            email: resp.user.email,
+            bio: resp.user.bio,
+            githubID: resp.user.githubID,
+            country: resp.user.country,
+            skills: resp.user.skills || [],
+            teams: resp.user.teams || [],
+            isAdmin: resp.user.isAdmin,
+          });
+        }
         router.push(`/teams`);
         // setTimeout(() => {
         //   window.location.reload();
@@ -180,6 +206,19 @@ export default function Login() {
             autoClose: 2000,
             closeButton: true,
           });
+          if (resp.user) {
+            setUser({
+              _id: resp.user._id,
+              name: resp.user.name,
+              email: resp.user.email,
+              bio: resp.user.bio,
+              githubID: resp.user.githubID,
+              country: resp.user.country,
+              skills: resp.user.skills || [],
+              teams: resp.user.teams || [],
+              isAdmin: resp.user.isAdmin,
+            });
+          }
           router.push(`/teams`);
           // setTimeout(() => {
           //   window.location.reload();
@@ -312,7 +351,7 @@ export default function Login() {
                 </Link>
               </div>
               <button
-                  className="login-submit w-[90%] px-4 py-2 rounded-lg text-sm 
+                className="login-submit w-[90%] px-4 py-2 rounded-lg text-sm 
                       bg-gradient-to-r from-purple-500 to-indigo-500 
                       text-white font-medium 
                       hover:scale-105 active:scale-95 

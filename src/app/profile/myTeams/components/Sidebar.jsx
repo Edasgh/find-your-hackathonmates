@@ -13,7 +13,7 @@ import Link from "next/link";
 const Sidebar = () => {
   const { user, isLoading, error } = useCreds();
   const { isActive } = useChat();
-  const [loading, setLoading] = useState(isLoading);
+  const [loading, setLoading] = useState(isLoading||true);
   const [myTeams, setMyTeams] = useState([]);
   const [over, setOver] = useState(false);
 
