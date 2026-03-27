@@ -44,6 +44,8 @@ export const CredsProvider = ({ children }) => {
     }else
     {
       socket.emit("visit",user._id);
+      setIsLoading(false);
+      setError(null);
     }
   }, [user]);
 

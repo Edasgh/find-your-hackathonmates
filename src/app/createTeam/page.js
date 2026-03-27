@@ -129,7 +129,7 @@ export default function createTeam() {
     }
   };
 
-  if (error) {
+  if (error && !user) {
     return (
       <>
         <div className="w-screen h-screen">

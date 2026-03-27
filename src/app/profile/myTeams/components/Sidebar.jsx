@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import TeamsLoader from "./TeamsLoader";
 import useChat from "@/hooks/useChat";
 import ChatTile from "./ChatTile";
@@ -13,26 +13,20 @@ import Link from "next/link";
 const Sidebar = () => {
   const { user, isLoading, error } = useCreds();
   const { isActive } = useChat();
-  const [loading, setLoading] = useState(isLoading||true);
+  const [loading, setLoading] = useState(isLoading || true);
   const [myTeams, setMyTeams] = useState([]);
   const [over, setOver] = useState(false);
 
   const getMyTeams = async () => {
     setLoading(true);
     try {
-      const getUser = await fetch("/api/profile");
-      const jsonData = await getUser.json();
-      if (getUser.status !== 200) {
-        throw new Error("Something went wrong!");
+      const resp = await fetch(`/api/profile/myTeams?id=${user._id}`);
+      const data = await resp.json();
+      if (resp.status === 200) {
+        setMyTeams([...data]);
+        setLoading(false);
       } else {
-        const resp = await fetch(`/api/profile/myTeams?id=${jsonData._id}`);
-        const data = await resp.json();
-        if (resp.status === 200) {
-          setMyTeams([...data]);
-          setLoading(false);
-        } else {
-          throw new Error("No teams found!");
-        }
+        throw new Error("No teams found!");
       }
     } catch (error) {
       console.log(error);
@@ -41,13 +35,17 @@ const Sidebar = () => {
     }
   };
 
-  useLayoutEffect(() => {
-    getMyTeams();
-  }, []);
+  useEffect(() => {
+    if (!isLoading && user) {
+      if (myTeams.length === 0) {
+        getMyTeams();
+      }
+    }
+  }, [isLoading, user]);
 
   return (
     <>
-      {loading ? (
+      {loading || isLoading ? (
         <TeamsLoader />
       ) : (
         <>

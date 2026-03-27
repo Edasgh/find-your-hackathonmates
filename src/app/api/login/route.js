@@ -20,7 +20,12 @@ export const POST = async (request) => {
         { message: "Logged in successfully!", user },
         { status: 200 }
       );
-      response.cookies.set("token", JSON.stringify(token), { httpOnly: true });
+      response.cookies.set("token", token, {
+        httpOnly: true,
+        path: "/",
+        sameSite: "lax", // 🔥 IMPORTANT for localhost
+        secure: process.env.NODE_ENV === "production",
+      });
       return response;
     } else {
       return new NextResponse("User doesn't exist", {

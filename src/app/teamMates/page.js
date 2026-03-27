@@ -9,7 +9,7 @@ import NotFoundUser from "@/components/not-found-user";
 
 export default function TeamMatesPage() {
   const { user, isLoading, error } = useCreds();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(isLoading||true);
   const [teamMates, setTeamMates] = useState([]);
   const [allTeamMates,setAllTeamMates] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -41,7 +41,9 @@ export default function TeamMatesPage() {
 
   useEffect(() => {
     if (!isLoading && user) {
-      fetchTeammates();
+      if(allTeamMates.length===0||teamMates.length===0){
+        fetchTeammates();
+      }
     }
   }, [isLoading, user]);
 
@@ -49,7 +51,7 @@ export default function TeamMatesPage() {
     return <LoadingComponent />;
   }
 
-  if (error || user === null) {
+  if (error && !user) {
     return (
       <>
         <div about="teammates" className="w-screen h-screen">

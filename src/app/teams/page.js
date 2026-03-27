@@ -11,14 +11,16 @@ export default function Teams() {
   const { user, isLoading, error } = useCreds();
   const [teamsData, setTeamsData] = useState([]);
   const [allTeamsData, setAllTeamsData] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(isLoading || true);
   const [searchTerm, setSearchTerm] = useState("");
 
   // Fetch teams data
   const fetchTeams = async () => {
     try {
       setLoading(true);
-      const resp = await fetch(`/api/createTeam?id=${user._id}`);
+      const resp = await fetch(`/api/createTeam?id=${user._id}`, {
+        method: "GET",
+      });
       if (resp.status !== 200) throw new Error("Failed to fetch teams data.");
       const data = await resp.json();
       setTeamsData(data.teams);
@@ -34,7 +36,9 @@ export default function Teams() {
 
   useEffect(() => {
     if (!isLoading && user) {
-      fetchTeams();
+      if(allTeamsData.length===0||teamsData.length===0){
+        fetchTeams();
+      }
     }
   }, [isLoading, user]);
 
@@ -42,7 +46,7 @@ export default function Teams() {
     return <LoadingComponent />;
   }
 
-  if (error || user === null) {
+  if (error && !user) {
     return (
       <>
         <NotFoundUser />
@@ -89,7 +93,7 @@ export default function Teams() {
           className={`w-fit text-textPrimary py-2 px-5 border-[1px] border-textPrimary/40 rounded-md outline-none ${teamsData.length === 0
             ? "bg-bgPrimary"
             : " bg-black"}`
-            
+
           }
           name="search_teams"
           id="search_teams"
@@ -107,9 +111,9 @@ export default function Teams() {
                      text-white
                       hover:scale-105 active:scale-95
                       shadow-lg shadow-purple-800/20  text-center gap-2 hover:shadow-xl transition-all duration-300 ${teamsData.length === 0
-            ? "cursor-not-allowed"
-            : "cursor-pointer"}`
-          
+              ? "cursor-not-allowed"
+              : "cursor-pointer"}`
+
           }
         >
           Search
