@@ -66,6 +66,7 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="en" data-scroll-behavior="smooth">
       <head>
+        <meta name="google-site-verification" content="t-M6n3gcnibq6sTIUyCs_buoYz4KkqLK6HXJeDD5j_0" />
         <Script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
