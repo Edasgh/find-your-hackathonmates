@@ -196,7 +196,7 @@ const AllUsers = () => {
                     </div>
                   </td>
 
-                  <td className="py-4 text-xs">{u.teams?.length === 0 ? (<span style={{ fontStyle: "italic" }} className="text-xs text-gray-400">
+                  <td className={`${u.teams?.length === 0 ? "py-4 text-xs" : "py-4 px-2 text-xs flex flex-wrap gap-2"}`}>{u.teams?.length === 0 ? (<span style={{ fontStyle: "italic" }} className="text-xs text-gray-400">
                     {`${u.name} hasn't join any team yet`}
                   </span>) : (
                     <>
