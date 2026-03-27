@@ -70,9 +70,9 @@ const ChatNavigation = ({
         throw new Error("Something went wrong!");
       }
       router.push("/profile/myTeams");
-      setTimeout(() => {
-        window.location.reload();
-      }, 800);
+      // setTimeout(() => {
+      //   window.location.reload();
+      // }, 800);
     } catch (error) {
       console.log(error.message);
     }
@@ -89,9 +89,9 @@ const ChatNavigation = ({
         throw new Error("Something went wrong!");
       }
       router.push("/profile/myTeams");
-      setTimeout(() => {
-        window.location.reload();
-      }, 800);
+      // setTimeout(() => {
+      //   window.location.reload();
+      // }, 800);
     } catch (error) {
       console.log(error.message);
     }

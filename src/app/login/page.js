@@ -59,9 +59,9 @@ export default function Login() {
               closeButton: true,
             });
             router.push(`/teams`);
-            setTimeout(() => {
-              window.location.reload();
-            }, 1000);
+            // setTimeout(() => {
+            //   window.location.reload();
+            // }, 1000);
           } else if (response.status === 401) {
             toast.update(tId, {
               render: resp.message,
@@ -140,9 +140,9 @@ export default function Login() {
           closeButton: true,
         });
         router.push(`/teams`);
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
+        // setTimeout(() => {
+        //   window.location.reload();
+        // }, 1000);
       } else {
         throw new Error("Wrong email or password!");
       }
@@ -181,9 +181,9 @@ export default function Login() {
             closeButton: true,
           });
           router.push(`/teams`);
-          setTimeout(() => {
-            window.location.reload();
-          }, 1000);
+          // setTimeout(() => {
+          //   window.location.reload();
+          // }, 1000);
         } else if (response.status === 401) {
           toast.update(tId, {
             render: resp.message,

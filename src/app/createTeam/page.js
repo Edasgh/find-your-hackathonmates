@@ -93,9 +93,9 @@ export default function createTeam() {
               closeButton: true,
             });
             router.push("/profile/myTeams");
-            setTimeout(() => {
-              window.location.reload();
-            }, 300);
+            // setTimeout(() => {
+            //   window.location.reload();
+            // }, 300);
           } else {
             throw new Error("Something went wrong!");
           }

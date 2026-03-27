@@ -132,17 +132,17 @@ export default function ResetPassword({ searchParams }) {
         if (!user || error) {
           setTimeout(() => {
             router.push("/profile");
-            setTimeout(() => {
-              window.location.reload();
-            }, 1000);
-          }, 3000);
+            // setTimeout(() => {
+            //   window.location.reload();
+            // }, 1000);
+          }, 1500);
         } else {
           setTimeout(() => {
             router.push("/login");
-            setTimeout(() => {
-              window.location.reload();
-            }, 1000);
-          }, 3000);
+            // setTimeout(() => {
+            //   window.location.reload();
+            // }, 1000);
+          }, 1500);
         }
       }
     } catch (error) {
