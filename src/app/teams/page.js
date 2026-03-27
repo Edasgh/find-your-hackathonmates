@@ -40,6 +40,10 @@ export default function Teams() {
         fetchTeams();
       }
     }
+
+    if(!user && loading){
+         setLoading(false)
+    }
   }, [isLoading, user]);
 
   if (isLoading || loading) {

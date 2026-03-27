@@ -45,6 +45,11 @@ export default function TeamMatesPage() {
         fetchTeammates();
       }
     }
+
+    if (!user && loading) {
+      setLoading(false)
+    }
+    
   }, [isLoading, user]);
 
   if (isLoading || loading) {
