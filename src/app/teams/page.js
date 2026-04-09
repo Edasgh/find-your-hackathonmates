@@ -8,7 +8,7 @@ import Footer from "@/components/Footer";
 import { useCreds } from "@/hooks/useCreds";
 
 export default function Teams() {
-  const { user, isLoading, error } = useCreds();
+  const { user, isLoading } = useCreds();
   const [teamsData, setTeamsData] = useState([]);
   const [allTeamsData, setAllTeamsData] = useState([]);
   const [loading, setLoading] = useState(isLoading || true);
@@ -18,7 +18,7 @@ export default function Teams() {
   const fetchTeams = async () => {
     try {
       setLoading(true);
-      const resp = await fetch(`/api/createTeam?id=${user._id}`, {
+      const resp = await fetch(`/api/createTeam?id=${user.id}`, {
         method: "GET",
       });
       if (resp.status !== 200) throw new Error("Failed to fetch teams data.");
@@ -50,7 +50,7 @@ export default function Teams() {
     return <LoadingComponent />;
   }
 
-  if (error && !user) {
+  if (!user) {
     return (
       <>
         <NotFoundUser />

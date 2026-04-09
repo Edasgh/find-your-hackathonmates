@@ -14,7 +14,7 @@ import TeamEl from "../../joinRequests/components/TeamEl";
 
 const AllUsers = () => {
   // Getting logged-in user info from custom hook
-  const { user, isLoading, error } = useCreds();
+  const { user, isLoading } = useCreds();
 
   // fetching users, error-status from the custom hook
   const {
@@ -96,7 +96,7 @@ const AllUsers = () => {
   // --------------------------------------------------
   // Unauthorized or Not Found
   // --------------------------------------------------
-  if (error || adminError || user === null || user.isAdmin === false) {
+  if ( adminError || user === null || user.isAdmin === false) {
     return (
       <div about="admin_dashboard_users" className="w-screen h-screen">
         <NotFoundUser />

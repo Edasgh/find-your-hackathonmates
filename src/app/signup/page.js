@@ -261,7 +261,7 @@ const countries = [
 ];
 
 export default function Signup() {
-  const { user, isLoading, error } = useCreds();
+  const { user, isLoading } = useCreds();
   //router
   const router = useRouter();
 

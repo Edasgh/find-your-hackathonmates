@@ -11,7 +11,7 @@ import { socket } from "@/lib/socket";
 import NotFoundUser from "@/components/not-found-user";
 
 const JoinRequests = () => {
-  const { user, isLoading, error } = useCreds();
+  const { user, isLoading } = useCreds();
   const [loading, setLoading] = useState(isLoading);
   const [reqs, setReqs] = useState([]);
 
@@ -29,7 +29,7 @@ const JoinRequests = () => {
     }
   }, [user]);
 
-  if (error || user === null) {
+  if ( user === null) {
     return (
       <>
         <div about="join requests" className="w-screen h-screen">

@@ -8,7 +8,7 @@ import { useCreds } from "@/hooks/useCreds";
 import NotFoundUser from "@/components/not-found-user";
 
 export default function TeamMatesPage() {
-  const { user, isLoading, error } = useCreds();
+  const { user, isLoading } = useCreds();
   const [loading, setLoading] = useState(isLoading||true);
   const [teamMates, setTeamMates] = useState([]);
   const [allTeamMates,setAllTeamMates] = useState([]);
@@ -20,7 +20,7 @@ export default function TeamMatesPage() {
       const resp = await fetch(`/api/teamMates`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: user?._id }),
+        body: JSON.stringify({ id: user?.id }),
       });
 
       if (!resp.ok) {
@@ -56,7 +56,7 @@ export default function TeamMatesPage() {
     return <LoadingComponent />;
   }
 
-  if (error && !user) {
+  if (!user) {
     return (
       <>
         <div about="teammates" className="w-screen h-screen">

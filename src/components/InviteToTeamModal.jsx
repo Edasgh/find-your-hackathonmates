@@ -14,7 +14,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const InviteToTeamModal = ({ open, setOpen, userId, userName, email }) => {
-  const { user, isLoading, error } = useCreds();
+  const { user, isLoading } = useCreds();
   const [loading, setLoading] = useState(isLoading);
   const [myTeams, setMyTeams] = useState([]);
   const [pending, setPending] = useState(false);
@@ -23,7 +23,7 @@ const InviteToTeamModal = ({ open, setOpen, userId, userName, email }) => {
   const getMyTeams = async () => {
     setLoading(true);
     try {
-      const resp = await fetch(`/api/profile/myTeams?id=${user._id}`);
+      const resp = await fetch(`/api/profile/myTeams?id=${user.id}`);
       const data = await resp.json();
       if (resp.status === 200) {
         setMyTeams([...data]);

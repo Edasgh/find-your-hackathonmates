@@ -11,7 +11,7 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
 const ChatTile = ({ team, myId }) => {
-  const {user,isLoading,error} = useCreds();
+  const {user,isLoading} = useCreds();
   const { teamId } = useChat();
   const [messages, setMessages] = useState([...team.messages]);
   const [members, setMembers] = useState([...team.members]);

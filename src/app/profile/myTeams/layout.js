@@ -8,8 +8,8 @@ import NotFoundUser from "@/components/not-found-user";
 
 const TeamsLayout = ({ children }) => {
   const { isActive } = useChat();
-  const { user, isLoading, error } = useCreds();
-  if (error || user === null) {
+  const { user, isLoading } = useCreds();
+  if (user === null) {
     return (
       <>
         <div className="w-screen h-screen">

@@ -18,8 +18,7 @@ import { faGithub, faGoogle } from "@fortawesome/free-brands-svg-icons";
 import FacebookLoginObj from "@/components/FacebookLogin";
 
 export default function Login() {
-  const { user, isLoading, error, setUser } = useCreds();
-  const [loading, setLoading] = useState(false);
+  const { user, isLoading } = useCreds();
   //router
   const router = useRouter();
   const params = useSearchParams();
@@ -83,7 +82,7 @@ export default function Login() {
 
   return (
     <>
-      {isLoading || loading ? (
+      {isLoading ? (
         <>
           <LoadingComponent />
         </>

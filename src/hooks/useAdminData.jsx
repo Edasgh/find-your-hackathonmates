@@ -72,7 +72,7 @@ export const AdminDataProvider = ({ children }) => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
 
-        body: JSON.stringify({ admin: user?._id }),
+        body: JSON.stringify({ admin: user?.id }),
       });
 
       if (!res.ok) {

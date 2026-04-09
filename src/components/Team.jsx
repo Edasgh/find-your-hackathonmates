@@ -34,7 +34,7 @@ export default function Team({
 }) {
   const [loading, setLoading] = useState(false);
   const [applySuccess, setApplySuccess] = useState(false);
-  const { user, isLoading, error } = useCreds();
+  const { user, isLoading} = useCreds();
 
   const cleanedSkills = [
     ...new Set(
@@ -52,7 +52,7 @@ export default function Team({
       teamId: id,
       recieverId: admin,
       teamEmail: email,
-      myId: user._id,
+      myId: user.id,
       myName: user.name,
     };
     /*

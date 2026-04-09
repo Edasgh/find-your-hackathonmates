@@ -16,7 +16,7 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
 const ProfileNav = () => {
-  const { user, isLoading, error } = useCreds();
+  const { user, isLoading} = useCreds();
 
   const [opened, setOpened] = useState(true);
   const [reqs, setReqs] = useState([]);
@@ -25,7 +25,7 @@ const ProfileNav = () => {
 
   useEffect(() => {
     if (!isLoading && user) {
-      socket.emit("get_alerts", { userId: user._id });
+      socket.emit("get_alerts", { userId: user.id });
       socket.on("get_alerts", ({ data }) => {
         setReqs([...data]);
       });

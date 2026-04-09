@@ -24,6 +24,7 @@ import { useRouter } from "next/navigation";
 import { useCreds } from "@/hooks/useCreds";
 import { socket } from "@/lib/socket";
 import useChat from "@/hooks/useChat";
+import { signOut } from "next-auth/react";
 
 const UserNav = ({ menuItems, opened }) => {
   return (
@@ -50,7 +51,7 @@ const UserNav = ({ menuItems, opened }) => {
 };
 
 export default function Navbar() {
-  const { user, isLoading, error, setUser } = useCreds();
+  const { user, isLoading } = useCreds();
   const router = useRouter();
   const { teamId } = useChat();
   const [opened, setOpened] = useState(false);
@@ -60,11 +61,10 @@ export default function Navbar() {
   const [notifications, setNotifications] = useState([]);
 
   const handleLogOut = async () => {
-    const response = await fetch("/api/logout");
-    if (response.status === 200) {
-      setUser(null)
-      router.push("/");
-    }
+    signOut();
+    setTimeout(()=>{
+      router.refresh();
+    },1800)
   };
   useEffect(() => {
     if (user) {

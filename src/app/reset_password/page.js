@@ -14,7 +14,7 @@ import Footer from "@/components/Footer";
 import { useCreds } from "@/hooks/useCreds";
 
 export default function ResetPassword({ searchParams }) {
-  const { user, isLoading, error } = useCreds();
+  const { user, isLoading } = useCreds();
   const router = useRouter();
   const { id } = use(searchParams);
   // access password & confirm password value
@@ -129,7 +129,7 @@ export default function ResetPassword({ searchParams }) {
           autoClose: 2000,
           closeButton: true,
         });
-        if (!user || error) {
+        if (!user) {
           setTimeout(() => {
             router.push("/profile");
             // setTimeout(() => {

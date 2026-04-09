@@ -37,7 +37,7 @@ const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
 const TeamChat = () => {
   const { teamId } = useChat();
-  const { user, isLoading, error } = useCreds();
+  const { user, isLoading } = useCreds();
   const userDetails = user;
 
   const [loading, setLoading] = useState(isLoading||true);

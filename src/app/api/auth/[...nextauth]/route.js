@@ -6,9 +6,9 @@ import GoogleProvider from "next-auth/providers/google";
 import { dbConn } from "@/lib/mongo";
 import User from "@/model/user-model";
 
-const handler = NextAuth({
+// ✅ EXPORT THIS
+export const authOptions = {
     providers: [
-        // EMAIL + PASSWORD OR facebook LOGIN
         CredentialsProvider({
             name: "Credentials",
             credentials: {
@@ -16,12 +16,12 @@ const handler = NextAuth({
                 password: {},
                 provider: {},
             },
+
             async authorize(credentials) {
                 await dbConn();
 
-                // 🔥 OAuth login (Facebook / Google custom)
                 if (credentials.provider === "facebook") {
-                    let user = await User.findOne({ email: credentials.email });
+                    const user = await User.findOne({ email: credentials.email });
 
                     if (!user) throw new Error("User not found");
 
@@ -37,7 +37,6 @@ const handler = NextAuth({
                         isAdmin: user.isAdmin,
                     };
                 }
-
 
                 const user = await User.findOne({ email: credentials.email });
 
@@ -61,13 +60,11 @@ const handler = NextAuth({
             },
         }),
 
-        // 🐙 GITHUB LOGIN (REPLACES YOUR githubLogin API)
         GitHubProvider({
             clientId: process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID,
             clientSecret: process.env.NEXT_PUBLIC_GITHUB_CLIENT_SECRET,
         }),
 
-        // 🌐 GOOGLE LOGIN (REPLACES YOUR googleLogin API)
         GoogleProvider({
             clientId: process.env.NEXT_PUBLIC_GOOGLE_AUTH_CLIENT_ID,
             clientSecret: process.env.NEXT_PUBLIC_GOOGLE_AUTH_CLIENT_SECRET,
@@ -79,15 +76,11 @@ const handler = NextAuth({
     },
 
     callbacks: {
-        // 🔥 Runs on login
-        async signIn({ user, account, profile }) {
+        async signIn({ user, account }) {
             await dbConn();
 
-            // For OAuth users (Google/GitHub)
             if (account.provider !== "credentials") {
-                const email = user.email;
-
-                let existingUser = await User.findOne({ email });
+                const existingUser = await User.findOne({ email: user.email });
 
                 if (!existingUser) {
                     throw new Error("User not found. Please sign up first.");
@@ -104,10 +97,16 @@ const handler = NextAuth({
             return true;
         },
 
-        async jwt({ token, user }) {
+        // 🔥 IMPORTANT FOR PROFILE UPDATE
+        async jwt({ token, user, trigger, session }) {
             if (user) {
                 token.user = user;
             }
+
+            if (trigger === "update") {
+                token.user = session.user;
+            }
+
             return token;
         },
 
@@ -122,6 +121,9 @@ const handler = NextAuth({
     },
 
     secret: process.env.JWT_SECRET,
-});
+};
+
+// ✅ USE IT HERE
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };

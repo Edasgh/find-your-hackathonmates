@@ -29,7 +29,11 @@ import { useAdminData } from "@/hooks/useAdminData";
 
 const Dashboard = () => {
   // Getting logged-in user info from custom hook
-  const { user, isLoading, error } = useCreds();
+  const { user, isLoading } = useCreds();
+
+  //router
+  const router = useRouter();
+
   const {
     allReqs,
     allTeams,
@@ -45,8 +49,6 @@ const Dashboard = () => {
     adminDataLoading
   } = useAdminData();
 
-  //router
-  const router = useRouter();
 
 
   // --------------------------------------------------
@@ -63,7 +65,7 @@ const Dashboard = () => {
   // --------------------------------------------------
   // Unauthorized or Not Found
   // --------------------------------------------------
-  if (error || adminError || user === null || user.isAdmin === false) {
+  if (adminError || user === null || user.isAdmin === false) {
     return (
       <div about="admin_dashboard" className="w-screen h-screen">
         <NotFoundUser />

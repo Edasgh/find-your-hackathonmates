@@ -14,7 +14,7 @@ import { checkGithubUrlExists } from "@/lib/checkValidGithubId";
 
 export default function createTeam() {
   const router = useRouter();
-  const { user, isLoading, error } = useCreds();
+  const { user, isLoading} = useCreds();
   const userDetails = user;
 
   // to show floating labels if focused on input fields
@@ -56,7 +56,7 @@ export default function createTeam() {
     let tId = toast.loading("Please wait....");
 
     try {
-      let members = [{ name: userDetails.name, id: userDetails._id }];
+      let members = [{ name: userDetails.name, id: userDetails.id }];
       try {
         if (!(await checkGithubUrlExists(github))) {
           throw new Error("Invalid github link");
@@ -77,7 +77,7 @@ export default function createTeam() {
               hackathonName: hkNm,
               email: email,
               members: members,
-              admin: userDetails._id,
+              admin: userDetails.id,
               links: [{ name: "Github Link", link: github }],
               description: desc,
               skills: skillsArr,
@@ -129,7 +129,7 @@ export default function createTeam() {
     }
   };
 
-  if (error && !user) {
+  if (!user) {
     return (
       <>
         <div className="w-screen h-screen">
@@ -411,7 +411,7 @@ export default function createTeam() {
 
                   <button
                     suppressHydrationWarning
-                      className="submit px-4 py-2 rounded-lg text-sm 
+                    className="submit px-4 py-2 rounded-lg text-sm 
                       bg-gradient-to-r from-purple-500 to-indigo-500 
                       text-white font-medium 
                       hover:scale-105 active:scale-95 

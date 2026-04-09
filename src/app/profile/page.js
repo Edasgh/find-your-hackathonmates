@@ -17,19 +17,18 @@ import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import EditProfile from "@/components/EditProfile";
 import { useCreds } from "@/hooks/useCreds";
+import { signOut } from "next-auth/react";
 
 export default function Profile() {
-  const { user, isLoading, error, setUser } = useCreds();
+  const { user, isLoading } = useCreds();
   const router = useRouter();
 
 
   const handleLogOut = async () => {
-    const response = await fetch("/api/logout");
-
-    if (response.status === 200) {
-      setUser(null);
-      router.push("/");
-    }
+    signOut();
+    setTimeout(() => {
+      router.refresh();
+    }, 1800)
   }
 
 
