@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useLayoutEffect, useState } from "react";
 import Link from "next/link";
+import { signIn } from "next-auth/react";
 
 import { faEye, faEyeSlash } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -13,9 +14,7 @@ import "react-toastify/dist/ReactToastify.css";
 import LoadingComponent from "../loading";
 import Footer from "@/components/Footer";
 import { useCreds } from "@/hooks/useCreds";
-import { GoogleLogin } from "@react-oauth/google";
-import { jwtDecode } from "jwt-decode";
-import { faGithub } from "@fortawesome/free-brands-svg-icons";
+import { faGithub, faGoogle } from "@fortawesome/free-brands-svg-icons";
 import FacebookLoginObj from "@/components/FacebookLogin";
 
 export default function Login() {
@@ -24,7 +23,6 @@ export default function Login() {
   //router
   const router = useRouter();
   const params = useSearchParams();
-  const codeToken = params.get("code");
 
   useLayoutEffect(() => {
     if (!isLoading && user) {
@@ -33,79 +31,15 @@ export default function Login() {
   }, [isLoading, user, router]);
 
   useEffect(() => {
-    if ((!user || user === null) && codeToken !== null) {
-      const func = async () => {
-        let tId = toast.loading("Logging you in....");
-        setLoading(true);
-        try {
-          const response = await fetch("/api/githubLogin", {
-            method: "POST",
-            headers: {
-              "content-type": "application/json",
-            },
-            body: JSON.stringify({
-              provider: "github",
-              email: "",
-              code: codeToken,
-            }),
-          });
-          const resp = await response.json();
-          // console.log("resp : ", resp);
-          if (response.status === 200) {
-            toast.update(tId, {
-              render: resp.message,
-              type: "success",
-              isLoading: false,
-              autoClose: 2000,
-              closeButton: true,
-            });
+    const error = params.get("error");
 
-            setUser({
-              _id: resp.user._id,
-              name: resp.user.name,
-              email: resp.user.email,
-              bio: resp.user.bio,
-              githubID: resp.user.githubID,
-              country: resp.user.country,
-              skills: [...resp.user.skills],
-              teams: [...resp.user.teams],
-              isAdmin: resp.user.isAdmin
-            });
-
-            router.push(`/teams`);
-            // setTimeout(() => {
-            //   window.location.reload();
-            // }, 1000);
-          } else if (response.status === 401) {
-            toast.update(tId, {
-              render: resp.message,
-              type: "error",
-              isLoading: false,
-              autoClose: 950,
-              closeButton: true,
-            });
-            setTimeout(() => {
-              router.push(`/signup`);
-            }, 1500);
-          } else {
-            throw new Error("Something went wrong!");
-          }
-        } catch (error) {
-          toast.update(tId, {
-            render: error.message,
-            type: "error",
-            isLoading: false,
-            autoClose: 2000,
-            closeButton: true,
-          });
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      func();
+    if (error) {
+      toast.error(decodeURIComponent(error));
+      toast.error("User not found. Redirecting to signup...");
+      setTimeout(() => router.push("/signup"), 1500);
     }
-  }, [user, codeToken]);
+  }, [params]);
+
 
   //to show floating labels if focused on input fields
   const [isPasswordFocus, setIsPasswordFocus] = useState(false);
@@ -124,137 +58,26 @@ export default function Login() {
     return isFocus ? onFocusStyle : { display: "inherit" };
   };
 
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    let tId;
-    try {
-      const data = new FormData(e.currentTarget);
-      const email = data.get("emailLogin");
-      const password = data.get("passwordLogin");
+    const data = new FormData(e.currentTarget);
 
-      tId = toast.loading("Logging you in....");
+    const res = await signIn("credentials", {
+      email: data.get("emailLogin"),
+      password: data.get("passwordLogin"),
+      redirect: false,
+    });
 
-      const response = await fetch("/api/login", {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-        }),
-      });
-      const resp = await response.json();
-      // console.log("resp : ", resp);
-      if (response.status === 200) {
-        toast.update(tId, {
-          render: "Logged in Successfully!",
-          type: "success",
-          isLoading: false,
-          autoClose: 2000,
-          closeButton: true,
-        });
-
-        setUser({
-          _id: resp.user._id,
-          name: resp.user.name,
-          email: resp.user.email,
-          bio: resp.user.bio,
-          githubID: resp.user.githubID,
-          country: resp.user.country,
-          skills: [...resp.user.skills],
-          teams: [...resp.user.teams],
-          isAdmin: resp.user.isAdmin
-        });
-
-        router.push(`/teams`);
-        // setTimeout(() => {
-        //   window.location.reload();
-        // }, 1000);
-      } else {
-        throw new Error("Wrong email or password!");
-      }
-    } catch (error) {
-      toast.update(tId, {
-        render: error.message,
-        type: "error",
-        isLoading: false,
-        autoClose: 2000,
-        closeButton: true,
-      });
-    }
-  };
-
-  const oauthLogin = async ({ provider, email }) => {
-    if (provider === "google" || provider === "facebook") {
-      let tId = toast.loading("Logging you in....");
-      setLoading(true);
-      try {
-        const response = await fetch("/api/googleLogin", {
-          method: "POST",
-          headers: {
-            "content-type": "application/json",
-          },
-          body: JSON.stringify({
-            email,
-          }),
-        });
-        const resp = await response.json();
-        // console.log("resp : ", resp);
-        if (response.status === 200) {
-          toast.update(tId, {
-            render: resp.message,
-            type: "success",
-            isLoading: false,
-            autoClose: 2000,
-            closeButton: true,
-          });
-
-          setUser({
-            _id: resp.user._id,
-            name: resp.user.name,
-            email: resp.user.email,
-            bio: resp.user.bio,
-            githubID: resp.user.githubID,
-            country: resp.user.country,
-            skills: [...resp.user.skills],
-            teams: [...resp.user.teams],
-            isAdmin: resp.user.isAdmin
-          });
-
-          router.push(`/teams`);
-          // setTimeout(() => {
-          //   window.location.reload();
-          // }, 1000);
-        } else if (response.status === 401) {
-          toast.update(tId, {
-            render: resp.message,
-            type: "error",
-            isLoading: false,
-            autoClose: 950,
-            closeButton: true,
-          });
-          setTimeout(() => {
-            router.push(`/signup`);
-          }, 1500);
-        } else {
-          throw new Error("Something went wrong!");
-        }
-      } catch (error) {
-        toast.update(tId, {
-          render: error.message,
-          type: "error",
-          isLoading: false,
-          autoClose: 2000,
-          closeButton: true,
-        });
-      } finally {
-        setLoading(false);
-      }
-    } else if (provider === "github") {
-      window.location.assign(
-        `https://github.com/login/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID}`
-      );
+    if (res.error) {
+      toast.error(res.error);
+    } else {
+      toast.success("Logged in!");
+      router.refresh();
+      setTimeout(() => {
+        router.push("/teams");
+      }, 1800)
     }
   };
 
@@ -382,28 +205,27 @@ export default function Login() {
                 </p>
 
                 <div className="flex gap-4 justify-center items-center my-3 mt-8">
-                  <GoogleLogin
-                    type="icon"
-                    theme="filled_black"
-                    onSuccess={async (e) => {
-                      const email = jwtDecode(e.credential).email;
-                      await oauthLogin({ provider: "google", email });
-                    }}
-                    onError={(e) => console.log(e)}
-                  />
                   <button
                     type="button"
                     className="flex justify-start items-center rounded-sm hover:ring-2 ring-[#555658]"
-                    onClick={async () => {
-                      await oauthLogin({ provider: "github", email: "" });
-                    }}
+                    onClick={() => signIn("google")}
+                  >
+                    <FontAwesomeIcon
+                      className="text-black text-2xl bg-white py-1.5 px-2 rounded-sm"
+                      icon={faGoogle}
+                    />
+                  </button>
+                  <button
+                    type="button"
+                    className="flex justify-start items-center rounded-sm hover:ring-2 ring-[#555658]"
+                    onClick={() => signIn("github")}
                   >
                     <FontAwesomeIcon
                       className="text-black text-2xl bg-white py-1.5 px-2 rounded-sm"
                       icon={faGithub}
                     />
                   </button>
-                  <FacebookLoginObj oauthLogin={oauthLogin} />
+                  <FacebookLoginObj />
                 </div>
 
                 <p className="text-sm mt-10 text-textPrimary">
