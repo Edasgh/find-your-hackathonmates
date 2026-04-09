@@ -20,7 +20,7 @@ const ChatTile = ({ team, myId }) => {
   useEffect(() => {
      if(user)
      {
-      socket.emit("get_notifs", { userId: user._id });
+      socket.emit("get_notifs", { userId: user.id });
       socket.on("get_notifs", ({ data }) => {
         setNotifications([...data]);
       });

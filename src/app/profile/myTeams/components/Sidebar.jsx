@@ -20,7 +20,7 @@ const Sidebar = () => {
   const getMyTeams = async () => {
     setLoading(true);
     try {
-      const resp = await fetch(`/api/profile/myTeams?id=${user._id}`);
+      const resp = await fetch(`/api/profile/myTeams?id=${user.id}`);
       const data = await resp.json();
       if (resp.status === 200) {
         setMyTeams([...data]);
@@ -122,7 +122,7 @@ const Sidebar = () => {
                 </div>
                 <div className="overflow-y-auto h-[calc(100vh-5rem)]">
                   {myTeams.map((team, index) => (
-                    <ChatTile key={index} team={team} myId={user._id} />
+                    <ChatTile key={index} team={team} myId={user.id} />
                   ))}
                 </div>
               </div>

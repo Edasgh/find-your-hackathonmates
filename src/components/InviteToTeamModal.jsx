@@ -56,7 +56,7 @@ const InviteToTeamModal = ({ open, setOpen, userId, userName, email }) => {
     const team = JSON.parse(data.get("team"));
     const invitationData = {
       senderName: user.name,
-      senderId: user._id,
+      senderId: user.id,
       teamName: team.name,
       teamId: team.id,
       recieverName: userName,

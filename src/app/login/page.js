@@ -33,7 +33,6 @@ export default function Login() {
     const error = params.get("error");
 
     if (error) {
-      toast.error(decodeURIComponent(error));
       toast.error("User not found. Redirecting to signup...");
       setTimeout(() => router.push("/signup"), 1500);
     }

@@ -1,5 +1,7 @@
 "use client";
 import { checkValidGithubId } from "@/lib/checkValidGithubId";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { toast } from "react-toastify";
@@ -259,6 +261,9 @@ export default function EditProfile({
   UserBio,
   UserSkills,
 }) {
+  const router = useRouter();
+  const { data: session, update } = useSession();
+
   // to show floating labels if focused on input fields
   const [focusObj, setFocusObj] = useState({
     nameFocus: true,
@@ -343,14 +348,14 @@ export default function EditProfile({
       }
 
       if (!(await checkValidGithubId(githubID))) {
-          toast.update(tId, {
-            render: "Invalid Github ID!",
-            type: "error",
-            isLoading: false,
-            autoClose: 1200, 
-            closeButton: true,
-          });
-          return;
+        toast.update(tId, {
+          render: "Invalid Github ID!",
+          type: "error",
+          isLoading: false,
+          autoClose: 1200,
+          closeButton: true,
+        });
+        return;
       }
 
       const response = await fetch("/api/profile", {
@@ -369,9 +374,18 @@ export default function EditProfile({
           autoClose: 2000,
           closeButton: true,
         });
+
+        const {user:updatedUser} = await response.json();
+        await update({
+          ...session,
+          user: {
+            ...session.user,
+            ...updatedUser,
+          },
+        });
         setTimeout(() => {
-          window.location.reload();
-        }, 300);
+          router.refresh();
+        }, 1800);
       } else {
         throw new Error("Something went wrong!");
       }

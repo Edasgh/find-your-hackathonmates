@@ -36,7 +36,7 @@ const AllUsers = () => {
   // Delete an user
   const deleteUser = async (userId) => {
     try {
-      const reqBody = { admin: user._id, userId };
+      const reqBody = { admin: user.id, userId };
       const resp = await fetch("/api/admin/users_growth", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },

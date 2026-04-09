@@ -39,9 +39,24 @@ export const POST = async (request) => {
       githubID: githubID,
       skills: skills,
       bio: bio,
+    }, {
+      returnDocument: 'after'
     });
     if (resp) {
       return new NextResponse("User updated successfully!", {
+        user: {
+          id: resp._id.toString(),
+          name: resp.name,
+          email: resp.email,
+          bio: resp.bio,
+          githubID: resp.githubID,
+          country: resp.country,
+          skills: resp.skills,
+          teams: resp.teams,
+          isAdmin: resp.isAdmin,
+
+        }
+      }, {
         status: 200,
       });
     } else {

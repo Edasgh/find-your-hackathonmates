@@ -144,7 +144,7 @@ export default function Profile() {
                     Log Out
                   </button>
 
-                  <Link href={`/reset_password?id=${user._id}`}>
+                  <Link href={`/reset_password?id=${user.id}`}>
                     <button className="px-4 py-2 rounded-lg text-sm 
                       bg-gradient-to-r from-purple-500 to-indigo-500 
                       text-white font-medium 
@@ -168,7 +168,7 @@ export default function Profile() {
                 </h1>
 
                 <EditProfile
-                  UserId={user._id}
+                  UserId={user.id}
                   UserName={user.name}
                   UserEmail={user.email}
                   UserCountry={user.country}

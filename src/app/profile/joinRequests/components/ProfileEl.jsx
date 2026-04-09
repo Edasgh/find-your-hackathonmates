@@ -12,7 +12,7 @@ export const ProfileEl = ({ user, open }) => {
   const userDetails = useMemo(() => {
     if (!user) return null;
     return {
-      _id: user._id,
+      _id: user.id,
       name: user.name,
       email: user.email,
       bio: user.bio,

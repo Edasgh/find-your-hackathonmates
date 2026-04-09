@@ -68,11 +68,11 @@ export default function Navbar() {
   };
   useEffect(() => {
     if (user) {
-      socket.emit("get_alerts", { userId: user._id });
+      socket.emit("get_alerts", { userId: user.id });
       socket.on("get_alerts", ({ data }) => {
         setAlerts([...data]);
       });
-      socket.emit("get_notifs",({userId:user._id}));
+      socket.emit("get_notifs",({userId:user.id}));
       socket.on("get_notifs", ({ data }) => {
         setNotifications([...data]);
       });

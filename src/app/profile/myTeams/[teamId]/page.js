@@ -121,7 +121,7 @@ const TeamChat = () => {
             name: fileName,
           },
           message: "",
-          sender: { name: userDetails.name, id: userDetails._id },
+          sender: { name: userDetails.name, id: userDetails.id },
           sentOn: currentTimeStamp,
         };
         setMessages((prev) => [...prev, obj]);
@@ -131,7 +131,7 @@ const TeamChat = () => {
           public_id: data.public_id,
           url: data.url,
           fileName,
-          senderId: userDetails._id,
+          senderId: userDetails.id,
           senderName: userDetails.name,
           sentOn: obj.sentOn,
         });
@@ -163,7 +163,7 @@ const TeamChat = () => {
         public_id: "-1",
         url: "",
       },
-      sender: { name: userDetails.name, id: userDetails._id },
+      sender: { name: userDetails.name, id: userDetails.id },
       sentOn: currentTimeStamp,
       isPending: true, // Use this flag to prevent duplicates
     };
@@ -177,7 +177,7 @@ const TeamChat = () => {
       message: msg,
       public_id: "-1",
       url: "",
-      senderId: userDetails._id,
+      senderId: userDetails.id,
       senderName: userDetails.name,
       sentOn: currentTimeStamp,
     });
@@ -260,7 +260,7 @@ const TeamChat = () => {
       socket.off("message");
       socket.off("error_message", handleError);
     };
-  }, [teamId, userDetails._id]); // Dependencies are important
+  }, [teamId, userDetails.id]); // Dependencies are important
 
   useEffect(() => {
     socket.emit("join-room", teamId);
@@ -277,7 +277,7 @@ const TeamChat = () => {
       setNewMembers((prev) => prev.filter((m) => m.id !== memberId));
     });
 
-    socket.emit("read_msg", { userId: user._id, roomId: teamId });
+    socket.emit("read_msg", { userId: user.id, roomId: teamId });
 
     return () => {
       socket.off("join-room");
@@ -334,7 +334,7 @@ const TeamChat = () => {
       message: msg.message,
       public_id: msg.attachment?.public_id || "-1",
       url: msg.attachment?.url || "",
-      senderId: userDetails._id,
+      senderId: userDetails.id,
       senderName: userDetails.name,
       sentOn: msg.sentOn,
       clientId: newClientId, // 🔥 important
@@ -424,7 +424,7 @@ const TeamChat = () => {
                 <ChatNavigation
                   email={teamData.email}
                   userName={userDetails.name}
-                  userId={userDetails._id}
+                  userId={userDetails.id}
                   hkNm={teamData.hackathonName}
                   adminId={teamData.admin}
                   name={teamData.name}
@@ -461,7 +461,7 @@ const TeamChat = () => {
                   senderName={m.sender.name}
                   sentOn={m.sentOn}
                   teamId={teamId}
-                  userId={userDetails._id}
+                  userId={userDetails.id}
                   handleDelMsg={handleDelMsg}
                   failed={m.failed ? true : false}
                   retryMessage = {()=>{retryMessage(m)}}

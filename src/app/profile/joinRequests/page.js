@@ -17,7 +17,7 @@ const JoinRequests = () => {
 
   useEffect(() => {
     if (user) {
-      socket.emit("get_join_alerts", { userId: user._id });
+      socket.emit("get_join_alerts", { userId: user.id });
       socket.on("get_alerts", ({ data }) => {
         setReqs([...data]);
         setLoading(false);
@@ -81,7 +81,7 @@ const JoinRequests = () => {
   };
 
   const handleReject = (reqId) => {
-    const data = { reqId, myId: user._id };
+    const data = { reqId, myId: user.id };
     let tId = toast.loading("Please wait...");
 
     socket.emit("reject-alert", { ...data });
